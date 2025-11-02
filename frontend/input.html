@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Add Product</title>
+  <style>
+    body { font-family: Arial; margin: 40px; max-width: 600px; }
+    label { display: block; margin-top: 10px; }
+    input, select { width: 100%; padding: 6px; margin-top: 5px; }
+    button { margin-top: 12px; padding: 8px 12px; }
+    #response { margin-top: 20px; color: green; }
+  </style>
+</head>
+<body>
+  <h2>Add Product to Weaviate</h2>
+
+  <form id="productForm">
+    <label>Gender:</label>
+    <input id="gender" required>
+
+    <label>Master Category:</label>
+    <input id="masterCategory" required>
+
+    <label>Sub Category:</label>
+    <input id="subCategory" required>
+
+    <label>Article Type:</label>
+    <input id="articleType" required>
+
+    <label>Base Colour:</label>
+    <input id="baseColour" required>
+
+    <label>Season:</label>
+    <input id="season" required>
+
+    <label>Year:</label>
+    <input id="year" type="number" required>
+
+    <label>Usage:</label>
+    <input id="usage" required>
+
+    <label>Product Display Name:</label>
+    <input id="productDisplayName" required>
+
+    <label>Price:</label>
+    <input id="price" type="number" required>
+
+    <label>Product ID:</label>
+    <input id="product_id" type="number" required>
+
+    <button type="submit">Add Product</button>
+  </form>
+
+  <p id="response"></p>
+
+  <script>
+    document.getElementById("productForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const product = {
+        gender: document.getElementById("gender").value,
+        masterCategory: document.getElementById("masterCategory").value,
+        subCategory: document.getElementById("subCategory").value,
+        articleType: document.getElementById("articleType").value,
+        baseColour: document.getElementById("baseColour").value,
+        season: document.getElementById("season").value,
+        year: parseInt(document.getElementById("year").value),
+        usage: document.getElementById("usage").value,
+        productDisplayName: document.getElementById("productDisplayName").value,
+        price: parseInt(document.getElementById("price").value),
+        product_id: parseInt(document.getElementById("product_id").value),
+      };
+
+      const res = await fetch("http://127.0.0.1:8000/add_product", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(product),
+      });
+
+      const result = await res.json();
+      document.getElementById("response").innerText =
+        result.message || "❌ " + result.error;
+      document.getElementById("productForm").reset();
+    });
+  </script>
+</body>
+</html>
