@@ -1,0 +1,11 @@
+Sure thing! Here are a few blue t‑shirts we have in stock. I’ve included a picture of each one, the price, and the style (all casual). Let me know if you’d like to see a different size, cut, or any other details!
+
+| Product | Price | Image |
+|---|---|---|
+| **Mr.Men Men's What Me Rude Blue T‑shirt** | $47.00 | ![Mr.Men Men's What Me Rude Blue T-shirt](http://127.0.0.1:8000/images/2852.jpg) |
+| **Myntra Men Blue Say It Loud T‑shirt** | $215.00 | ![Myntra Men Blue Say It Loud T-shirt](http://127.0.0.1:8000/images/34358.jpg) |
+| **s.Oliver Men's Dont Stop Me Now Blue T‑shirt** | $286.00 | ![s.Oliver Men's Dont Stop Me Now Blue T-shirt](http://127.0.0.1:8000/images/6967.jpg) |
+| **Mr.Men Boys A Lot Of Work Blue T‑shirt** | $264.00 | ![Mr.Men Boys A Lot Of Work Blue T-shirt](http://127.0.0.1:8000/images/36321.jpg) |
+| **Inkfruit Men's Bring Back 80's Blue T‑shirt** | $215.00 | ![Inkfruit Men's Bring Back 80's Blue T-shirt](http://127.0.0.1:8000/images/3682.jpg) |
+
+**Quick tip:** All of these shirts are designed for everyday (casual) wear. If you have a preferred fit (e.g., regular, slim, relaxed) or need help with sizing, just let me know and I’ll point you to the right size guide. Happy shopping!
