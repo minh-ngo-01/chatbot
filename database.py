@@ -1,25 +1,38 @@
-from sqlalchemy import create_engine, MetaData, Table, Column, Integer, String, Text, Numeric
+from sqlalchemy import text
+from sqlalchemy import create_engine
 
 engine=create_engine('sqlite:///database.db', connect_args={'check_same_thread': False} )
-metadata=MetaData()
-products=Table('products', 
-               metadata,
-               Column('gender', Text),
-               Column('masterCategory', Text),
-               Column('subCategory', Text),
-               Column('articleType', Text),
-               Column('baseColor', Text),
-               Column('season', Text),
-               Column('year', Integer),
-               Column('usage', Text),
-               Column('productDisplayName', Text),
-               Column('price', Numeric(10,2)),
-               Column('product_id', Integer, primary_key=True),)
-faqs=Table('faqs',
-           metadata,
-           Column('question', Text),
-           Column('answer', Text),
-           Column('type', Text))
-metadata.create_all(engine)
+with engine.connect() as conn:
+    conn.execute(text('DROP TABLE IF EXISTS products'))
+    conn.commit()
+    conn.execute(text("""CREATE TABLE products (id int,
+    product_code text, 
+    name text, 
+    short_desc text,
+    regular_price int, compare_price int,
+    gender text,
+    highlights text,
+    technology text,
+    material text,
+    stype text,
+    usage text,
+    features text,
+    care text,
+    images text,
+    storage text)"""))
+    conn.commit()
 
+def insert_data(product_code, name, short_desc,regular_price, compare_price,gender, highlights, technology,
+    material,
+    stype,
+    usage,
+    features,
+    care,
+    images,
+    storage):
+    return None
+
+
+    
+    
 

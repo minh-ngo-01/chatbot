@@ -1,6 +1,5 @@
 import weaviate
 from weaviate.classes.init import Auth
-from weaviate_setup import get_products_collection
 from utils import classify_query
 from utils import query_faq
 from utils import query_product
@@ -22,9 +21,8 @@ app.add_middleware(
 )
 
 app.mount("/static", StaticFiles(directory='frontend'), name='static')
-app.mount('/images', StaticFiles(directory='images'), name='images')
-@app.get('/')
 
+@app.get('/')
 def serve_index():
     return FileResponse(os.path.join('frontend', 'index.html'))
 
@@ -98,25 +96,12 @@ def answer(question: Question):
         print(query_type=='Product')
         # with open('text.txt', 'w') as f:
         #     f.write(res)
-        print(res)
         return {'message':res}
 
 @app.get('/')
 def root():
     return {'message':'FastAPI chatbot backend running!'}
 
-# load_dotenv()
-# weaviate_url=os.getenv('WEAVIATE_URL')
-# weaviate_api_key=os.getenv('WEAVIATE_API_KEY')
-# with weaviate.connect_to_weaviate_cloud(
-# cluster_url=weaviate_url,
-# auth_credentials=Auth.api_key(weaviate_api_key)
-# ) as client:
-#     query='give me some blue tshirts'
-#     query_type=classify_query(query)
-#     if query_type=='FAQ':
-#         res=query_faq(client, query)
-#     elif query_type=='Product':
-#         res=query_product(client, query)
-#     print(res)
+
+
 
