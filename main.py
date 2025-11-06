@@ -3,6 +3,7 @@ from weaviate.classes.init import Auth
 from utils import classify_query
 from utils import query_faq
 from utils import query_product
+from utils import query_other
 from fastapi import FastAPI
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
@@ -10,6 +11,8 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 import os
 from dotenv import load_dotenv
+import joblib
+import time
 
 app=FastAPI()
 app.add_middleware(
@@ -82,26 +85,33 @@ def answer(question: Question):
     load_dotenv()
     weaviate_url=os.getenv('WEAVIATE_URL')
     weaviate_api_key=os.getenv('WEAVIATE_API_KEY')
+    try:
+        chat_history=joblib.load('chat_history.joblib')
+    except:
+        chat_history=[]
+        joblib.dump(chat_history, 'chat_history.joblib')
     with weaviate.connect_to_weaviate_cloud(
     cluster_url=weaviate_url,
     auth_credentials=Auth.api_key(weaviate_api_key)
     ) as client:
+        
         query=question.query
         query_type=classify_query(query)
         if query_type=='FAQ':
             res=query_faq(client, query)
         elif query_type=='Product':
             res=query_product(client, query)
+        else:
+            res=query_other(query)
+
         print(query_type)
         print(query_type=='Product')
         # with open('text.txt', 'w') as f:
         #     f.write(res)
+        chat_history.append({'time': time.asctime(), 'customer':query, 'bot':res})
+        joblib.dump(chat_history, 'chat_history.joblib')
         return {'message':res}
 
 @app.get('/')
 def root():
     return {'message':'FastAPI chatbot backend running!'}
-
-
-
-

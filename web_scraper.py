@@ -4,7 +4,6 @@ from urllib.parse import urljoin
 import os
 import re
 import json
-from weaviate_setup import initialize_products_collection, populate_collection
 import time
 import random
 
@@ -15,9 +14,11 @@ def get_item_urls(url):
     html=r.text
     soup=BeautifulSoup(html,'lxml')
     item_urls=[]
+    seen=[]
     for item in soup.select('a.block.h-full.w-full'):
-        if item['href'].startswith('/product/'):
+        if item['href'].startswith('/product/') and (item['href'] not in seen):
             href=item['href']
+            seen.append(href)
             item_url=urljoin(url, href)
             item_urls.append(item_url)
     return item_urls
@@ -116,6 +117,30 @@ def get_items_data(url):
         list_.append(dict_)
     return list_
 
+def get_faqs_data():
+    url='https://www.coolmate.me/page/faqs'
+    HEADERS={'User-Agent': 'my-clothes-scraper/1.0'}
+    response=requests.get(url,headers=HEADERS, timeout=5)
+    soup=BeautifulSoup(response.text, 'lxml')
+
+    list_=[]
+    for h3 in soup.find_all('h3'):
+        question=h3.get_text(strip=True)
+
+        answers=[]
+
+        for sibling in h3.find_next_siblings():
+            if sibling.name in ['h3', 'h2']:
+                break
+            for a in sibling.find_all('a'):
+                a.replace_with(f"{a.get_text(strip=True)} ({a['href']})")
+            answer=sibling.get_text(strip=False)
+            if 'Covid' in answer:
+                continue
+            answers.append(answer)
+        answers=" ".join(answers)
+        list_.append({'question': question, 'answer': answers})
+    return list_
 
 
-            
+

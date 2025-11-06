@@ -1,38 +1,33 @@
-import weaviate
-import joblib
-from weaviate.classes.init import Auth
 from weaviate.classes.config import Configure
 from weaviate.classes.config import Property
 from weaviate.classes.config import DataType
-import os
 
-
-def get_faqs_collection(client):
+def initialize_faqs_collection(client):
     if not client.collections.exists('faqs'):
         faqs=client.collections.create(
             name='faqs',
             vector_config=Configure.Vectors.text2vec_weaviate(
                 name='vector',
-                source_properties=['question', 'answer', 'type']),
+                source_properties=['question', 'answer']),
             properties=[
                 Property(name='question', vectorize_property_name=False, data_type=DataType.TEXT),
-                Property(name='answer', vectorize_property_name=False, data_type=DataType.TEXT),
-                Property(name='type', vectorize_property_name=False, data_type=DataType.TEXT)])
-        
-        faq_data=joblib.load('faq.joblib')
-        with faqs.batch.fixed_size(batch_size=100) as batch:
-            for faq in faq_data:
-                batch.add_object(
-                    {'question': faq['question'],
-                    'answer': faq['answer'],
-                    'type': faq['type'],
-                    })
-                if batch.number_errors >10:
-                    print('Batch import stopped due to too many errors.')
-                    break
-    else:
-        faqs=client.collections.get('faqs')
+                Property(name='answer', vectorize_property_name=False, data_type=DataType.TEXT)
+            ]   
+        )
     return faqs
+
+def populate_faqs_collection(collection, list_):
+    for dict_ in list_:
+        with collection.batch.fixed_size(batch_size=100) as batch:
+            batch.add_object(
+            properties= (
+                    {'question': dict_['question'],
+                    'answer': dict_['answer'],
+                    }))
+            if batch.number_errors >10:
+                print('Batch import stopped due to too many errors.')
+                break    
+    return collection
 
 def initialize_products_collection(client):
     if not client.collections.exists('products'):
@@ -65,7 +60,7 @@ def initialize_products_collection(client):
         )
     return products
 
-def populate_collection(collection, list_):
+def populate_products_collection(collection, list_):
     for dict_ in list_:
         with collection.batch.fixed_size(batch_size=100) as batch:
             batch.add_object(

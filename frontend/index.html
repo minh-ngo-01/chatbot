@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <title>Simple Chatbot</title>
 
-  <!-- Load a Markdown parser -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
   <style>
@@ -23,31 +22,6 @@
     }
     .user { color: #007bff; }
     .bot { color: #0a790a; }
-
-    /* Markdown content styling */
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-      font-size: 14px;
-    }
-    th, td {
-      border: 1px solid #ccc;
-      padding: 6px 10px;
-      text-align: left;
-    }
-    th {
-      background-color: #f2f2f2;
-    }
-    pre {
-      background: #f6f6f6;
-      padding: 8px;
-      border-radius: 6px;
-      overflow-x: auto;
-    }
-    h3, h4 {
-      margin-top: 10px;
-    }
   </style>
 </head>
 <body>
@@ -56,35 +30,53 @@
   <div id="chatbox"></div>
 
   <input id="userInput" type="text" placeholder="Type a message..." style="width: 80%;" />
-  <button onclick="sendMessage()">Send</button>
+  <button id="sendButton">Send</button>
 
   <script>
+    const input = document.getElementById("userInput");
+    const chatbox = document.getElementById("chatbox");
+    const sendButton = document.getElementById("sendButton");
+
+    // Press Enter to send
+    input.addEventListener("keydown", function(event) {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        sendMessage();
+      }
+    });
+
+    // Also allow click on Send button
+    sendButton.addEventListener("click", sendMessage);
+
     async function sendMessage() {
-      const input = document.getElementById("userInput");
       const message = input.value.trim();
       if (!message) return;
 
-      const chatbox = document.getElementById("chatbox");
+      // Show user message
       chatbox.innerHTML += `<p class="user"><b>You:</b> ${message}</p>`;
 
-      // Send message to FastAPI backend
-      const response = await fetch("http://127.0.0.1:8000/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: message }),
-      });
-
-      const data = await response.json();
-
-      // ✅ Parse Markdown using marked.js
-      const botHTML = marked.parse(data.message);
-
-      // Display bot message with rendered Markdown
-      chatbox.innerHTML += `<div class="bot"><b>Bot:</b><br>${botHTML}</div>`;
-
-      // Scroll to bottom & clear input
-      chatbox.scrollTop = chatbox.scrollHeight;
+      // ✅ Immediately clear the input box (before waiting for backend)
       input.value = "";
+
+      // Send message to FastAPI backend
+      try {
+        const response = await fetch("http://127.0.0.1:8000/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ query: message }),
+        });
+
+        const data = await response.json();
+
+        // Parse Markdown using marked.js
+        const botHTML = marked.parse(data.message || "");
+        chatbox.innerHTML += `<div class="bot"><b>Bot:</b><br>${botHTML}</div>`;
+      } catch (error) {
+        chatbox.innerHTML += `<p style="color:red;"><b>Error:</b> ${error}</p>`;
+      }
+
+      // Scroll to bottom
+      chatbox.scrollTop = chatbox.scrollHeight;
     }
   </script>
 </body>
