@@ -9,6 +9,7 @@ import random
 
 
 def get_item_urls(url):
+    print(url)
     HEADERS={'User-Agent': 'my-clothes-scraper/1.0'}
     r =requests.get(url, headers=HEADERS, timeout=5)
     html=r.text
@@ -21,9 +22,10 @@ def get_item_urls(url):
             seen.append(href)
             item_url=urljoin(url, href)
             item_urls.append(item_url)
-    return item_urls[:10]
+    return item_urls
 
 def get_id(item_url):
+    print(item_url)
     HEADERS={'User-Agent': 'my-clothes-scraper/1.0'}
     r =requests.get(item_url, headers=HEADERS, timeout=5)
     html=r.text
@@ -31,16 +33,14 @@ def get_id(item_url):
     for script in soup.select('script'):
         if 'regular_price' in script.text:
             match=re.search(r'"id":"([A-Za-z0-9]{24})"', script.text.replace('\\',""))
-    print(match.group(1))
+    # print(match.group(1))
     return match.group(1)
         
-    
-
-
-
 def get_item_info(product_id):
+    print(product_id)
+    HEADERS={'User-Agent': 'my-clothes-scraper/1.0'}
     url = f"https://www.coolmate.me/api/proxy/products?ids={product_id}"
-    product = requests.get(url).json()["data"][0]
+    product = requests.get(url, headers=HEADERS, timeout=5).json()["data"][0]
     with open('json.json', 'w', encoding='utf-8') as f:
         json.dump(product, f, ensure_ascii=False, indent=2)
     product_id=product['id']
@@ -80,6 +80,7 @@ def get_item_info(product_id):
         care=", ".join([dict_['title'] for dict_ in product['extra']['p_extra_features'][5]['value']])
     except:
         care=""    
+    video=product['youtube_video']
     images={}
     for dict_0 in product['options_value'][0]['options']:
         urls=[]
@@ -109,6 +110,7 @@ def get_item_info(product_id):
             'usage':usage,
             'features':features,
             'care':care,
+            'video':video,
             'images':str(images),
             'storage':str(storage),
             'product_url':product_url

@@ -52,6 +52,7 @@ def initialize_products_collection(client):
                 Property(name='usage', vectorize_property_name=True, data_type=DataType.TEXT),
                 Property(name='features', vectorize_property_name=True, data_type=DataType.TEXT),
                 Property(name='care', vectorize_property_name=True, data_type=DataType.TEXT),
+                Property(name='video', vectorize_property_name=True, data_type=DataType.TEXT),
                 Property(name='images', vectorize_property_name=True, data_type=DataType.TEXT),
                 Property(name='storage', vectorize_property_name=True, data_type=DataType.TEXT),
                 Property(name='product_url', vectorize_property_name=True, data_type=DataType.TEXT),
@@ -77,6 +78,7 @@ def populate_products_collection(collection, list_):
             'usage':dict_['usage'],
             'features':dict_['features'],
             'care':dict_['care'],
+            'video':dict_['video'],
             'images':dict_['images'],
             'storage':dict_['storage'],
             'product_url':dict_['product_url']})
