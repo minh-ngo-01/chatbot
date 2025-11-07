@@ -75,8 +75,7 @@ def query_faq(client, query):
         contents=prompt)
     augmented_query=response.text
     # print(augmented_query)
-    
-    
+
     
     response=faqs.query.near_text(query, limit=3)
 
@@ -105,7 +104,8 @@ def query_faq(client, query):
 
 
     
-def query_product(client, query):
+def query_product(client, query):   
+    # client.collections.delete('products')
     if not client.collections.exists('products'):
         products=initialize_products_collection(client)
         urls=['https://www.coolmate.me/collection/ao-ba-lo-tank-top-nam',
@@ -132,7 +132,7 @@ def query_product(client, query):
               'https://www.coolmate.me/collection/phu-kien-nam']              
         for url in tqdm.tqdm(urls):
             product_data=get_items_data(url)
-            products=populate_products_collection(products, product_data)
+            products=populate_products_collection(products, product_data[:10])
     else:
         products=client.collections.get('products')
 
@@ -184,7 +184,7 @@ def query_product(client, query):
                        Bạn có thể tự nghĩ ra văn bản mới để tìm cho ra sản phẩm phù hợp nhất.
                        Các tin nhắn trước đó từ cũ tới mới nhất: {prev_chat}
                        Tin nhắn hiện tại: {query}"""
-    print(prompt)
+    # print(prompt)
 
     response=client.models.generate_content(
         model="gemini-2.5-flash",
@@ -193,9 +193,24 @@ def query_product(client, query):
             system_instruction='Nhiệm vụ của bạn liên quan đến một cửa hàng thời trang online'),
         contents=prompt)
     augmented_query=response.text
-    print(augmented_query)
+    # print(augmented_query)
 
-    response=products.query.near_text(query=augmented_query, limit=5)
+    prompt=f"""Đây là tin nhắn hiện tại của khách hàng cùng lịch sử trò chuyện.
+              Bạn hãy trả về số lượng sản phẩm nên được lấy thông tin trong vector databse để trả lời khách hàng.
+              Các tin nhắn trước đó từ cũ tới mới nhất: {prev_chat}
+              Tin nhắn hiện tại: {query}"""
+    
+
+    response=client.models.generate_content(
+        model="gemini-2.5-flash",
+        config=types.GenerateContentConfig(
+            thinking_config=types.ThinkingConfig(thinking_budget=0),
+            system_instruction='Chỉ trả về số tự nhiên trong khoảng từ 1 tới 20'),
+        contents=prompt)
+    limit=int(response.text)
+    print(limit)
+
+    response=products.query.near_text(query=augmented_query, limit=limit)
     context=""
     for res in response.objects:
         context+=f"""mã sản phẩm: {res.properties['product_code']},
@@ -219,7 +234,8 @@ def query_product(client, query):
                 Tin nhắn hiện tại: {query}
                 Thông tin sản phẩm: {context}
                 Không đề cấp đến số lượng hàng tồn.
-                Phản hồi hình ảnh bằng tag img. Điều chỉnh kích thước ảnh sao cho nội dung được hiển thị đẹp nhất."""
+                Phản hồi hình ảnh bằng tag img. Sắp xếp và điều chỉnh kích thước ảnh sao cho nội dung được hiển thị đẹp nhất trong khung chat. Rộng tối đa 300px.
+                Thêm tag <br> khi xuống dòng."""
     
     response=client.models.generate_content(
         model="gemini-2.5-flash",
@@ -229,6 +245,22 @@ def query_product(client, query):
                                   Chỉ chào người dùng một lần, ở đầu cuộc trò chuyện.
                                   Giữ câu trả lời ngắn gọn và hữu ích.
                                   Nếu người dùng đặt câu hỏi tiếp theo, hãy tiếp tục cuộc trò chuyện mà không lặp lại lời chào hay phần giới thiệu."""),
+        contents=prompt)
+    
+    prompt=f""" Bạn sẽ nhận được phản hồi chuẩn bị được gửi cho khách hàng, tin nhắn khách hàng vừa gửi cho bạn và lịch sử trò chuyện gần nhất.
+                Các tin nhắn trước đó từ cũ tới mới nhất: {prev_chat}
+                Tin nhắn hiện tại: {query}
+                Phản hồi: {response.text}
+                Hãy kiểm tra xem phản hồi này đã đáp ứng các yêu cầu sau chưa:
+                    - Không đề cấp đến số lượng hàng tồn.
+                    - Hình ảnh được đính kèm bằng tag img, rộng tối đa 300px.
+                    - Thêm tag <br> khi xuống dòng.
+                Trả về phản hồi cuối cùng, chỉnh sửa nếu cần thiết"""
+    response=client.models.generate_content(
+        model="gemini-2.5-flash",
+        config=types.GenerateContentConfig(
+            thinking_config=types.ThinkingConfig(thinking_budget=0),
+            system_instruction="""Nhiệm vụ của bạn là đảm bảo câu trả lời cuối cùng đáp ứng yêu cầu."""),
         contents=prompt)
     # print(response.text)
     return response.text

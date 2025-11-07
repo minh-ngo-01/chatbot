@@ -105,12 +105,24 @@ def answer(question: Question):
             res=query_other(query)
 
         print(query_type)
-        print(query_type=='Product')
         # with open('text.txt', 'w') as f:
         #     f.write(res)
         chat_history.append({'time': time.asctime(), 'customer':query, 'bot':res})
         joblib.dump(chat_history, 'chat_history.joblib')
         return {'message':res}
+    
+# @app.post('/chat')
+# def answer():
+#     res="""Đây là video hướng dẫn cách gấp áo khoác thể thao:
+
+# <video autoplay loop muted playsinline controls
+#   style="width:100%; max-width:300px; border:none; border-radius:10px; display:block; margin-top:6px;">
+#   <source src="https://media3.coolmate.me/uploads/videos/nguoi-mau-cach-gap-ao-khoac-the-thao-windbreaker.mp4" type="video/mp4">
+#   Trình duyệt của bạn không hỗ trợ video.
+# </video>"""
+#     return {'message':res}
+
+
 
 @app.get('/')
 def root():

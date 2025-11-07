@@ -21,7 +21,7 @@ def get_item_urls(url):
             seen.append(href)
             item_url=urljoin(url, href)
             item_urls.append(item_url)
-    return item_urls
+    return item_urls[:10]
 
 def get_id(item_url):
     HEADERS={'User-Agent': 'my-clothes-scraper/1.0'}
@@ -79,8 +79,14 @@ def get_item_info(product_id):
     try:
         care=", ".join([dict_['title'] for dict_ in product['extra']['p_extra_features'][5]['value']])
     except:
-        care=""
-    images=['https://n7media.coolmate.me/uploads/'+dict_['src'][7:] for dict_ in product['images']]
+        care=""    
+    images={}
+    for dict_0 in product['options_value'][0]['options']:
+        urls=[]
+        for dict_1 in dict_0['image']:
+            url='https://n7media.coolmate.me/uploads/'+dict_1['src'][7:]
+            urls.append(url)
+            images[dict_0['title']]=urls
     storage={}
     for variant in product['variants']:
         if variant['quantity']>0:
@@ -144,3 +150,15 @@ def get_faqs_data():
 
 
 
+# url = f"https://www.coolmate.me/api/proxy/products?ids=6593ee1f9e830a519420fbe4"
+# product = requests.get(url).json()["data"][0]
+# with open('json.json', 'w', encoding='utf-8') as f:
+#     json.dump(product, f, ensure_ascii=False, indent=2)
+# images={}
+# for dict_0 in product['options_value'][0]['options']:
+#     urls=[]
+#     for dict_1 in dict_0['image']:
+#         url='https://n7media.coolmate.me/uploads/'+dict_1['src'][7:]
+#         urls.append(url)
+#     images[dict_0['title']]=urls
+# print(images)
