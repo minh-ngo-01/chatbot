@@ -60,6 +60,7 @@ def query_faq(client, query):
         model="gemini-2.5-flash-lite",
         config=types.GenerateContentConfig(
             thinking_config=types.ThinkingConfig(include_thoughts=False),
+            temperature=0,
             system_instruction="""Bạn là một trợ lý ảo trò chuyện của cửa hàng quần áo trực tuyến Coolmate. Hãy nói chuyện một cách tự nhiên, như đang trò chuyện với một người bạn.
                                   Giữ câu trả lời ngắn gọn và hữu ích."""),
         contents=prompt)
@@ -78,6 +79,7 @@ def query_faq(client, query):
         model="gemini-2.5-flash-lite",
         config=types.GenerateContentConfig(
             thinking_config=types.ThinkingConfig(thinking_budget=0),
+            temperature=0,
             system_instruction="""Bạn là một trợ lý ảo trò chuyện cho cửa hàng quần áo trực tuyến Coolmate. Hãy nói chuyện một cách tự nhiên, như đang trò chuyện với một người bạn.
                                   Giữ câu trả lời ngắn gọn và hữu ích."""),
         contents=f"""Đây là tin nhắn hiện tại của khách hàng cùng với lịch sử trò chuyện.
@@ -143,6 +145,7 @@ def query_product(client, query):
         model="gemini-2.5-flash-lite",
         config=types.GenerateContentConfig(
             thinking_config=types.ThinkingConfig(thinking_budget=0),
+            temperature=0,
             system_instruction='Chỉ trả về đoạn văn bản dùng để tìm kiếm, không gì khác!'),
         contents=prompt)
     augmented_query=response.text
@@ -164,6 +167,7 @@ def query_product(client, query):
         model="gemini-2.5-flash-lite",
         config=types.GenerateContentConfig(
             thinking_config=types.ThinkingConfig(thinking_budget=0),
+            temperature=0,
             system_instruction='Chỉ trả về JSON, không gì khác!'),
         contents=prompt)
     
@@ -238,27 +242,10 @@ def query_product(client, query):
         model="gemini-2.5-flash",
         config=types.GenerateContentConfig(
             thinking_config=types.ThinkingConfig(thinking_budget=0),
+            temperature=0,
             system_instruction="""Bạn là một trợ lý ảo trò chuyện cho cửa hàng quần áo trực tuyến Coolmate. Hãy nói chuyện một cách tự nhiên, như đang trò chuyện với một người bạn.
                                   Giữ câu trả lời ngắn gọn và hữu ích."""),
         contents=prompt)
-
-    # prompt=f""" Bạn sẽ nhận được phản hồi chuẩn bị được gửi cho khách hàng, tin nhắn khách hàng vừa gửi cho bạn và lịch sử trò chuyện gần nhất.
-    #             Các tin nhắn trước đó từ cũ tới mới nhất: {prev_chat}
-    #             Tin nhắn hiện tại: {query}
-    #             Phản hồi: {response.text}
-    #             Hãy kiểm tra xem phản hồi này đã đáp ứng các yêu cầu sau chưa:
-    #                 - Không đề cấp đến số lượng hàng tồn.
-    #                 - Đính kèm link hình ảnh bằng tag img, rộng tối đa 300px
-    #                 - Thêm tag <br> khi xuống dòng.
-    #                 - Không chào lại nếu vẫn đang trong cuộc trò chuyện.
-    #             Trả về phản hồi cuối cùng, chỉnh sửa nếu cần thiết"""
-    # response=client.models.generate_content(
-    #     model="gemini-2.5-flash-lite",
-    #     config=types.GenerateContentConfig(
-    #         thinking_config=types.ThinkingConfig(thinking_budget=0),
-    #         system_instruction="""Nhiệm vụ của bạn là đảm bảo câu trả lời cuối cùng đáp ứng yêu cầu."""),
-    #     contents=prompt)
-    # # print(response.text)
 
     return response.text
 
@@ -276,6 +263,7 @@ def query_other(query):
         model="gemini-2.5-flash-lite",
         config=types.GenerateContentConfig(
             thinking_config=types.ThinkingConfig(thinking_budget=0),
+            temperature=0,
             system_instruction="""Bạn là một trợ lý ảo trò chuyện cho cửa hàng quần áo trực tuyến Coolmate. Hãy nói chuyện một cách tự nhiên, như đang trò chuyện với một người bạn.
                                   Giữ câu trả lời ngắn gọn và hữu ích."""),
         contents=f""" Bạn sẽ nhận tin nhắn hiện tại và lịch sử trò chuyện.
