@@ -94,32 +94,36 @@ def answer(question: Question):
     cluster_url=weaviate_url,
     auth_credentials=Auth.api_key(weaviate_api_key)
     ) as client:
-        
+        time0=time.time()
         query=question.query
         query_type=classify_query(query)
+        time1=time.time()
+        print(time1-time0)
+        print(query_type)
         if query_type=='FAQ':
             res=query_faq(client, query)
         elif query_type=='Product':
             res=query_product(client, query)
         else:
             res=query_other(query)
-
-        print(query_type)
-        # with open('text.txt', 'w') as f:
-        #     f.write(res)
+              
+        
+        with open('text.txt', 'w', encoding='utf-8') as f:
+            f.write(res)
         chat_history.append({'time': time.asctime(), 'customer':query, 'bot':res})
         joblib.dump(chat_history, 'chat_history.joblib')
         return {'message':res}
     
 # @app.post('/chat')
 # def answer():
-#     res="""Đây là video hướng dẫn cách gấp áo khoác thể thao:
+#     res="""Okie bạn! Mình gợi ý thêm mẫu Áo Thun Chạy Bộ Graphic Special nhé, đây là dòng sản phẩm chuyên chạy bộ cho nam, mang lại sự thoải mái, thoáng mát với chất liệu vải nhẹ, được xử lý hoàn thiện vải Quick-Dry thoát mồ hôi nhanh giúp bạn luôn khô ráo trên đường chạy. Giá chỉ 159.000đ thôi nè.
+# <img src="https://n7media.coolmate.me/uploads/July2025/ao-thun-chay-bo-nam-graphic-special-den-2_50.jpg", width=300>
+# Mã sản phẩm: TSZ878
 
-# <video autoplay loop muted playsinline controls
-#   style="width:100%; max-width:300px; border:none; border-radius:10px; display:block; margin-top:6px;">
-#   <source src="https://media3.coolmate.me/uploads/videos/nguoi-mau-cach-gap-ao-khoac-the-thao-windbreaker.mp4" type="video/mp4">
-#   Trình duyệt của bạn không hỗ trợ video.
-# </video>"""
+# Hoặc bạn có thể tham khảo Combo 3 Áo Thun Nam Thể Thao Coolmate Basics, giá 259.000đ, siêu nhẹ mỏng mát, năng động và thanh lịch, không nhăn nhàu khi giặt.
+# <br><img src="https://n7media.coolmate.me/uploads/September2025/combo-03-ao-the-thao-nam-coolmate-basics-mau-1-1.jpg", width=300><br>
+
+# Bạn thích mẫu nào hay muốn mình tìm kiếm theo tiêu chí nào không?"""
 #     return {'message':res}
 
 

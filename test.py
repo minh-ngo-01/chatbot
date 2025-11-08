@@ -1,20 +1,7 @@
-import re
-
-
-meta_data="""```json
-{"price": {
-"min": 0,
-"max": 200000
-},
-"gender": [
-"Men"
-],
-"shown_product_codes": []}
-```"""
-import re
-import json
-match=re.search(r'{.*}', meta_data, re.DOTALL)
-meta_data=match.group(0)
-
-meta_data=json.loads(meta_data)
-print(meta_data)
+from google import genai
+client=genai.Client(api_key='AIzaSyAYioiyAlQFNZih4qJZdaM6N1xnkF5yj2A')
+response=client.models.generate_content_stream(
+    model="gemini-2.5-flash-lite",
+    contents='Mô tả việt nam')
+for chunk in response:
+    print(chunk.text)

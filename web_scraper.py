@@ -84,7 +84,7 @@ def get_item_info(product_id):
     images={}
     for dict_0 in product['options_value'][0]['options']:
         urls=[]
-        for dict_1 in dict_0['image']:
+        for dict_1 in dict_0['image'][:3]:
             url='https://n7media.coolmate.me/uploads/'+dict_1['src'][7:]
             urls.append(url)
             images[dict_0['title']]=urls

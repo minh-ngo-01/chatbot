@@ -19,31 +19,20 @@ def classify_query(query):
         prev_chat+='\n'
 
     prompt=f"""Đây là tin nhắn hiện tại của khách hàng cùng với lịch sử trò chuyện.
-              Hãy tóm tắt ý định hiện tại của khách hàng.
-              Tóm tắt này sẽ được sử dụng thực hiện việc phân loại ý định là về FAQs, sản phẩm hoặc chủ đề khác.
-              Các tin nhắn trước đó từ cũ tới mới nhất: {prev_chat}
-              Tin nhắn hiện tại: {query}"""
+               Phân loại tin nhắn hiện tại của khách hàng liên quan tới FAQs, sản phẩm hoặc gì khác.
+               Trả về FAQ nếu ý định đó liên quan đến các câu hỏi FAQs.
+               Trả về Product nếu ý định đó liên quan đến sản phẩm.
+               Trả về Other nếu không phải về FAQ hay Product.
+               Các tin nhắn trước đó từ cũ tới mới nhất: {prev_chat}
+               Tin nhắn hiện tại: {query}"""
     # print(prompt)
     client=genai.Client(api_key='AIzaSyAYioiyAlQFNZih4qJZdaM6N1xnkF5yj2A')
     response=client.models.generate_content(
-        model="gemini-2.5-flash",
-        config=types.GenerateContentConfig(
-            thinking_config=types.ThinkingConfig(thinking_budget=0)),
+        model="gemini-2.5-flash-lite",
+        config=types.GenerateContentConfig(system_instruction='Chỉ trả về một chữ FAQ hoặc Product hoặc Other',
+            thinking_config=types.ThinkingConfig(include_thoughts=False),
+            temperature=0),
         contents=prompt)
-    augmented_query=response.text
-    # print(augmented_query)
-
-    response=client.models.generate_content(
-        model="gemini-2.5-flash",
-        contents=f"""Phân loại ý định sau của khách hàng là FAQ, Product hoặc Others.
-                   Trả về FAQ nếu ý định đó liên quan đến các câu hỏi FAQs.
-                   Trả về Product nếu ý định đó liên quan đến sản phẩm.
-                   Trả về Other nếu không phải về FAQ hay Product.
-                   Chỉ trả về 'FAQ, 'Product' hoặc 'Other'. Không gì khác!
-                   Ý định:{augmented_query}""",
-        config=types.GenerateContentConfig(
-            thinking_config=types.ThinkingConfig(thinking_budget=0)
-        ))
     return response.text.strip().replace("'", "")
 
 def query_faq(client, query):
@@ -66,15 +55,13 @@ def query_faq(client, query):
               Các tin nhắn trước đó từ cũ tới mới nhất: {prev_chat}
               Tin nhắn hiện tại: {query}"""
     # print(prompt)
-
+    client=genai.Client(api_key='AIzaSyAYioiyAlQFNZih4qJZdaM6N1xnkF5yj2A')
     response=client.models.generate_content(
-        model="gemini-2.5-flash",
+        model="gemini-2.5-flash-lite",
         config=types.GenerateContentConfig(
-            thinking_config=types.ThinkingConfig(thinking_budget=0),
+            thinking_config=types.ThinkingConfig(include_thoughts=False),
             system_instruction="""Bạn là một trợ lý ảo trò chuyện của cửa hàng quần áo trực tuyến Coolmate. Hãy nói chuyện một cách tự nhiên, như đang trò chuyện với một người bạn.
-                                  Chỉ chào người dùng một lần, ở đầu cuộc trò chuyện.
-                                  Giữ câu trả lời ngắn gọn và hữu ích.
-                                  Nếu người dùng đặt câu hỏi tiếp theo, hãy tiếp tục cuộc trò chuyện mà không lặp lại lời chào hay phần giới thiệu."""),
+                                  Giữ câu trả lời ngắn gọn và hữu ích."""),
         contents=prompt)
     augmented_query=response.text
     # print(augmented_query)
@@ -88,7 +75,7 @@ def query_faq(client, query):
     
     client=genai.Client(api_key='AIzaSyAYioiyAlQFNZih4qJZdaM6N1xnkF5yj2A')
     response=client.models.generate_content(
-        model="gemini-2.5-flash",
+        model="gemini-2.5-flash-lite",
         config=types.GenerateContentConfig(
             thinking_config=types.ThinkingConfig(thinking_budget=0),
             system_instruction="""Bạn là một trợ lý ảo trò chuyện cho cửa hàng quần áo trực tuyến Coolmate. Hãy nói chuyện một cách tự nhiên, như đang trò chuyện với một người bạn.
@@ -104,6 +91,7 @@ def query_faq(client, query):
     
 def query_product(client, query):   
     # client.collections.delete('products')
+    
     if not client.collections.exists('products'):
         products=initialize_products_collection(client)
         urls=[
@@ -145,44 +133,45 @@ def query_product(client, query):
         prev_chat+='\n'
 
     prompt=f"""Đây là tin nhắn hiện tại của khách hàng cùng với lịch sử trò chuyện. 
-               Hãy trả về đoạn văn bản tối ưu nhất để thực hiện semantic search trong bộ dự liệu thông tin sản phẩm.
+               Hãy trả về đoạn văn bản tối ưu nhất để thực hiện semantic search trong bộ dữ liệu thông tin sản phẩm.
                Bạn có thể tự nghĩ ra văn bản mới để tìm cho ra sản phẩm phù hợp nhất.
                Các tin nhắn trước đó từ cũ tới mới nhất: {prev_chat}
-               Tin nhắn hiện tại: {query}"""
+               Tin nhắn hiện tại: {query}."""
     # print(prompt)
 
     response=client.models.generate_content(
-        model="gemini-2.5-flash",
+        model="gemini-2.5-flash-lite",
         config=types.GenerateContentConfig(
             thinking_config=types.ThinkingConfig(thinking_budget=0),
-            system_instruction='Nhiệm vụ của bạn liên quan đến một cửa hàng thời trang online'),
+            system_instruction='Chỉ trả về đoạn văn bản dùng để tìm kiếm, không gì khác!'),
         contents=prompt)
     augmented_query=response.text
     print(augmented_query)
+
     
     prompt=f"""Đây là tin nhắn hiện tại của khách hàng cùng với lịch sử trò chuyện. 
-               Hãy lọc ra các meta data hữu ích liên quan tới giá, giới tính và product_code thông tin những sản phẩm đã gửi khách hàng.
+               Hãy lọc ra các meta data hữu ích liên quan tới giá, giới tính và những mã sản phẩm đã gợi ý cho khách hàng.
                Các tin nhắn trước đó từ cũ tới mới nhất: {prev_chat}
                Tin nhắn hiện tại: {query}
                Mẫu: 
                {{
-              'price': {{'min': 0, 'max': 500000}} trả về 'price': null nếu không đề cập về giá.
-              'gender': ['Men', 'Women'] (possible values in:['Men', 'Women']) nếu không đề cập đến giới tính, trả về null
-              'shown_product_codes': ['JKZ400', 'TT009','SOA102'] product_code gồm 6 kí tự, trả về 'shown_product_codes': null nếu chưa gửi khách hàng thông tin sản phẩm nào.
-              }} 
-              Chỉ trả về nội dung của file JSON, không gì khác!"""
+              'price': {{'min': 0, 'max': "inf"}} 'max':"inf" nếu không đề cập về giá.
+              'gender': ['MALE', 'UNISEX'] (possible values in:['MALE', 'FEMALE', 'UNISEX',]) nếu không đề cập đến giới tính, trả về null
+              'shown_product_codes': ['JKZ400', 'TT009','SOA102'] trả về null nếu cần.
+              }} """
 
     response=client.models.generate_content(
-        model="gemini-2.5-flash",
+        model="gemini-2.5-flash-lite",
         config=types.GenerateContentConfig(
             thinking_config=types.ThinkingConfig(thinking_budget=0),
-            system_instruction='Nhiệm vụ của bạn liên quan đến một cửa hàng thời trang online'),
+            system_instruction='Chỉ trả về JSON, không gì khác!'),
         contents=prompt)
     
     meta_data= response.text    
+
     match=re.search(r'{.*}', meta_data, re.DOTALL)
     meta_data=match.group(0)
-    print(meta_data)
+    # print(meta_data)
     meta_data=json.loads(meta_data)
     print(meta_data)
     
@@ -191,13 +180,14 @@ def query_product(client, query):
     for key, value in meta_data.items():
         if value==None:
             continue
-        elif key=='price':                          
+        elif key=='price' and value['max'] != 'inf':                          
             filters.append(Filter.by_property(key).greater_than(value['min']))
             filters.append(Filter.by_property(key).less_than(value['max']))
+            # print(value['max'])
         elif key=='shown_product_codes':
-            filters.append(Filter.by_property('product_code').contains_none(list(value)))
+            filters.append(Filter.by_property('product_code').contains_none(value))
         elif key=='gender':
-            filters.append(Filter.by_property('gender').contains_any(list(value)))
+            filters.append(Filter.by_property('gender').contains_any(value))
 
     # prompt=f"""Đây là tin nhắn hiện tại của khách hàng cùng lịch sử trò chuyện.
     #           Bạn hãy trả về số lượng sản phẩm nên được lấy thông tin trong vector databse để trả lời khách hàng.
@@ -213,8 +203,9 @@ def query_product(client, query):
     #     contents=prompt)
     # limit=int(response.text)
     # print(limit)
-    filters=[]
+    # filters=[]
     response=products.query.near_text(query=augmented_query, filters=Filter.all_of(filters) if len(filters) != 0 else None, limit=5)
+    
     context=""
     for res in response.objects:
         context+=f"""mã sản phẩm: {res.properties['product_code']},
@@ -232,14 +223,15 @@ def query_product(client, query):
                      hình ảnh: {res.properties['images']},
                      tồn kho theo kích thường và màu: {res.properties['storage']},
                      link sản phẩm:{res.properties['product_url']}/n"""
-    print(context)
+    # print(context)
+
     prompt=f""" Bạn sẽ nhận tin nhắn hiện tại và lịch sử trò chuyện cùng với thông tin chi tiết các sản phẩm liên quan.
                 Các tin nhắn trước đó từ cũ tới mới nhất: {prev_chat}
                 Tin nhắn hiện tại: {query}
                 Thông tin sản phẩm: {context}
                 Không đề cấp đến số lượng hàng tồn.
-                Gắn hình ảnh bằng tag img. Rộng tối đa 300px.
-                Thêm tag <br> khi xuống dòng.
+                Gắn hình ảnh bằng tag <br><img src="http:\\ ..." width=300><br>.
+                Đính kèm mã sản phẩm.
                 Nếu vẫn đang trong một cuộc trò chuyện thì chỉ trả lời, không chào lại."""
     
     response=client.models.generate_content(
@@ -249,24 +241,25 @@ def query_product(client, query):
             system_instruction="""Bạn là một trợ lý ảo trò chuyện cho cửa hàng quần áo trực tuyến Coolmate. Hãy nói chuyện một cách tự nhiên, như đang trò chuyện với một người bạn.
                                   Giữ câu trả lời ngắn gọn và hữu ích."""),
         contents=prompt)
-    
-    prompt=f""" Bạn sẽ nhận được phản hồi chuẩn bị được gửi cho khách hàng, tin nhắn khách hàng vừa gửi cho bạn và lịch sử trò chuyện gần nhất.
-                Các tin nhắn trước đó từ cũ tới mới nhất: {prev_chat}
-                Tin nhắn hiện tại: {query}
-                Phản hồi: {response.text}
-                Hãy kiểm tra xem phản hồi này đã đáp ứng các yêu cầu sau chưa:
-                    - Không đề cấp đến số lượng hàng tồn.
-                    - Đính kèm link hình ảnh bằng tag img, rộng tối đa 300px
-                    - Thêm tag <br> khi xuống dòng.
-                    - Không chào lại nếu vẫn đang trong cuộc trò chuyện.
-                Trả về phản hồi cuối cùng, chỉnh sửa nếu cần thiết"""
-    response=client.models.generate_content(
-        model="gemini-2.5-flash",
-        config=types.GenerateContentConfig(
-            thinking_config=types.ThinkingConfig(thinking_budget=0),
-            system_instruction="""Nhiệm vụ của bạn là đảm bảo câu trả lời cuối cùng đáp ứng yêu cầu."""),
-        contents=prompt)
-    print(response.text)
+
+    # prompt=f""" Bạn sẽ nhận được phản hồi chuẩn bị được gửi cho khách hàng, tin nhắn khách hàng vừa gửi cho bạn và lịch sử trò chuyện gần nhất.
+    #             Các tin nhắn trước đó từ cũ tới mới nhất: {prev_chat}
+    #             Tin nhắn hiện tại: {query}
+    #             Phản hồi: {response.text}
+    #             Hãy kiểm tra xem phản hồi này đã đáp ứng các yêu cầu sau chưa:
+    #                 - Không đề cấp đến số lượng hàng tồn.
+    #                 - Đính kèm link hình ảnh bằng tag img, rộng tối đa 300px
+    #                 - Thêm tag <br> khi xuống dòng.
+    #                 - Không chào lại nếu vẫn đang trong cuộc trò chuyện.
+    #             Trả về phản hồi cuối cùng, chỉnh sửa nếu cần thiết"""
+    # response=client.models.generate_content(
+    #     model="gemini-2.5-flash-lite",
+    #     config=types.GenerateContentConfig(
+    #         thinking_config=types.ThinkingConfig(thinking_budget=0),
+    #         system_instruction="""Nhiệm vụ của bạn là đảm bảo câu trả lời cuối cùng đáp ứng yêu cầu."""),
+    #     contents=prompt)
+    # # print(response.text)
+
     return response.text
 
 
@@ -280,7 +273,7 @@ def query_other(query):
     
     client=genai.Client(api_key='AIzaSyAYioiyAlQFNZih4qJZdaM6N1xnkF5yj2A')
     response=client.models.generate_content(
-        model="gemini-2.5-flash",
+        model="gemini-2.5-flash-lite",
         config=types.GenerateContentConfig(
             thinking_config=types.ThinkingConfig(thinking_budget=0),
             system_instruction="""Bạn là một trợ lý ảo trò chuyện cho cửa hàng quần áo trực tuyến Coolmate. Hãy nói chuyện một cách tự nhiên, như đang trò chuyện với một người bạn.
@@ -292,18 +285,18 @@ def query_other(query):
 
 
 # urls=[         
-#               'https://www.coolmate.me/collection/ao-ba-lo-tank-top-nam',
-#               'https://www.coolmate.me/collection/ao-thun-nam',
-#               'https://www.coolmate.me/collection/ao-nam-choi-the-thao',
-#               'https://www.coolmate.me/collection/ao-polo-nam',
-#               'https://www.coolmate.me/collection/ao-so-mi-nam',
-#               'https://www.coolmate.me/collection/ao-nam-dai-tay',
-#               'https://www.coolmate.me/collection/ao-sweater-len-ni-nam',
-#               'https://www.coolmate.me/collection/ao-khoac-nam',
-#               'https://www.coolmate.me/collection/quan-short-nam',
-#               'https://www.coolmate.me/collection/quan-jogger-nam',
-#               'https://www.coolmate.me/collection/quan-nam-choi-the-thao',
-#               'https://www.coolmate.me/collection/quan-dai-nam',
+#             #   'https://www.coolmate.me/collection/ao-ba-lo-tank-top-nam',
+#             #   'https://www.coolmate.me/collection/ao-thun-nam',
+#             #   'https://www.coolmate.me/collection/ao-nam-choi-the-thao',
+#             #   'https://www.coolmate.me/collection/ao-polo-nam',
+#             #   'https://www.coolmate.me/collection/ao-so-mi-nam',
+#             #   'https://www.coolmate.me/collection/ao-nam-dai-tay',
+#             #   'https://www.coolmate.me/collection/ao-sweater-len-ni-nam',
+#             #   'https://www.coolmate.me/collection/ao-khoac-nam',
+#             #   'https://www.coolmate.me/collection/quan-short-nam',
+#             #   'https://www.coolmate.me/collection/quan-jogger-nam',
+#             #   'https://www.coolmate.me/collection/quan-nam-choi-the-thao',
+#             #   'https://www.coolmate.me/collection/quan-dai-nam',
 #               'https://www.coolmate.me/collection/quan-pants-nam',
 #               'https://www.coolmate.me/collection/quan-jeans-nam',
 #               'https://www.coolmate.me/collection/quan-kaki-nam',
