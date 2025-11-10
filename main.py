@@ -17,7 +17,7 @@ load_dotenv()
 app=FastAPI()
 
 origins = [
-    "https://chatbot-qhxh.onrender.com",  # <-- your deployed frontend
+    os.getenv('FRONTEND_URL'),  # <-- your deployed frontend
     "http://localhost:3000",                   # for local testing
 ]
 app.add_middleware(
