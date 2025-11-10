@@ -1,0 +1,7 @@
+fastapi 
+pydantic
+weaviate-client
+google-genai
+uvicorn
+joblib
+python-dotenv
