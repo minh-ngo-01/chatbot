@@ -16,13 +16,10 @@ from utils import classify_query, query_faq, query_product, query_other, get_pre
 load_dotenv()
 app=FastAPI()
 
-origins = [
-    os.getenv('FRONTEND_URL'),  # <-- your deployed frontend
-    "http://localhost:3000",                   # for local testing
-]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=['*'],
     allow_credentials=True,
     allow_methods=['*'],
     allow_headers=['*'],
