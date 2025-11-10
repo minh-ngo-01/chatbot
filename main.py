@@ -1,19 +1,19 @@
+import os
+import time
+import joblib
+
 import weaviate
 from weaviate.classes.init import Auth
-from utils import classify_query
-from utils import query_faq
-from utils import query_product
-from utils import query_other
 from fastapi import FastAPI
-from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
-import os
+from pydantic import BaseModel
 from dotenv import load_dotenv
-import joblib
-import time
 
+from utils import classify_query, query_faq, query_product, query_other, get_prev_chat
+
+load_dotenv()
 app=FastAPI()
 app.add_middleware(
     CORSMiddleware,
@@ -82,7 +82,6 @@ def add_product(product: Product):
 
 @app.post('/chat')
 def answer(question: Question):
-    load_dotenv()
     weaviate_url=os.getenv('WEAVIATE_URL')
     weaviate_api_key=os.getenv('WEAVIATE_API_KEY')
     try:
@@ -90,30 +89,32 @@ def answer(question: Question):
     except:
         chat_history=[]
         joblib.dump(chat_history, 'chat_history.joblib')
+    prev_chat=get_prev_chat()
+    # print(prev_chat)
     with weaviate.connect_to_weaviate_cloud(
     cluster_url=weaviate_url,
     auth_credentials=Auth.api_key(weaviate_api_key)
     ) as client:
-        time0=time.time()
         query=question.query
-        query_type=classify_query(query)
-        time1=time.time()
-        print(time1-time0)
+        query_type=classify_query(query, prev_chat)
         print(query_type)
         if query_type=='FAQ':
-            res=query_faq(client, query)
+            res=query_faq(client, query, prev_chat)
         elif query_type=='Product':
-            res=query_product(client, query)
+            res=query_product(client, query, prev_chat)
         else:
-            res=query_other(query)
-              
-        
-        with open('text.txt', 'w', encoding='utf-8') as f:
-            f.write(res)
+            res=query_other(query, prev_chat)
+        # with open('text.txt', 'w', encoding='utf-8') as f:
+        #     f.write(res)
         chat_history.append({'time': time.asctime(), 'customer':query, 'bot':res})
         joblib.dump(chat_history, 'chat_history.joblib')
         return {'message':res}
     
+@app.get('/')
+def root():
+    return {'message':'FastAPI chatbot backend running!'}
+
+        
 # @app.post('/chat')
 # def answer():
 #     res="""Okie bạn! Mình gợi ý thêm mẫu Áo Thun Chạy Bộ Graphic Special nhé, đây là dòng sản phẩm chuyên chạy bộ cho nam, mang lại sự thoải mái, thoáng mát với chất liệu vải nhẹ, được xử lý hoàn thiện vải Quick-Dry thoát mồ hôi nhanh giúp bạn luôn khô ráo trên đường chạy. Giá chỉ 159.000đ thôi nè.
@@ -124,10 +125,4 @@ def answer(question: Question):
 # <br><img src="https://n7media.coolmate.me/uploads/September2025/combo-03-ao-the-thao-nam-coolmate-basics-mau-1-1.jpg", width=300><br>
 
 # Bạn thích mẫu nào hay muốn mình tìm kiếm theo tiêu chí nào không?"""
-#     return {'message':res}
-
-
-
-@app.get('/')
-def root():
-    return {'message':'FastAPI chatbot backend running!'}
+#     return {'message':res}        

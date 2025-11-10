@@ -10,8 +10,9 @@
     body {
       font-family: Arial, sans-serif;
       margin: 40px;
-      max-width: 1200px;
+      max-width: 800px;
     }
+
     #chatbox {
       border: 1px solid #ccc;
       padding: 10px;
@@ -19,9 +20,70 @@
       overflow-y: auto;
       margin-bottom: 10px;
       background-color: #fafafa;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
     }
-    .user { color: #007bff; }
-    .bot { color: #0a790a; }
+
+    .message {
+  max-width: 80%;
+  border-radius: 12px;
+  word-wrap: break-word;
+  padding: 8px 12px;
+}
+
+.user {
+  align-self: flex-end;
+  background-color: #007bff;
+  color: white;
+  border-bottom-right-radius: 0;
+}
+
+.bot {
+  align-self: flex-start;
+  background-color: #e1f3e1;
+  color: #0a790a;
+  border-bottom-left-radius: 0;
+}
+
+/* NEW FIX BELOW */
+.bot img {
+  display: block;
+  margin: 8px 0;
+  border-radius: 10px;
+  max-width: 100%;
+  height: auto;
+}
+
+.bot p {
+  margin: 6px 0;
+  line-height: 1.5;
+}
+
+.bot br {
+  display: none; /* optional: remove excessive <br> spacing */
+}
+
+    .sender-label {
+      font-size: 0.8em;
+      opacity: 0.7;
+      margin-bottom: 2px;
+    }
+
+    #input-area {
+      display: flex;
+      gap: 8px;
+    }
+
+    #userInput {
+      flex: 1;
+      padding: 8px;
+    }
+
+    button {
+      padding: 8px 16px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -29,36 +91,38 @@
 
   <div id="chatbox"></div>
 
-  <input id="userInput" type="text" placeholder="Type a message..." style="width: 80%;" />
-  <button id="sendButton">Send</button>
+  <div id="input-area">
+    <input id="userInput" type="text" placeholder="Type a message..." />
+    <button id="sendButton">Send</button>
+  </div>
 
   <script>
     const input = document.getElementById("userInput");
     const chatbox = document.getElementById("chatbox");
     const sendButton = document.getElementById("sendButton");
 
-    // Press Enter to send
-    input.addEventListener("keydown", function(event) {
+    input.addEventListener("keydown", function (event) {
       if (event.key === "Enter") {
         event.preventDefault();
         sendMessage();
       }
     });
 
-    // Also allow click on Send button
     sendButton.addEventListener("click", sendMessage);
 
     async function sendMessage() {
       const message = input.value.trim();
       if (!message) return;
 
-      // Show user message
-      chatbox.innerHTML += `<p class="user"><b>You:</b> ${message}</p>`;
+      // Display user message
+      const userMsg = document.createElement("div");
+      userMsg.classList.add("message", "user");
+      userMsg.innerHTML = `<div>${message}</div>`;
+      chatbox.appendChild(userMsg);
 
-      // ✅ Immediately clear the input box (before waiting for backend)
       input.value = "";
 
-      // Send message to FastAPI backend
+      // Send to backend
       try {
         const response = await fetch("http://127.0.0.1:8000/chat", {
           method: "POST",
@@ -68,14 +132,19 @@
 
         const data = await response.json();
 
-        // Parse Markdown using marked.js
-        const botHTML = marked.parse(data.message || "");
-        chatbox.innerHTML += `<div class="bot"><b>Bot:</b><br>${botHTML}</div>`;
+        const botMsg = document.createElement("div");
+        botMsg.classList.add("message", "bot");
+        botMsg.innerHTML = marked.parse(data.message || "");
+        chatbox.appendChild(botMsg);
       } catch (error) {
-        chatbox.innerHTML += `<p style="color:red;"><b>Error:</b> ${error}</p>`;
+        const errMsg = document.createElement("div");
+        errMsg.classList.add("message", "bot");
+        errMsg.style.backgroundColor = "#f8d7da";
+        errMsg.style.color = "#721c24";
+        errMsg.textContent = "Error: " + error;
+        chatbox.appendChild(errMsg);
       }
 
-      // Scroll to bottom
       chatbox.scrollTop = chatbox.scrollHeight;
     }
   </script>

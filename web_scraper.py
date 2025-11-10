@@ -41,15 +41,20 @@ def get_item_info(product_id):
     HEADERS={'User-Agent': 'my-clothes-scraper/1.0'}
     url = f"https://www.coolmate.me/api/proxy/products?ids={product_id}"
     product = requests.get(url, headers=HEADERS, timeout=5).json()["data"][0]
-    with open('json.json', 'w', encoding='utf-8') as f:
-        json.dump(product, f, ensure_ascii=False, indent=2)
+    # with open('json.json', 'w', encoding='utf-8') as f:
+    #     json.dump(product, f, ensure_ascii=False, indent=2)
     product_id=product['id']
     try:
         product_code=product['spu']
     except:
         product_code=""
     name=product['title']
-    short_desc=product['short_desc']
+
+    soup=BeautifulSoup(product['body_html'], 'html.parser')
+    raw_text=soup.get_text()
+    text=re.sub(r'(.*Xem thêm:.*)',"", raw_text)
+    desc=re.sub(r'\n+',"\n", text).strip()
+
     price=product['regular_price']
     gender=product['gender_type']
     try:
@@ -100,7 +105,7 @@ def get_item_info(product_id):
     return {'product_id':product_id,
             'product_code':product_code,
             'name':name,
-            'short_desc':short_desc,
+            'desc':desc,
             'price':price,
             'gender':gender,
             'highlights':highlights,
@@ -164,3 +169,9 @@ def get_faqs_data():
 #         urls.append(url)
 #     images[dict_0['title']]=urls
 # print(images)
+
+# HEADERS={'User-Agent': 'my-clothes-scraper/1.0'}
+# url = f"https://www.coolmate.me/api/proxy/products?ids=664340520764e2769f636943"
+# product = requests.get(url, headers=HEADERS, timeout=5).json()["data"][0]
+# with open('json.json', 'w', encoding='utf-8') as f:
+#     json.dump(product, f, ensure_ascii=False, indent=2)
