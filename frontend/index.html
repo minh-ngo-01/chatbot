@@ -2,21 +2,20 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Simple Chatbot</title>
-
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-
   <style>
     body {
       font-family: Arial, sans-serif;
-      margin: 40px;
-      max-width: 800px;
+      margin: 10px; /* smaller margin for mobile */
+      max-width: 100%;
     }
 
     #chatbox {
       border: 1px solid #ccc;
       padding: 10px;
-      height: 400px;
+      height: 60vh; /* use viewport height instead of fixed px */
       overflow-y: auto;
       margin-bottom: 10px;
       background-color: #fafafa;
@@ -26,48 +25,37 @@
     }
 
     .message {
-  max-width: 80%;
-  border-radius: 12px;
-  word-wrap: break-word;
-  padding: 8px 12px;
-}
+      max-width: 80%;
+      border-radius: 12px;
+      word-wrap: break-word;
+      padding: 8px 12px;
+    }
 
-.user {
-  align-self: flex-end;
-  background-color: #007bff;
-  color: white;
-  border-bottom-right-radius: 0;
-}
+    .user {
+      align-self: flex-end;
+      background-color: #007bff;
+      color: white;
+      border-bottom-right-radius: 0;
+    }
 
-.bot {
-  align-self: flex-start;
-  background-color: #e1f3e1;
-  color: #0a790a;
-  border-bottom-left-radius: 0;
-}
+    .bot {
+      align-self: flex-start;
+      background-color: #e1f3e1;
+      color: #0a790a;
+      border-bottom-left-radius: 0;
+    }
 
-/* NEW FIX BELOW */
-.bot img {
-  display: block;
-  margin: 8px 0;
-  border-radius: 10px;
-  max-width: 100%;
-  height: auto;
-}
+    .bot img {
+      display: block;
+      margin: 8px 0;
+      border-radius: 10px;
+      max-width: 100%;
+      height: auto;
+    }
 
-.bot p {
-  margin: 6px 0;
-  line-height: 1.5;
-}
-
-.bot br {
-  display: none; /* optional: remove excessive <br> spacing */
-}
-
-    .sender-label {
-      font-size: 0.8em;
-      opacity: 0.7;
-      margin-bottom: 2px;
+    .bot p {
+      margin: 6px 0;
+      line-height: 1.5;
     }
 
     #input-area {
@@ -84,8 +72,38 @@
       padding: 8px 16px;
       cursor: pointer;
     }
+
+    /* MOBILE ADJUSTMENTS */
+    @media screen and (max-width: 480px) {
+      body {
+        margin: 5px;
+      }
+
+      .message {
+        max-width: 90%;
+        padding: 6px 10px;
+        font-size: 0.95em;
+      }
+
+      #input-area {
+        flex-direction: column;
+      }
+
+      #userInput, button {
+        width: 100%;
+      }
+
+      button {
+        margin-top: 5px;
+      }
+
+      #chatbox {
+        height: 70vh;
+      }
+    }
   </style>
 </head>
+
 <body>
   <h2>Simple Chatbot</h2>
 
