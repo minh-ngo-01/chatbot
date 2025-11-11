@@ -10,6 +10,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from dotenv import load_dotenv
+from typing import List
 
 from utils import classify_query, query_faq, query_product, query_other, get_prev_chat
 
@@ -36,8 +37,16 @@ def serve_add_product_page():
     return FileResponse(os.path.join('frontend', 'input.html'))
 
 
-class Question(BaseModel):
+class Message(BaseModel):
+    time: str
+    user: str
+    bot: str
+    
+
+class chatRequest(BaseModel):
     query: str
+    chat_history: List[Message]
+
 class Product(BaseModel):
     gender: str
     masterCategory: str
@@ -81,23 +90,18 @@ def add_product(product: Product):
         except Exception as e:
             return {'error': str(e)}
         
-
 @app.post('/chat')
-def answer(question: Question):
+def answer(chatRequest: chatRequest):
     weaviate_url=os.getenv('WEAVIATE_URL')
     weaviate_api_key=os.getenv('WEAVIATE_API_KEY')
-    try:
-        chat_history=joblib.load('chat_history.joblib')
-    except:
-        chat_history=[]
-        joblib.dump(chat_history, 'chat_history.joblib')
-    prev_chat=get_prev_chat()
-    # print(prev_chat)
+
+    prev_chat='\n'.join(map(str,chatRequest.chat_history))
+    print(prev_chat)
     with weaviate.connect_to_weaviate_cloud(
     cluster_url=weaviate_url,
     auth_credentials=Auth.api_key(weaviate_api_key)
     ) as client:
-        query=question.query
+        query=chatRequest.query
         query_type=classify_query(query, prev_chat)
         print(query_type)
         if query_type=='FAQ':
@@ -106,25 +110,22 @@ def answer(question: Question):
             res=query_product(client, query, prev_chat)
         else:
             res=query_other(query, prev_chat)
-        # with open('text.txt', 'w', encoding='utf-8') as f:
-        #     f.write(res)
-        chat_history.append({'time': time.asctime(), 'customer':query, 'bot':res})
-        joblib.dump(chat_history, 'chat_history.joblib')
+        with open('text.txt', 'w', encoding='utf-8') as f:
+            f.write(res)
+        # chat_history.append({'time': time.asctime(), 'customer':query, 'bot':res})
+        # joblib.dump(chat_history, 'chat_history.joblib')
         return {'message':res}
     
-@app.get('/')
-def root():
-    return {'message':'FastAPI chatbot backend running!'}
+# @app.post('/chat')
+# def answer(chatRequest: chatRequest):
+#         return {'message':"""Ok bạn, mình có thêm mẫu Quần Jogger Nam Daily Wear này nha, giá 179.000đ. Chất liệu Polyester thoáng mát, co giãn 4 chiều, kháng khuẩn và còn chống nước, chống tia UV nữa đó.
+# <img src="https://n7media.coolmate.me/uploads/December2024/quan-joggers-the-thao-daily-wear-den-1.jpg" width=300>
+# <img src="https://n7media.coolmate.me/uploads/December2024/quan-joggers-the-thao-daily-wear-den-2.jpg" width=300>
+# <img src="https://n7media.coolmate.me/uploads/December2024/quan-joggers-the-thao-daily-wear-den-3.jpg" width=300>
+
+# Mã sản phẩm: JGZ865
+
+# Bạn xem thử nha!"""}
 
         
-# @app.post('/chat')
-# def answer():
-#     res="""Okie bạn! Mình gợi ý thêm mẫu Áo Thun Chạy Bộ Graphic Special nhé, đây là dòng sản phẩm chuyên chạy bộ cho nam, mang lại sự thoải mái, thoáng mát với chất liệu vải nhẹ, được xử lý hoàn thiện vải Quick-Dry thoát mồ hôi nhanh giúp bạn luôn khô ráo trên đường chạy. Giá chỉ 159.000đ thôi nè.
-# <img src="https://n7media.coolmate.me/uploads/July2025/ao-thun-chay-bo-nam-graphic-special-den-2_50.jpg", width=300>
-# Mã sản phẩm: TSZ878
 
-# Hoặc bạn có thể tham khảo Combo 3 Áo Thun Nam Thể Thao Coolmate Basics, giá 259.000đ, siêu nhẹ mỏng mát, năng động và thanh lịch, không nhăn nhàu khi giặt.
-# <br><img src="https://n7media.coolmate.me/uploads/September2025/combo-03-ao-the-thao-nam-coolmate-basics-mau-1-1.jpg", width=300><br>
-
-# Bạn thích mẫu nào hay muốn mình tìm kiếm theo tiêu chí nào không?"""
-#     return {'message':res}        

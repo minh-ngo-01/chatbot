@@ -154,14 +154,14 @@ def query_product(client, query, prev_chat):
                      mô tả: {res.properties['desc']},
                      tồn kho theo kích thước và màu: {res.properties['storage']},
                      link sản phẩm:{res.properties['product_url']}/n"""
-    # print(context)
+    print(context)
 
     prompt=f""" Bạn sẽ nhận tin nhắn hiện tại và lịch sử trò chuyện cùng với thông tin chi tiết các sản phẩm liên quan.
                 Các tin nhắn trước đó từ cũ tới mới nhất: {prev_chat}
                 Tin nhắn hiện tại: {query}
                 Thông tin sản phẩm: {context}
                 Không đề cấp đến số lượng hàng tồn.
-                Gắn hình ảnh bằng tag <br><img src="http:\\ ..." width=300><br>.
+                Gắn hình ảnh bằng tag <img src="http:\\ ..." width=300>.
                 Đính kèm mã sản phẩm.
                 Nếu vẫn đang trong một cuộc trò chuyện thì chỉ trả lời, không chào lại."""
     system_instruction="""Bạn là một trợ lý ảo trò chuyện cho cửa hàng quần áo trực tuyến Coolmate. Hãy nói chuyện một cách tự nhiên, như đang trò chuyện với một người bạn.
