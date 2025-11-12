@@ -73,9 +73,7 @@ def query_faq(client, query, prev_chat):
 
 def get_metadata(query, prev_chat):
     prompt=f"""Đây là tin nhắn hiện tại của khách hàng cùng với lịch sử trò chuyện. 
-            Hãy lọc ra các meta data hữu ích liên quan tới giá, giới tính, 
-            và các mã sản phẩm đã được gợi ý trước đó (đã hiển thị cho khách hàng), 
-            **nhưng chỉ đối với loại sản phẩm mà khách hàng hiện đang muốn xem thêm.**
+            Hãy lọc ra các meta data hữu ích liên quan tới giá, giới tính.
 
             Các tin nhắn trước đó từ cũ tới mới nhất: {prev_chat}
             Tin nhắn hiện tại: {query}
@@ -84,18 +82,15 @@ def get_metadata(query, prev_chat):
             {{
             'price': {{'min': 0, 'max': "inf"}},     # 'max': "inf" nếu khách hàng không đề cập đến giá
             'gender': ['MALE', 'UNISEX'],          # list, possible values: ['MALE', 'FEMALE', 'UNISEX'], hoặc null nếu không nhắc đến
-            'shown_product_codes': ['JKZ400', 'TT009', 'SOA102']  # list, trả về null nếu không có
             }}
 
-
-
-            **Chú ý:**
-            - 'shown_product_codes' là danh sách **các mã sản phẩm đã từng được gợi ý hoặc hiển thị cho khách hàng**, 
-            **và thuộc cùng loại sản phẩm mà khách hàng hiện đang muốn xem thêm**.
-            - Mục đích là để **loại trừ các sản phẩm này khỏi danh sách gợi ý tiếp theo**, 
-            tránh gợi lại các mẫu đã từng hiển thị.
-            - Không bao gồm các mã sản phẩm khác loại hoặc chưa từng được gợi ý.
-            - Nếu không xác định được loại sản phẩm mà khách hàng muốn xem thêm, hoặc không có sản phẩm trùng loại, trả về null.
+            # **Chú ý:**
+            # - 'shown_product_codes' là danh sách **các mã sản phẩm đã từng được gợi ý hoặc hiển thị cho khách hàng**, 
+            # **và thuộc cùng loại sản phẩm mà khách hàng hiện đang muốn xem thêm**.
+            # - Mục đích là để **loại trừ các sản phẩm này khỏi danh sách gợi ý tiếp theo**, 
+            # tránh gợi lại các mẫu đã từng hiển thị.
+            # - Không bao gồm các mã sản phẩm khác loại hoặc chưa từng được gợi ý.
+            # - Nếu không xác định được loại sản phẩm mà khách hàng muốn xem thêm, hoặc không có sản phẩm trùng loại, trả về null.
 """ 
     system_instruction='Chỉ trả về JSON, không gì khác!'
     meta_data=call_llm(prompt, system_instruction, model='gemini-2.5-flash')
