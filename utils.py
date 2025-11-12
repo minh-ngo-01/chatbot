@@ -98,7 +98,7 @@ def get_metadata(query, prev_chat):
             - Nếu không xác định được loại sản phẩm mà khách hàng muốn xem thêm, hoặc không có sản phẩm trùng loại, trả về null.
 """ 
     system_instruction='Chỉ trả về JSON, không gì khác!'
-    meta_data=call_llm(prompt, system_instruction)
+    meta_data=call_llm(prompt, system_instruction, model='gimini-2.5-flash')
     match=re.search(r'{.*}', meta_data, re.DOTALL)
     meta_data=match.group(0)
 
