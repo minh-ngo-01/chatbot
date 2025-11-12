@@ -190,7 +190,7 @@ def query_product(client, query, prev_chat):
                 Tin nhắn hiện tại: {query}
                 Thông tin sản phẩm: {context}
                 Không đề cấp đến số lượng hàng tồn.
-                Gắn hình ảnh bằng tag <br><img src="http:\\ ..." width=300><br>.
+                Gắn hình ảnh bằng tag <img src="http:\\ ..." width=300>.
                 Đính kèm mã sản phẩm."""
     system_instruction="""Bạn là một trợ lý ảo trò chuyện cho cửa hàng quần áo trực tuyến Coolmate. Hãy nói chuyện một cách tự nhiên, như đang trò chuyện với một người bạn.
                           Giữ câu trả lời ngắn gọn và hữu ích.
