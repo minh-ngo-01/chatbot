@@ -47,7 +47,8 @@ def query_faq(client, query, prev_chat):
               Các tin nhắn trước đó từ cũ tới mới nhất: {prev_chat}
               Tin nhắn hiện tại: {query}"""
     system_instruction="""Bạn là một trợ lý ảo trò chuyện của cửa hàng quần áo trực tuyến Coolmate. Hãy nói chuyện một cách tự nhiên, như đang trò chuyện với một người bạn.
-                                  Giữ câu trả lời ngắn gọn và hữu ích."""
+                                  Giữ câu trả lời ngắn gọn và hữu ích.
+                                  Nếu đang trong cuộc trò chuyện rồi thì không chào lại."""
     # print(prompt)
     
     response=call_llm(prompt, system_instruction)
@@ -190,10 +191,10 @@ def query_product(client, query, prev_chat):
                 Thông tin sản phẩm: {context}
                 Không đề cấp đến số lượng hàng tồn.
                 Gắn hình ảnh bằng tag <br><img src="http:\\ ..." width=300><br>.
-                Đính kèm mã sản phẩm.
-                Nếu vẫn đang trong một cuộc trò chuyện thì chỉ trả lời, không chào lại."""
+                Đính kèm mã sản phẩm."""
     system_instruction="""Bạn là một trợ lý ảo trò chuyện cho cửa hàng quần áo trực tuyến Coolmate. Hãy nói chuyện một cách tự nhiên, như đang trò chuyện với một người bạn.
-                                  Giữ câu trả lời ngắn gọn và hữu ích."""
+                          Giữ câu trả lời ngắn gọn và hữu ích.
+                          Nếu đang trong cuộc trò chuyện rồi thì không chào lại."""
 
     response=call_llm(prompt, system_instruction, temperature=1)
     return response
@@ -205,7 +206,8 @@ def query_other(query, prev_chat):
               Tin nhắn hiện tại: {query}"""
     
     system_instruction="""Bạn là một trợ lý ảo trò chuyện cho cửa hàng quần áo trực tuyến Coolmate. Hãy nói chuyện một cách tự nhiên, như đang trò chuyện với một người bạn.
-                          Giữ câu trả lời ngắn gọn và hữu ích."""
+                          Giữ câu trả lời ngắn gọn và hữu ích.
+                          Nếu đang trong cuộc trò chuyện rồi thì không chào lại."""
     # print(prompt)
     response=call_llm(prompt, system_instruction)
     return response
