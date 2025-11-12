@@ -47,8 +47,7 @@ def query_faq(client, query, prev_chat):
               Các tin nhắn trước đó từ cũ tới mới nhất: {prev_chat}
               Tin nhắn hiện tại: {query}"""
     system_instruction="""Bạn là một trợ lý ảo trò chuyện của cửa hàng quần áo trực tuyến Coolmate. Hãy nói chuyện một cách tự nhiên, như đang trò chuyện với một người bạn.
-                                  Giữ câu trả lời ngắn gọn và hữu ích.
-                                  Nếu đang trong cuộc trò chuyện rồi thì không chào lại."""
+                                  Giữ câu trả lời ngắn gọn và hữu ích."""
     # print(prompt)
     
     response=call_llm(prompt, system_instruction)
@@ -84,9 +83,11 @@ def get_metadata(query, prev_chat):
             Trả về kết quả theo mẫu:
             {{
             'price': {{'min': 0, 'max': "inf"}},     # 'max': "inf" nếu khách hàng không đề cập đến giá
-            'gender': ['MALE', 'UNISEX'],          # possible values: ['MALE', 'FEMALE', 'UNISEX'], hoặc null nếu không nhắc đến
-            'shown_product_codes': ['JKZ400', 'TT009', 'SOA102']  # hoặc null nếu không có
+            'gender': ['MALE', 'UNISEX'],          # list, possible values: ['MALE', 'FEMALE', 'UNISEX'], hoặc null nếu không nhắc đến
+            'shown_product_codes': ['JKZ400', 'TT009', 'SOA102']  # list, trả về null nếu không có
             }}
+
+
 
             **Chú ý:**
             - 'shown_product_codes' là danh sách **các mã sản phẩm đã từng được gợi ý hoặc hiển thị cho khách hàng**, 
@@ -162,27 +163,26 @@ def query_product(client, query, prev_chat):
 
     filters=build_filters(meta_data)
     # filters=[]
-    limit=get_litmit(query, prev_chat)
+    # limit=get_litmit(query, prev_chat)
+    context=""    
+    response=products.query.near_text(query=augmented_query, filters=Filter.all_of(filters) if len(filters) != 0 else None, limit=3)
     context=""
-    if limit!=0:        
-        response=products.query.near_text(query=augmented_query, filters=Filter.all_of(filters) if len(filters) != 0 else None, limit=limit)
-        context=""
-        for res in response.objects:
-            context+=f"""mã sản phẩm: {res.properties['product_code']},
-                        tên sản phẩm:{res.properties['name']},                     
-                        giá: {res.properties['price']},
-                        giới tính: {res.properties['gender']},
-                        nổi bât: {res.properties['highlights']},
-                        công nghệ: {res.properties['technology']},
-                        vật liệu: {res.properties['material']},
-                        kiểu dáng: {res.properties['style']},
-                        phù hợp: {res.properties['usage']},
-                        tính năng: {res.properties['features']},
-                        bảo quản: {res.properties['care']},
-                        hình ảnh: {res.properties['images']},
-                        mô tả: {res.properties['desc']},
-                        tồn kho theo kích thước và màu: {res.properties['storage']},
-                        link sản phẩm:{res.properties['product_url']}/n"""
+    for res in response.objects:
+        context+=f"""mã sản phẩm: {res.properties['product_code']},
+                    tên sản phẩm:{res.properties['name']},                     
+                    giá: {res.properties['price']},
+                    giới tính: {res.properties['gender']},
+                    nổi bât: {res.properties['highlights']},
+                    công nghệ: {res.properties['technology']},
+                    vật liệu: {res.properties['material']},
+                    kiểu dáng: {res.properties['style']},
+                    phù hợp: {res.properties['usage']},
+                    tính năng: {res.properties['features']},
+                    bảo quản: {res.properties['care']},
+                    hình ảnh: {res.properties['images']},
+                    mô tả: {res.properties['desc']},
+                    tồn kho theo kích thước và màu: {res.properties['storage']},
+                    link sản phẩm:{res.properties['product_url']}/n"""
     # print(context)
 
     prompt=f""" Bạn sẽ nhận tin nhắn hiện tại và lịch sử trò chuyện cùng với thông tin chi tiết các sản phẩm liên quan.
@@ -190,11 +190,11 @@ def query_product(client, query, prev_chat):
                 Tin nhắn hiện tại: {query}
                 Thông tin sản phẩm: {context}
                 Không đề cấp đến số lượng hàng tồn.
-                Gắn hình ảnh bằng tag <img src="http:\\ ..." width=300>.
-                Đính kèm mã sản phẩm."""
+                Gắn hình ảnh bằng tag <br><img src="http:\\ ..." width=300><br>.
+                Đính kèm mã sản phẩm.
+                Nếu vẫn đang trong một cuộc trò chuyện thì chỉ trả lời, không chào lại."""
     system_instruction="""Bạn là một trợ lý ảo trò chuyện cho cửa hàng quần áo trực tuyến Coolmate. Hãy nói chuyện một cách tự nhiên, như đang trò chuyện với một người bạn.
-                          Giữ câu trả lời ngắn gọn và hữu ích.
-                          Nếu đang trong cuộc trò chuyện rồi thì không chào lại."""
+                                  Giữ câu trả lời ngắn gọn và hữu ích."""
 
     response=call_llm(prompt, system_instruction, temperature=1)
     return response
@@ -206,8 +206,7 @@ def query_other(query, prev_chat):
               Tin nhắn hiện tại: {query}"""
     
     system_instruction="""Bạn là một trợ lý ảo trò chuyện cho cửa hàng quần áo trực tuyến Coolmate. Hãy nói chuyện một cách tự nhiên, như đang trò chuyện với một người bạn.
-                          Giữ câu trả lời ngắn gọn và hữu ích.
-                          Nếu đang trong cuộc trò chuyện rồi thì không chào lại."""
+                          Giữ câu trả lời ngắn gọn và hữu ích."""
     # print(prompt)
     response=call_llm(prompt, system_instruction)
     return response
