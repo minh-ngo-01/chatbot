@@ -118,12 +118,14 @@ def build_filters(meta_data):
         elif key=='gender':
             filters.append(Filter.by_property('gender').contains_any(value))
     return filters
+
 def get_litmit(query, prev_chat):
     prompt=f"""Đây là tin nhắn hiện tại của khách hàng cùng lịch sử trò chuyện.
-            Bạn hãy trả về số lượng sản phẩm nên được lấy thông tin trong vector databse để trả lời khách hàng.
             Các tin nhắn trước đó từ cũ tới mới nhất: {prev_chat}
-            Tin nhắn hiện tại: {query}"""
-    system_instruction='Chỉ trả về số tự nhiên trong khoảng từ 1 tới 20'
+            Tin nhắn hiện tại: {query}
+            Bạn hãy trả về số lượng sản phẩm nên được lấy thông tin trong vector databse để trả lời khách hàng.
+            Trả về 0 nếu không cần lấy thêm thông tin"""
+    system_instruction='Chỉ trả về số tự nhiên trong khoảng từ 0 tới 20'
     response=call_llm(prompt, system_instruction)
     print(response)
     return int(response)
@@ -152,35 +154,35 @@ def query_product(client, query, prev_chat):
     augmented_query=call_llm(prompt, system_instruction, temperature=1)
     if '?' in augmented_query:
         return augmented_query
-    # print(augmented_query)
+    print(augmented_query)
     
     meta_data=get_metadata(query, prev_chat)
     print(meta_data)
 
     filters=build_filters(meta_data)
-    print(filters)
     # filters=[]
     limit=get_litmit(query, prev_chat)
-    response=products.query.near_text(query=augmented_query, filters=Filter.all_of(filters) if len(filters) != 0 else None, limit=limit)
-    
     context=""
-    for res in response.objects:
-        context+=f"""mã sản phẩm: {res.properties['product_code']},
-                     tên sản phẩm:{res.properties['name']},                     
-                     giá: {res.properties['price']},
-                     giới tính: {res.properties['gender']},
-                     nổi bât: {res.properties['highlights']},
-                     công nghệ: {res.properties['technology']},
-                     vật liệu: {res.properties['material']},
-                     kiểu dáng: {res.properties['style']},
-                     phù hợp: {res.properties['usage']},
-                     tính năng: {res.properties['features']},
-                     bảo quản: {res.properties['care']},
-                     hình ảnh: {res.properties['images']},
-                     mô tả: {res.properties['desc']},
-                     tồn kho theo kích thước và màu: {res.properties['storage']},
-                     link sản phẩm:{res.properties['product_url']}/n"""
-    print(context)
+    if limit!=0:        
+        response=products.query.near_text(query=augmented_query, filters=Filter.all_of(filters) if len(filters) != 0 else None, limit=limit)
+        context=""
+        for res in response.objects:
+            context+=f"""mã sản phẩm: {res.properties['product_code']},
+                        tên sản phẩm:{res.properties['name']},                     
+                        giá: {res.properties['price']},
+                        giới tính: {res.properties['gender']},
+                        nổi bât: {res.properties['highlights']},
+                        công nghệ: {res.properties['technology']},
+                        vật liệu: {res.properties['material']},
+                        kiểu dáng: {res.properties['style']},
+                        phù hợp: {res.properties['usage']},
+                        tính năng: {res.properties['features']},
+                        bảo quản: {res.properties['care']},
+                        hình ảnh: {res.properties['images']},
+                        mô tả: {res.properties['desc']},
+                        tồn kho theo kích thước và màu: {res.properties['storage']},
+                        link sản phẩm:{res.properties['product_url']}/n"""
+    # print(context)
 
     prompt=f""" Bạn sẽ nhận tin nhắn hiện tại và lịch sử trò chuyện cùng với thông tin chi tiết các sản phẩm liên quan.
                 Các tin nhắn trước đó từ cũ tới mới nhất: {prev_chat}
@@ -203,7 +205,7 @@ def query_other(query, prev_chat):
               Tin nhắn hiện tại: {query}"""
     
     system_instruction="""Bạn là một trợ lý ảo trò chuyện cho cửa hàng quần áo trực tuyến Coolmate. Hãy nói chuyện một cách tự nhiên, như đang trò chuyện với một người bạn.
-                                  Giữ câu trả lời ngắn gọn và hữu ích."""
+                          Giữ câu trả lời ngắn gọn và hữu ích."""
     # print(prompt)
     response=call_llm(prompt, system_instruction)
     return response
