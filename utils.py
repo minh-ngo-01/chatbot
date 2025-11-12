@@ -73,23 +73,35 @@ def query_faq(client, query, prev_chat):
 
 def get_metadata(query, prev_chat):
     prompt=f"""Đây là tin nhắn hiện tại của khách hàng cùng với lịch sử trò chuyện. 
-               Hãy lọc ra các meta data hữu ích liên quan tới giá, giới tính và những mã sản phẩm đã gợi ý cho khách hàng.
-               Các tin nhắn trước đó từ cũ tới mới nhất: {prev_chat}
-               Tin nhắn hiện tại: {query}
-               Mẫu: 
-               {{
-              'price':{{'min': 0, 'max': "inf"}}, 'max':"inf" nếu không đề cập về giá.
-              'gender':['MALE', 'UNISEX'], (possible values in:['MALE', 'FEMALE', 'UNISEX',]) nếu không đề cập đến giới tính, trả về null
-              'shown_product_codes':['JKZ400', 'TT009','SOA102'] trả về null nếu cần.
-              }} 
-               Kiểu giá trị của gender và shown_product_codes là list"""
+            Hãy lọc ra các meta data hữu ích liên quan tới giá, giới tính, 
+            và các mã sản phẩm đã được gợi ý trước đó (đã hiển thị cho khách hàng), 
+            **nhưng chỉ đối với loại sản phẩm mà khách hàng hiện đang muốn xem thêm.**
+
+            Các tin nhắn trước đó từ cũ tới mới nhất: {prev_chat}
+            Tin nhắn hiện tại: {query}
+
+            Trả về kết quả theo mẫu:
+            {{
+            'price': {{'min': 0, 'max': "inf"}},     # 'max': "inf" nếu khách hàng không đề cập đến giá
+            'gender': ['MALE', 'UNISEX'],          # possible values: ['MALE', 'FEMALE', 'UNISEX'], hoặc null nếu không nhắc đến
+            'shown_product_codes': ['JKZ400', 'TT009', 'SOA102']  # hoặc null nếu không có
+            }}
+
+            **Chú ý:**
+            - 'shown_product_codes' là danh sách **các mã sản phẩm đã từng được gợi ý hoặc hiển thị cho khách hàng**, 
+            **và thuộc cùng loại sản phẩm mà khách hàng hiện đang muốn xem thêm**.
+            - Mục đích là để **loại trừ các sản phẩm này khỏi danh sách gợi ý tiếp theo**, 
+            tránh gợi lại các mẫu đã từng hiển thị.
+            - Không bao gồm các mã sản phẩm khác loại hoặc chưa từng được gợi ý.
+            - Nếu không xác định được loại sản phẩm mà khách hàng muốn xem thêm, hoặc không có sản phẩm trùng loại, trả về null.
+""" 
     system_instruction='Chỉ trả về JSON, không gì khác!'
     meta_data=call_llm(prompt, system_instruction)
     match=re.search(r'{.*}', meta_data, re.DOTALL)
     meta_data=match.group(0)
+
     # print(meta_data)
     meta_data=json.loads(meta_data)
-    print(meta_data)
     return meta_data
 
 def build_filters(meta_data):
@@ -107,6 +119,16 @@ def build_filters(meta_data):
             filters.append(Filter.by_property('gender').contains_any(value))
     return filters
 
+def get_litmit(query, prev_chat):
+    prompt=f"""Đây là tin nhắn hiện tại của khách hàng cùng lịch sử trò chuyện.
+            Các tin nhắn trước đó từ cũ tới mới nhất: {prev_chat}
+            Tin nhắn hiện tại: {query}
+            Bạn hãy trả về số lượng sản phẩm nên được lấy thông tin trong vector databse để trả lời khách hàng.
+            Trả về 0 nếu không cần lấy thêm thông tin"""
+    system_instruction='Chỉ trả về số tự nhiên trong khoảng từ 0 tới 20'
+    response=call_llm(prompt, system_instruction)
+    print(response)
+    return int(response)
     
 def query_product(client, query, prev_chat):   
     # client.collections.delete('products')
@@ -128,32 +150,38 @@ def query_product(client, query, prev_chat):
                Hỏi khách hàng thêm thông tin nếu cần thiết.
                """
     # print(prompt)
-    system_instruction='Chỉ trả về đoạn văn bản dùng để tìm kiếm, không gì khác!'
-    augmented_query=call_llm(prompt, system_instruction)
+    system_instruction='Chỉ trả về đoạn văn bản dùng để tìm kiếm hoặc câu hỏi thêm thông tin khách hàng, không gì khác!'
+    augmented_query=call_llm(prompt, system_instruction, temperature=1)
+    if '?' in augmented_query:
+        return augmented_query
     print(augmented_query)
     
     meta_data=get_metadata(query, prev_chat)
-    
+    print(meta_data)
+
     filters=build_filters(meta_data)
-    response=products.query.near_text(query=augmented_query, filters=Filter.all_of(filters) if len(filters) != 0 else None, limit=5)
-    
+    # filters=[]
+    limit=get_litmit(query, prev_chat)
     context=""
-    for res in response.objects:
-        context+=f"""mã sản phẩm: {res.properties['product_code']},
-                     tên sản phẩm:{res.properties['name']},                     
-                     giá: {res.properties['price']},
-                     giới tính: {res.properties['gender']},
-                     nổi bât: {res.properties['highlights']},
-                     công nghệ: {res.properties['technology']},
-                     vật liệu: {res.properties['material']},
-                     kiểu dáng: {res.properties['style']},
-                     phù hợp: {res.properties['usage']},
-                     tính năng: {res.properties['features']},
-                     bảo quản: {res.properties['care']},
-                     hình ảnh: {res.properties['images']},
-                     mô tả: {res.properties['desc']},
-                     tồn kho theo kích thước và màu: {res.properties['storage']},
-                     link sản phẩm:{res.properties['product_url']}/n"""
+    if limit!=0:        
+        response=products.query.near_text(query=augmented_query, filters=Filter.all_of(filters) if len(filters) != 0 else None, limit=limit)
+        context=""
+        for res in response.objects:
+            context+=f"""mã sản phẩm: {res.properties['product_code']},
+                        tên sản phẩm:{res.properties['name']},                     
+                        giá: {res.properties['price']},
+                        giới tính: {res.properties['gender']},
+                        nổi bât: {res.properties['highlights']},
+                        công nghệ: {res.properties['technology']},
+                        vật liệu: {res.properties['material']},
+                        kiểu dáng: {res.properties['style']},
+                        phù hợp: {res.properties['usage']},
+                        tính năng: {res.properties['features']},
+                        bảo quản: {res.properties['care']},
+                        hình ảnh: {res.properties['images']},
+                        mô tả: {res.properties['desc']},
+                        tồn kho theo kích thước và màu: {res.properties['storage']},
+                        link sản phẩm:{res.properties['product_url']}/n"""
     # print(context)
 
     prompt=f""" Bạn sẽ nhận tin nhắn hiện tại và lịch sử trò chuyện cùng với thông tin chi tiết các sản phẩm liên quan.
@@ -177,22 +205,7 @@ def query_other(query, prev_chat):
               Tin nhắn hiện tại: {query}"""
     
     system_instruction="""Bạn là một trợ lý ảo trò chuyện cho cửa hàng quần áo trực tuyến Coolmate. Hãy nói chuyện một cách tự nhiên, như đang trò chuyện với một người bạn.
-                                  Giữ câu trả lời ngắn gọn và hữu ích."""
+                          Giữ câu trả lời ngắn gọn và hữu ích."""
     # print(prompt)
     response=call_llm(prompt, system_instruction)
     return response
-
-# prompt=f"""Đây là tin nhắn hiện tại của khách hàng cùng lịch sử trò chuyện.
-#             Bạn hãy trả về số lượng sản phẩm nên được lấy thông tin trong vector databse để trả lời khách hàng.
-#             Các tin nhắn trước đó từ cũ tới mới nhất: {prev_chat}
-#             Tin nhắn hiện tại: {query}"""
-
-
-# response=client.models.generate_content(
-#     model="gemini-2.5-flash",
-#     config=types.GenerateContentConfig(
-#         thinking_config=types.ThinkingConfig(thinking_budget=0),
-#         system_instruction='Chỉ trả về số tự nhiên trong khoảng từ 1 tới 20'),
-#     contents=prompt)
-# limit=int(response.text)
-# print(limit)
