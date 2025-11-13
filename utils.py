@@ -96,9 +96,10 @@ def get_metadata(query, prev_chat):
             - Nếu không xác định được loại sản phẩm mà khách hàng muốn xem thêm, hoặc không có sản phẩm trùng loại, trả về null.
 """ 
     system_instruction='Chỉ trả về JSON, không gì khác!'
-    meta_data=call_llm(prompt, system_instruction)
+    meta_data=call_llm(prompt, system_instruction, model='gemini-2.5-flash')
     match=re.search(r'{.*}', meta_data, re.DOTALL)
     meta_data=match.group(0)
+
 
     # print(meta_data)
     meta_data=json.loads(meta_data)
@@ -189,7 +190,7 @@ def query_product(client, query, prev_chat):
                 Tin nhắn hiện tại: {query}
                 Thông tin sản phẩm: {context}
                 Không đề cấp đến số lượng hàng tồn.
-                Gắn hình ảnh bằng tag <br><img src="http:\\ ..." width=300><br>.
+                Gắn hình ảnh bằng tag <img src="http:\\ ..." width=300>.
                 Đính kèm mã sản phẩm.
                 Nếu vẫn đang trong một cuộc trò chuyện thì chỉ trả lời, không chào lại."""
     system_instruction="""Bạn là một trợ lý ảo trò chuyện cho cửa hàng quần áo trực tuyến Coolmate. Hãy nói chuyện một cách tự nhiên, như đang trò chuyện với một người bạn.

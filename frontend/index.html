@@ -120,18 +120,29 @@
     const chatbox = document.getElementById("chatbox");
     const sendButton = document.getElementById("sendButton");
 
+    let chatHistory=[];
+
+    // Show welcome message when page loads
+    window.addEventListener("DOMContentLoaded", () => {
+      const welcomeMsg = document.createElement("div");
+      welcomeMsg.classList.add("message", "bot");
+      welcomeMsg.innerHTML = marked.parse("👋 Chào bạn! Muốn mua quần áo gì thì nhắn mình nha!");
+      chatbox.appendChild(welcomeMsg);
+    });
+      
     input.addEventListener("keydown", function (event) {
       if (event.key === "Enter") {
         event.preventDefault();
         sendMessage();
       }
     });
-
+    
     sendButton.addEventListener("click", sendMessage);
 
     async function sendMessage() {
       const message = input.value.trim();
       if (!message) return;
+      input.value = "";
 
       // Display user message
       const userMsg = document.createElement("div");
@@ -139,17 +150,21 @@
       userMsg.innerHTML = `<div>${message}</div>`;
       chatbox.appendChild(userMsg);
 
-      input.value = "";
+      
 
       // Send to backend
       try {
         const response = await fetch("http://127.0.0.1:8000/chat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ query: message }),
+          body: JSON.stringify({ query: message, chat_history: chatHistory}),
         });
 
         const data = await response.json();
+
+        
+
+        chatHistory.push({time: new Date().toLocaleTimeString(), user:message, bot: data.message});
 
         const botMsg = document.createElement("div");
         botMsg.classList.add("message", "bot");
