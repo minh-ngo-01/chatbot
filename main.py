@@ -37,15 +37,8 @@ def serve_add_product_page():
     return FileResponse(os.path.join('frontend', 'input.html'))
 
 
-class Message(BaseModel):
-    time: str
-    user: str
-    bot: str
-    
-
-class chatRequest(BaseModel):
+class Question(BaseModel):
     query: str
-    chat_history: List[Message]
 
 class Product(BaseModel):
     gender: str
@@ -91,17 +84,19 @@ def add_product(product: Product):
             return {'error': str(e)}
         
 @app.post('/chat')
-def answer(chatRequest: chatRequest):
+def answer(question: Question):
     weaviate_url=os.getenv('WEAVIATE_URL')
-    weaviate_api_key=os.getenv('WEAVIATE_API_KEY')
-
-    prev_chat='\n'.join(map(str,chatRequest.chat_history))
-    print(prev_chat)
+    weaviate_api_key=os.getenv('WEAVIATE_API_KEY')    
+    try:
+        chat_history=joblib.load('chat_history.joblib')
+    except:
+        chat_history=[]
+    prev_chat=get_prev_chat(chat_history)
     with weaviate.connect_to_weaviate_cloud(
     cluster_url=weaviate_url,
     auth_credentials=Auth.api_key(weaviate_api_key)
     ) as client:
-        query=chatRequest.query
+        query=question.query
         query_type=classify_query(query, prev_chat)
         print(query_type)
         if query_type=='FAQ':
@@ -112,8 +107,8 @@ def answer(chatRequest: chatRequest):
             res=query_other(query, prev_chat)
         with open('text.txt', 'w', encoding='utf-8') as f:
             f.write(res)
-        # chat_history.append({'time': time.asctime(), 'customer':query, 'bot':res})
-        # joblib.dump(chat_history, 'chat_history.joblib')
+        chat_history.append({'customer':query, 'bot':res})
+        joblib.dump(chat_history, 'chat_history.joblib')
         return {'message':res}
     
 # @app.post('/chat')
