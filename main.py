@@ -117,10 +117,10 @@ def answer(chat_request: chatRequest):
             res=query_product(client, query, prev_chat)
         else:
             res=query_other(query, prev_chat)
-        with open('text.txt', 'w', encoding='utf-8') as f:
-            f.write(res)
-        chat_history.append({'time':time.asctime(),'customer':query, 'bot':res})
-        joblib.dump(chat_history, 'chat_history.joblib')
+        # with open('text.txt', 'w', encoding='utf-8') as f:
+        #     f.write(res)
+        # # chat_history.append({'time':time.asctime(),'customer':query, 'bot':res})
+        # joblib.dump(chat_history, 'chat_history.joblib')
         return {'message':res}
     
 # @app.post('/chat')
