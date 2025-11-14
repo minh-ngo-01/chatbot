@@ -251,7 +251,8 @@ def query_product(client, query, prev_chat):
                     hình ảnh: {res.properties['images']},
                     mô tả: {res.properties['desc']},
                     tồn kho theo kích thước và màu: {res.properties['storage']},
-                    link sản phẩm:{res.properties['product_url']}/n"""
+                    link sản phẩm:{res.properties['product_url']} 
+                    /n"""
     
     # with open('context.txt', 'w', encoding='utf-8') as f:
     #     f.write(context)
