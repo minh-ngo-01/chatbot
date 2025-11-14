@@ -102,7 +102,7 @@ def answer(chat_request: chatRequest):
         recent_message=str(chat_request.chat_history[-1])
     except:
         recent_message=""
-    old_messages='\n'.join(map(str,chat_request.chat_history[-n:-1]))
+    old_messages='\n'.join(map(str,chat_request.chat_history[-5:-1]))
     prev_chat=[recent_message, old_messages]
     with weaviate.connect_to_weaviate_cloud(
     cluster_url=weaviate_url,
