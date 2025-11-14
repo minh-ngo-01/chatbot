@@ -65,8 +65,7 @@ def classify_query(query, prev_chat):
                Tin nhắn ngay trước đó: {prev_chat[-1]}.
                Tin nhắn hiện tại: '{query}'"""
     # print(prompt)
-    with open('text.text', 'w', encoding='utf-8') as f:
-        f.write(prompt)
+   
     system_instruction='Chỉ trả về một chữ FAQ hoặc Product hoặc Other'    
     response=call_llm(prompt, system_instruction, temperature=1)
     return response.strip().replace("'", "")
@@ -214,8 +213,11 @@ def query_product(client, query, prev_chat):
 
                     Khách hàng: Áo đi làm.
                     Trả về: Áo nam lịch sự, thoải mái để mặc cả ngày, phù hợp để đi làm văn phòng.
+            Hỏi thêm khách hàng nếu cần thiết.
             """
     # print(prompt)
+    with open('text.text', 'w', encoding='utf-8') as f:
+        f.write(prompt)
     system_instruction='Chỉ trả về đoạn văn bản dùng để tìm kiếm hoặc câu hỏi thêm thông tin khách hàng, không gì khác!'
     augmented_query=call_llm(prompt, system_instruction, temperature=1)
 
