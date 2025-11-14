@@ -64,7 +64,7 @@ def classify_query(query, prev_chat):
                Tin nhắn trước đó:{prev_chat[-2]}.
                Tin nhắn ngay trước đó: {prev_chat[-1]}.
                Tin nhắn hiện tại: '{query}'"""
-    # print(prompt)
+    print(prompt)
    
     system_instruction='Chỉ trả về một chữ FAQ hoặc Product hoặc Other'    
     response=call_llm(prompt, system_instruction, temperature=1)
