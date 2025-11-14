@@ -92,7 +92,7 @@ def add_product(product: Product):
 @app.post('/chat')
 def answer(chat_request: chatRequest):
     weaviate_url=os.getenv('WEAVIATE_URL')
-    # weaviate_api_key=os.getenv('WEAVIATE_API_KEY')    
+    weaviate_api_key=os.getenv('WEAVIATE_API_KEY')    
     # try:
     #     chat_history=joblib.load('chat_history.joblib')
     # except:
