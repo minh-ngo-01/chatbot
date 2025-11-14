@@ -43,7 +43,7 @@ class Message(BaseModel):
     bot: str
     
 class chatRequest(BaseModel):
-    question: str
+    query: str
     chat_history: List[Message]
 
 class Product(BaseModel):
@@ -99,16 +99,16 @@ def answer(chat_request: chatRequest):
     #     chat_history=[]
     # prev_chat=get_prev_chat(chat_history)
     try:
-        recent_message=str(chat_request['chat_history'][-1])
+        recent_message=str(chat_request.chat_history[-1])
     except:
         recent_message=""
-    old_messages='\n'.join(map(str,chat_request['chat_history'][-n:-1]))
+    old_messages='\n'.join(map(str,chat_request.chat_history[-n:-1]))
     prev_chat=[recent_message, old_messages]
     with weaviate.connect_to_weaviate_cloud(
     cluster_url=weaviate_url,
     auth_credentials=Auth.api_key(weaviate_api_key)
     ) as client:
-        query=question.query
+        query=chat_request.query
         query_type=classify_query(query, prev_chat)
         print(query_type)
         if query_type=='FAQ':
