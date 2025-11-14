@@ -123,11 +123,11 @@ def get_item_info(product_id):
 def get_items_data(url):    
     list_=[]
     urls=get_item_urls(url)
-    for url in urls:
-        time.sleep(random.uniform(1,2))
+    for url in set(urls):
         id=get_id(url)
         dict_=get_item_info(id)
-        list_.append(dict_)
+        if dict_["product_code"] != "" :
+            list_.append(dict_)
     return list_
 
 def get_faqs_data():

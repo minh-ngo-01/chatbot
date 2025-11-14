@@ -152,6 +152,16 @@ urls=[
 # auth_credentials=Auth.api_key(weaviate_api_key)
 # ) as client:
 #     products=client.collections.get('products')
-#     print(products.query.fetch_objects(filters=filter))
+
+    # seen=[]
     
+    # for item in products.iterator():
+    #     if item.properties['product_id'] not in seen:
+    #         seen.append(item.properties['product_id'])
+    #     else:
+    #         products.data.delete_by_id(item.uuid)
+    
+        
+        
+
 
