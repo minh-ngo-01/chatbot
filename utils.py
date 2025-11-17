@@ -230,7 +230,7 @@ def query_product(client, query, prev_chat, intent):
                     
     
     
-    print(print_context)
+    print(check_context)
 
     prompt=f""" Bạn sẽ nhận:
                 - lịch sử trò chuyện giữa bạn và khách hàng
