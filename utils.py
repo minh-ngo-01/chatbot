@@ -103,7 +103,7 @@ def get_metadata(intent, query, prev_chat):
                  - lọc ra các thông tin về giá và giới tính
                  - nếu khách hàng chưa cung cấp thông tin về giới tính, hỏi lại khách hàng
             
-            Trả vê một JSON hoặc câu hỏi:
+            Trả vê một JSON hoặc câu hỏi theo mẫu:
                     {{
                     "previous_product": str           # sản phẩm được đề cập trong tin nhắn trước dó.
                     "see_more": Boolean           
@@ -150,6 +150,14 @@ def get_metadata(intent, query, prev_chat):
                     "price": {{"min": 0, "max": "inf"}}, 
                     "gender": ['MALE']
               }}
+
+              Lịch sử trò chuyện: {{'time': 'Mon Nov 17 15:18:54 2025', 'customer': 'xin chào', 'bot': 'Chào bạn, mình có thể giúp gì cho bạn nè?'}}
+              Ý định khách hàng: tìm quần kaki để đi làm
+              Trả về: Bạn mua quần kaki cho nam hay nữ vậy ạ?
+
+              Lịch sử trò chuyện: 
+              Ý định khách hàng: tìm áo thun
+              Trả về: Bạn mua áo thun cho nam hay nữ vậy ạ?
 
             
             Lịch sử trò chuyện: {prev_chat}
