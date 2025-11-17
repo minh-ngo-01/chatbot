@@ -162,8 +162,7 @@ def get_metadata(intent, query, prev_chat):
             
             Lịch sử trò chuyện: {prev_chat}
             Ý định hiện tại của khách hàng: {intent}"""
-    print( f"""Lịch sử trò chuyện: {prev_chat}
-            Ý định khách hàng: {intent}""")
+    print(f"""Ý định hiện tại của khách hàng: {intent}""")
 
     system_instruction="""Bạn là một trợ lý ảo trò chuyện cho cửa hàng quần áo trực tuyến Coolmate"""
     response=call_llm(prompt, system_instruction, temperature=0)
@@ -223,21 +222,19 @@ def query_product(client, query, prev_chat, intent):
                     size theo màu có sẵn: {res.properties['colorBySize']},
                     link sản phẩm:{res.properties['product_url']}/n"""
     
-    with open('context.txt', 'w', encoding='utf-8') as f:
-        f.write(context)
+    print(context)
 
     prompt=f""" Bạn sẽ nhận:
                 - lịch sử trò chuyện giữa bạn và khách hàng
-                - tin nhắn hiện tại của khách
                 - thông tin sản phẩm
 
                 Nhiệm vụ: 
-                trả lời tập trung vào câu hỏi/ yêu cầu của khách hàng dựa theo các thông tin sản phẩm được cung cấp.
+                trả lời đúng vào trọng tâm câu hỏi/yêu cầu của khách hàng dựa theo các thông tin sản phẩm được cung cấp.
                 
 
                 Yêu cầu:
-                - tránh trả lời không liên quan đến câu hỏi khách hàng
-                - nếu không có thông tin, sản phẩm khách hàng hỏi/ yêu cầu thì xin lỗi và đưa ra lý do
+                - tránh trả lời không liên quan đến câu hỏi/ yêu cầu của khách hàng
+                - nếu không có thông tin/sản phẩm khách hàng hỏi/ yêu cầu thì xin lỗi và đưa ra lý do
                 - liệt kê sản phẩm theo số thứ tự.
                 - Không đề cấp đến số lượng hàng tồn.
                 - Gắn hình ảnh bằng tag <img src="http:\\ ..." width=300>.
@@ -246,7 +243,7 @@ def query_product(client, query, prev_chat, intent):
 
 
                 Lịch sử trò chuyện:{prev_chat}
-                Tin nhắn hiện tại: '{query}'.
+                ý định hiện tại của khách hàng: {intent}
                 Thông tin sản phẩm: {context}"""
                 
     system_instruction="""Bạn là một trợ lý ảo trò chuyện cho cửa hàng quần áo trực tuyến Coolmate. Hãy nói chuyện một cách tự nhiên, như đang trò chuyện với một người bạn.
