@@ -86,7 +86,7 @@ def classify_query(query, prev_chat):
 
 
 
-def get_metadata(intent, query, prev_chat):
+def get_metadata(intent, prev_chat):
     prompt=f"""Bạn sẽ nhận:
             - lịch sử trò chuyện giữa bạn và khách hàng.
             - mô tả chi tiết về ý định hiện tại của khách hàng.
@@ -96,7 +96,7 @@ def get_metadata(intent, query, prev_chat):
                  Thực hiện theo các bước sau:
                  - trong lịch sử trò chuyện, xác định sản phẩm được đề cập gần nhất.  vd áo thun/quần tây/tất/áo khoác,...
                  - trong ý định hiện tại, khách hàng có hỏi thêm, yêu cầu cung cấp thêm thông tin gì về sản phẩm được đề cập gần nhất không? có -> see_more:false, product_codes=[""]
-                 - trong ý định hiện tại, khách hàng có tìm mẫu, kiểu khác của sản phẩm được đề cập gần nhất không? có -> see_more: True, product_codes: <các mã sản phẩm của sản phẩm trước đó trong lịch sử trò chuyện>
+                 - trong ý định hiện tại, khách hàng có tìm mẫu, kiểu khác của sản phẩm được đề cập gần nhất không? có -> see_more: True, product_codes: <tất cả các mã sản phẩm của sản phẩm trước đó trong lịch sử trò chuyện>
                  - trong ý định hiện tại, khách hàng tìm sản phẩm khác với sản phẩm được đề cập gần nhất không? có -> see_more: false, product_codes=[""]
 
             2. Xác định các meta_data trong ý định của khách hàng.
@@ -162,7 +162,8 @@ def get_metadata(intent, query, prev_chat):
             
             Lịch sử trò chuyện: {prev_chat}
             Ý định hiện tại của khách hàng: {intent}"""
-    print(f"""Ý định hiện tại của khách hàng: {intent}""")
+    print(f"""Lịch sử trò chuyện: {prev_chat}
+              Ý định hiện tại của khách hàng: {intent}""")
 
     system_instruction="""Bạn là một trợ lý ảo trò chuyện cho cửa hàng quần áo trực tuyến Coolmate"""
     response=call_llm(prompt, system_instruction, temperature=0)
