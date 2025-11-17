@@ -93,17 +93,7 @@ def add_product(product: Product):
 def answer(chat_request: chatRequest):
     weaviate_url=os.getenv('WEAVIATE_URL')
     weaviate_api_key=os.getenv('WEAVIATE_API_KEY')    
-    # try:
-    #     chat_history=joblib.load('chat_history.joblib')
-    # except:
-    #     chat_history=[]
-    # prev_chat=get_prev_chat(chat_history)
-    try:
-        recent_message=str(chat_request.chat_history[-1])
-    except:
-        recent_message=""
-    old_messages='\n'.join(map(str,chat_request.chat_history[-5:-1]))
-    prev_chat=[old_messages, recent_message]
+    prev_chat=chat_request.chat_history
     with weaviate.connect_to_weaviate_cloud(
     cluster_url=weaviate_url,
     auth_credentials=Auth.api_key(weaviate_api_key)
@@ -111,16 +101,12 @@ def answer(chat_request: chatRequest):
         query=chat_request.query
         query_type=classify_query(query, prev_chat)
         print(query_type)
-        if query_type=='FAQ':
-            res=query_faq(client, query, prev_chat)
-        elif query_type=='Product':
-            res=query_product(client, query, prev_chat)
-        else:
-            res=query_other(query, prev_chat)
-        # with open('text.txt', 'w', encoding='utf-8') as f:
-        #     f.write(res)
-        # # chat_history.append({'time':time.asctime(),'customer':query, 'bot':res})
-        # joblib.dump(chat_history, 'chat_history.joblib')
+        if response['topic']=='Product':
+            res=query_product(client, query, prev_chat, response['intend'])
+        if response['topic']=='Delivery':
+            res="Vấn đề giao hàng chưa được hỗ trợ"
+        if response['topic']=='Other':
+            res=query_other(client, query, prev_chat, response['intend'])
         return {'message':res}
     
 # @app.post('/chat')
