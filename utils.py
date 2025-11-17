@@ -205,6 +205,7 @@ def query_product(client, query, prev_chat, intent):
     filters=build_filters(meta_data)
     response=products.query.near_text(query=intent, filters=Filter.all_of(filters) if len(filters) != 0 else None, limit=3)
     context=""
+    check_context=""
     for res in response.objects:
         context+=f"""mã sản phẩm: {res.properties['product_code']},
                     tên sản phẩm:{res.properties['name']},                     
@@ -222,7 +223,8 @@ def query_product(client, query, prev_chat, intent):
                     size theo màu có sẵn: {res.properties['colorBySize']},
                     link sản phẩm:{res.properties['product_url']}/n"""
         
-        print_context+=f"""mã sản phẩm: {res.properties['product_code']},
+
+        check_context+=f"""mã sản phẩm: {res.properties['product_code']},
                     tên sản phẩm:{res.properties['name']},                     
                     giá: {res.properties['price']}"""
                     
