@@ -22,7 +22,7 @@ def get_item_urls(url):
             seen.append(href)
             item_url=urljoin(url, href)
             item_urls.append(item_url)
-    return item_urls
+    return item_urls[:10]
 
 def get_id(item_url):
     print(item_url)
@@ -98,7 +98,7 @@ def get_item_info(product_id):
         if variant['quantity']>0:
             color=variant['option1']
             size=variant['option2']
-            colorBySize.append[size+" "+color]
+            colorBySize.append(size +" "+ color)
     product_url='https://www.coolmate.me/product/'+ product['seo_alias']
 
     return {'product_id':product_id,
