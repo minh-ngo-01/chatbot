@@ -37,14 +37,8 @@ def serve_add_product_page():
     return FileResponse(os.path.join('frontend', 'input.html'))
 
 
-class Message(BaseModel):
-    time: str
-    user: str
-    bot: str
-    
-class chatRequest(BaseModel):
+class Question(BaseModel):
     query: str
-    chat_history: List[Message]
 
 class Product(BaseModel):
     gender: str
@@ -90,22 +84,33 @@ def add_product(product: Product):
             return {'error': str(e)}
         
 @app.post('/chat')
-def answer(chat_request: chatRequest):
+def answer(question: Question):
     weaviate_url=os.getenv('WEAVIATE_URL')
-    weaviate_api_key=os.getenv('WEAVIATE_API_KEY')    
-    prev_chat=chat_request.chat_history
+    weaviate_api_key=os.getenv('WEAVIATE_API_KEY')
+    try:
+        chat_history=joblib.load('chat_history.joblib')
+    except:
+        chat_history=[]
+    prev_chat=get_prev_chat(chat_history)
+    # with open('text.txt', 'w') as f:
+    #     f.write(prev_chat[-2])
+    #     f.write(prev_chat[-1])
     with weaviate.connect_to_weaviate_cloud(
     cluster_url=weaviate_url,
     auth_credentials=Auth.api_key(weaviate_api_key)
     ) as client:
-        query=chat_request.query
+        query=question.query
         response=classify_query(query, prev_chat)
         if response['topic']=='Product':
-            res=query_product(client, query, prev_chat, response['intend'])
+            res=query_product(client, query, prev_chat, response['intent'])
         if response['topic']=='Delivery':
             res="Vấn đề giao hàng chưa được hỗ trợ"
         if response['topic']=='Other':
-            res=query_other(client, query, prev_chat, response['intend'])
+            res=query_other(client, query, prev_chat, response['intent'])
+        # with open('text.txt', 'w', encoding='utf-8') as f:
+        #     f.write(res)
+        chat_history.append({'time': time.asctime(), 'customer':query, 'bot':res})
+        joblib.dump(chat_history, 'chat_history.joblib')
         return {'message':res}
     
 # @app.post('/chat')
