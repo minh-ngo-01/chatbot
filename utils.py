@@ -103,13 +103,13 @@ def get_metadata(intent, query, prev_chat):
                  - lọc ra các thông tin về giá và giới tính
                  - nếu khách hàng chưa cung cấp thông tin về giới tính, hỏi lại khách hàng
             
-            Trả vê một JSON theo mẫu:
+            Trả vê một JSON hoặc câu hỏi theo mẫu:
                     {{
                     "previous_product": str           # sản phẩm được đề cập trong tin nhắn trước dó.
                     "see_more": Boolean           
                     "product_codes": List[str]        # mã sản phẩm của sản phẩm được đề cập trong tin nhắn gần nhất trong lịch sử trò chuyện.
                     "price": {{"min": int, "max": int}},     # "max": "inf" nếu không có thông tin về giá
-                    "gender": List[str],          # possible values in ['MALE', 'FEMALE', 'UNISEX'], hỏi khách hàng nếu chưa được đề cập.
+                    "gender": List[str],          # possible values in ['MALE', 'FEMALE', 'UNISEX'], hỏi lại khách hàng nếu chưa được đề cập.
                     }}            
             
             Ví dụ: 
@@ -128,7 +128,7 @@ def get_metadata(intent, query, prev_chat):
               
               Lịch sử trò chuyện: {{'time': 'Sun Nov 16 07:52:30 2025', 'customer': 'các mẫu áo thun nam', 'bot': 'Tuyệt vời! Bạn đang tìm áo thun nam đúng không? Coolmate có mấy mẫu này rất được ưa chuộng nè:\n\n**1. Áo Thun Nam Cotton 220GSM Basics (TSZ959)**\n<img src="https://n7media.coolmate.me/uploads/February2025/ao-thun-nam-cotton-220gsm-mau-nau-cappuccino_(7).jpg" width=300>\nChất liệu 100% Cotton Úc dày dặn, mềm mịn, thấm hút tốt. Form Regular Fit mặc lên cực thoải mái, có đến 12 màu tha hồ lựa chọn nha. Giá chỉ 159.000đ.\n\n**2. Áo Thun Nam Chạy Bộ Graphic Heartbeat (TSZ877)**\n<img src="https://n7media.coolmate.me/uploads/July2025/ao-thun-nam-chay-bo-hoat-tiet-graphic-heartbeat-hong-5.jpg" width=300>\nSiêu nhẹ, nhanh khô và co giãn 4 chiều, cực hợp cho những ai mê vận động. Đặc biệt có logo phản quang giúp an toàn hơn khi tập luyện buổi tối. Giá cũng là 159.000đ.\n\n**3. Áo Thun Nam Thể Thao Coolmate Basics (TSZ916)**\n<img src="https://n7media.coolmate.me/uploads/September2025/ao-the-thao-nam-promax-recycle-basics1-hong-marsala-1_10.jpg" width=300>\nĐây là dòng sản phẩm Recycle Basics, vừa thân thiện môi trường, vừa siêu nhẹ, thấm hút và khô nhanh. Giá mềm hơn, chỉ 99.000đ.\n\nBạn ưng mẫu nào hay muốn xem thêm màu sắc của mẫu nào không?'}},
                                   {{'time': 'Sun Nov 16 07:52:46 2025', 'customer': 'mẫu khác', 'bot': 'Oke, bạn muốn xem thêm áo thun nam đúng không? Coolmate có mấy mẫu này nè:\n\n**1. Áo thun dài tay 100% Cotton Relax fit (LSZ711)**\n<img src="https://n7media.coolmate.me/uploads/September2025/ao-dai-tay-100-cotton-relax-fit-reu-1.jpg" width=300>\nÁo này làm từ 100% cotton mềm mại, thấm hút tốt, form Relax fit mặc thoải mái lắm. Có màu Rêu, Trắng, Đen. Giá 219.000đ.\n\n**2. Áo dài tay thể thao 1699 (LSZ681)**\n<img src="https://n7media.coolmate.me/uploads/December2024/ao-dai-tay-the-thao-1699-trang_(3).jpg" width=300>\nÁo này chất polyester thoáng khí, nhanh khô, hợp cho người hay vận động nè. Form Slim fit tôn dáng. Có các màu Trắng, Be Trench Coat, Be, Đen, Navy, Xanh bóng đêm. Giá 199.000đ.\n\n**3. Áo thun nam Cotton Compact (TSZ923)**\n<img src="https://n7media.coolmate.me/uploads/September2025/ao-thun-nam-cotton-compact-chong-nhan-den-1.jpg" width=300>\nChất cotton compact siêu mềm mịn, ít nhăn, có thêm chút spandex co giãn thoải mái. Form Regular fit. Có nhiều màu lắm: Đen, Xám, Xanh Navy, Trắng, Xanh rêu, Đỏ, Be, Xanh Pastel. Giá 229.000đ.\n\nBạn thấy mẫu nào ưng ý hay muốn xem thêm chi tiết gì không?'}}
-              Ý định khách hàng: tìm quần kaki nam để đi làm
+              Ý định khách hàng: quần kaki để đi làm
               Trả về:
                {{
                     "previous_product": áo thun         
@@ -150,6 +150,14 @@ def get_metadata(intent, query, prev_chat):
                     "price": {{"min": 0, "max": "inf"}}, 
                     "gender": ['MALE']
               }}
+
+              Lịch sử trò chuyện: {{'time': 'Mon Nov 17 15:18:54 2025', 'customer': 'xin chào', 'bot': 'Chào bạn, mình có thể giúp gì cho bạn nè?'}}
+              Ý định khách hàng: tìm quần kaki để đi làm
+              Trả về: Bạn mua quần kaki cho nam hay nữ vậy ạ?
+
+              Lịch sử trò chuyện: 
+              Ý định khách hàng: tìm áo thun
+              Trả về: Bạn mua áo thun cho nam hay nữ vậy ạ?
 
             
             Lịch sử trò chuyện: {prev_chat}
