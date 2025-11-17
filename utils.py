@@ -194,7 +194,7 @@ def query_product(client, query, prev_chat, intent):
     products=client.collections.get('products')
 
     # print(prompt)
-    meta_data=get_metadata(intent, query, prev_chat)
+    meta_data=get_metadata(intent, prev_chat)
     if "?" in meta_data:
         return meta_data
 
