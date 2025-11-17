@@ -236,16 +236,15 @@ def query_product(client, query, prev_chat, intent):
 
     prompt=f""" Bạn sẽ nhận:
                 - ý định hiện tại của khách hàng
-                - thông tin sản phẩm
+                - thông tin các sản phẩm phù hợp
 
                 Nhiệm vụ: 
                 trả lời đúng vào trọng tâm câu hỏi/yêu cầu của khách hàng dựa theo thông tin sản phẩm được cung cấp.
                 
 
-                Yêu cầu:
-                - chỉ dựa vào thông tin được cung cấp, không lấy lại thông tin trong lịch sử trò chuyện.
+                Yêu cầu:.
                 - tránh trả lời không liên quan đến câu hỏi hay yêu cầu của khách hàng.
-                - nếu không có thông tin hay sản phẩm mà khách hàng hỏi hay yêu cầu thì báo không có thông tin hoặc hoặc hết sản phẩm đó.
+                - xin lỗi và báo hết sản phẩm nếu trong thông tin được cung cấp không có sản phẩm khách hàng muốn tìm.
                 - liệt kê sản phẩm theo số thứ tự.
                 - Không đề cấp đến số lượng hàng tồn.
                 - Gắn hình ảnh bằng tag <img src="http:\\ ..." width=300>.
