@@ -99,7 +99,7 @@ def answer(chat_request: chatRequest):
     auth_credentials=Auth.api_key(weaviate_api_key)
     ) as client:
         query=chat_request.query
-        query_type=classify_query(query, prev_chat)
+        response=classify_query(query, prev_chat)
         print(query_type)
         if response['topic']=='Product':
             res=query_product(client, query, prev_chat, response['intend'])
