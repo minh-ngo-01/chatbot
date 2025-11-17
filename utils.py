@@ -56,20 +56,20 @@ def classify_query(query, prev_chat):
               Lịch sử trò chuyện: {{'time': 'Sun Nov 16 07:52:30 2025', 'customer': 'các mẫu áo thun nam', 'bot': 'Tuyệt vời! Bạn đang tìm áo thun nam đúng không? Coolmate có mấy mẫu này rất được ưa chuộng nè:\n\n**1. Áo Thun Nam Cotton 220GSM Basics (TSZ959)**\n<img src="https://n7media.coolmate.me/uploads/February2025/ao-thun-nam-cotton-220gsm-mau-nau-cappuccino_(7).jpg" width=300>\nChất liệu 100% Cotton Úc dày dặn, mềm mịn, thấm hút tốt. Form Regular Fit mặc lên cực thoải mái, có đến 12 màu tha hồ lựa chọn nha. Giá chỉ 159.000đ.\n\n**2. Áo Thun Nam Chạy Bộ Graphic Heartbeat (TSZ877)**\n<img src="https://n7media.coolmate.me/uploads/July2025/ao-thun-nam-chay-bo-hoat-tiet-graphic-heartbeat-hong-5.jpg" width=300>\nSiêu nhẹ, nhanh khô và co giãn 4 chiều, cực hợp cho những ai mê vận động. Đặc biệt có logo phản quang giúp an toàn hơn khi tập luyện buổi tối. Giá cũng là 159.000đ.\n\n**3. Áo Thun Nam Thể Thao Coolmate Basics (TSZ916)**\n<img src="https://n7media.coolmate.me/uploads/September2025/ao-the-thao-nam-promax-recycle-basics1-hong-marsala-1_10.jpg" width=300>\nĐây là dòng sản phẩm Recycle Basics, vừa thân thiện môi trường, vừa siêu nhẹ, thấm hút và khô nhanh. Giá mềm hơn, chỉ 99.000đ.\n\nBạn ưng mẫu nào hay muốn xem thêm màu sắc của mẫu nào không?'}}
               Tin nhắn hiện tại: mẫu thứ 2 có những màu nào?
               Trả về:
-              {{"intend":" cần thêm thông tin về màu sắc Áo Thun Nam Chạy Bộ Graphic Heartbeat (TSZ877)",
+              {{"intent":" cần thêm thông tin về màu sắc Áo Thun Nam Chạy Bộ Graphic Heartbeat (TSZ877)",
                "topic": "Product"}}
 
               Lịch sử trò chuyện: {{'time': 'Sun Nov 16 16:00:00 2025', 'customer': 'mẫu áo thun cho nam, dưới 200k', 'bot': 'Ok bạn ơi, đây là mẫu Áo Thun Nam Cotton 220GSM này, giá chỉ 159k thôi nè. Chất cotton dày dặn, mặc thoải mái lắm nha. Bạn xem thử có ưng màu nào không nè:\n\n<img src="https://n7media.coolmate.me/uploads/February2025/ao-thun-nam-cotton-220gsm-mau-nau-cappuccino_(7).jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/February2025/ao-thun-nam-cotton-220gsm-mau-xam-castlerock_(8).jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/February2025/ao-thun-nam-cotton-220gsm-mau-hong-peach-whip_(7).jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/October2024/AT.220_-_Do_1.1.jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/January2024/AT.220.den6.jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/January2024/AT.220.xd.3.jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/January2024/AT.220.be.1.jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/January2024/AT.220.den14.jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/January2024/AT.220.NAU.1.jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/June2025/ao-thun-nam-cotton-220gsm-xanh-reu-1111.jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/January2024/AT.220.mint1.jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/January2024/AT.220.xam1.jpg" width=300>\n\nMã sản phẩm: TSZ959'}}
                                   {{'time': 'Sun Nov 16 16:00:20 2025', 'customer': 'mẫu khác nha', 'bot': 'Ok bạn ơi, mình có mẫu Áo Thun Chạy Bộ Graphic Heartbeat này, giá cũng 159k nè, có nhiều màu xinh lắm:\n<img src="https://n7media.coolmate.me/uploads/July2025/ao-thun-nam-chay-bo-hoat-tiet-graphic-heartbeat-hong-5.jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/July2025/ao-thun-nam-chay-bo-hoat-tiet-graphic-heartbeat-tim-2.jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/July2025/ao-thun-nam-chay-bo-hoat-tiet-graphic-heartbeat-den-3.jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/July2025/ao-thun-nam-chay-bo-hoat-tiet-graphic-heartbeat-xanh-reu-3_60.jpg" width=300>\n\nMã sản phẩm: TSZ877\n\nNgoài ra còn có Áo singlet chạy bộ nam "Việt Nam tiến bước" giá 109k, siêu nhẹ và thoáng mát nè:\n<img src="https://n7media.coolmate.me/uploads/August2025/ao-singlet-chay-bo-nam-viet-nam-tien-buoc-18-do_76.jpg" width=300>\nMã sản phẩm: 25CM.MAWRU.TTA484\n\nBạn thích mẫu nào hơn nè?'}}
               Tin nhắn hiện tại: mẫu khác
               Trả về:
-               {{"intend":"tìm mẫu áo thun nam khác dưới 200k",
+               {{"intent":"tìm mẫu áo thun nam khác dưới 200k",
                "topic": "Poroduct"}}
 
               Lịch sử trò chuyện: ""
               Tin nhắn hiện tại: Khi nào cửa hàng mình mở cửa?
               Trả về:
-               {{"intend":"hỏi về thời gian mở cửa cửa hàng",
+               {{"intent":"hỏi về thời gian mở cửa cửa hàng",
                "topic": "Other"}}
             
             Lịch sử trò chuyện: {prev_chat}
@@ -86,7 +86,7 @@ def classify_query(query, prev_chat):
 
 
 
-def get_metadata(intend, query, prev_chat):
+def get_metadata(intent, query, prev_chat):
     prompt=f"""Bạn sẽ nhận:
             - lịch sử trò chuyện giữa bạn và khách hàng.
             - mô tả chi tiết về ý định hiện tại của khách hàng.
@@ -153,9 +153,9 @@ def get_metadata(intend, query, prev_chat):
 
             
             Lịch sử trò chuyện: {prev_chat}
-            Ý định hiện tại của khách hàng: {intend}"""
+            Ý định hiện tại của khách hàng: {intent}"""
     print( f"""Lịch sử trò chuyện: {prev_chat}
-            Ý định khách hàng: {intend}""")
+            Ý định khách hàng: {intent}""")
 
     system_instruction="""Bạn là một trợ lý ảo trò chuyện cho cửa hàng quần áo trực tuyến Coolmate"""
     response=call_llm(prompt, system_instruction, temperature=0)
@@ -180,13 +180,13 @@ def build_filters(meta_data):
             filters.append(Filter.by_property('product_code').contains_none(value))
     return filters
     
-def query_product(client, query, prev_chat, intend):   
+def query_product(client, query, prev_chat, intent):   
     
     # client.collections.delete('products')
     products=client.collections.get('products')
 
     # print(prompt)
-    meta_data=get_metadata(intend, query, prev_chat)
+    meta_data=get_metadata(intent, query, prev_chat)
     if "?" in meta_data:
         return meta_data
 
@@ -196,7 +196,7 @@ def query_product(client, query, prev_chat, intend):
     context=""
     print(meta_data)
     filters=build_filters(meta_data)
-    response=products.query.near_text(query=intend, filters=Filter.all_of(filters) if len(filters) != 0 else None, limit=3)
+    response=products.query.near_text(query=intent, filters=Filter.all_of(filters) if len(filters) != 0 else None, limit=3)
     context=""
     for res in response.objects:
         context+=f"""mã sản phẩm: {res.properties['product_code']},
@@ -247,10 +247,10 @@ def query_product(client, query, prev_chat, intend):
     return response
 
 
-def query_other(client, query, prev_chat, intend):
+def query_other(client, query, prev_chat, intent):
     context=""
     faqs=client.collections.get('faqs')
-    response=faqs.query.near_text(intend, limit=3)
+    response=faqs.query.near_text(intent, limit=3)
     for res in response.objects:
         context+=f"Question: {res.properties['question']} Answer: {res.properties['answer']}\n"
 
