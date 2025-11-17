@@ -12,7 +12,7 @@ from pydantic import BaseModel
 from dotenv import load_dotenv
 from typing import List
 
-from utils import classify_query, query_faq, query_product, query_other, get_prev_chat
+from utils import classify_query, query_product, get_prev_chat, query_other
 
 load_dotenv()
 app=FastAPI()
