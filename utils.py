@@ -24,7 +24,11 @@ load_dotenv()
 
 llm_client=genai.Client(api_key=os.getenv('GOOGLE_STUDIO_API_KEY'))
 
-def get_prev_chat(chat_history, n=5):     
+def get_prev_chat(n=5):
+    try:
+        chat_history=joblib.load('chat_history.joblib')
+    except:
+        chat_history=[]        
     prev_chat='\n'.join(map(str,chat_history[-5:]))
     return prev_chat
 
@@ -40,72 +44,41 @@ def call_llm(prompt, system_instruction, temperature=0, model='gemini-2.5-flash-
 
 
 def classify_query(query, prev_chat):
-    prompt=f"""Đây là tin nhắn hiện tại của khách hàng cùng với lịch sử trò chuyện.
-               Xem xét lịch sử trò chuyên cùng tin nhắn hiện tại để xác định ý định của khách hàng.
-               Trả về FAQ nếu ý định đó liên quan đến các câu hỏi FAQs.
-               Trả về Product nếu ý định đó liên quan đến sản phẩm.
-               Trả về Other nếu không phải về FAQ hay Product.
-               Tin nhắn trước đó:{prev_chat[-2]}.
-               Tin nhắn ngay trước đó: {prev_chat[-1]}.
-               Tin nhắn hiện tại: '{query}'"""
-    print(prompt)
+    prompt=f"""Bạn sẽ nhận:
+            - tin nhắn hiện tại
+            - lịch sử trò chuyện giữa bạn và khách hàng.
+            Nhiệm vụ:
+            - mô tả chi tiết ý định của khách hàng, cụ thể về mẫu sản phẩm, loại sản phẩm và đặc điểm sản phẩm nếu có.
+            - phân loại ý định đó theo 3 chủ đề gồm: Product(sản phẩm)/Delivery(giao hàng)/Other(chủ đề khác)
+            Trả vê một JSON.
+
+            Ví dụ: 
+              Lịch sử trò chuyện: {{'time': 'Sun Nov 16 07:52:30 2025', 'customer': 'các mẫu áo thun nam', 'bot': 'Tuyệt vời! Bạn đang tìm áo thun nam đúng không? Coolmate có mấy mẫu này rất được ưa chuộng nè:\n\n**1. Áo Thun Nam Cotton 220GSM Basics (TSZ959)**\n<img src="https://n7media.coolmate.me/uploads/February2025/ao-thun-nam-cotton-220gsm-mau-nau-cappuccino_(7).jpg" width=300>\nChất liệu 100% Cotton Úc dày dặn, mềm mịn, thấm hút tốt. Form Regular Fit mặc lên cực thoải mái, có đến 12 màu tha hồ lựa chọn nha. Giá chỉ 159.000đ.\n\n**2. Áo Thun Nam Chạy Bộ Graphic Heartbeat (TSZ877)**\n<img src="https://n7media.coolmate.me/uploads/July2025/ao-thun-nam-chay-bo-hoat-tiet-graphic-heartbeat-hong-5.jpg" width=300>\nSiêu nhẹ, nhanh khô và co giãn 4 chiều, cực hợp cho những ai mê vận động. Đặc biệt có logo phản quang giúp an toàn hơn khi tập luyện buổi tối. Giá cũng là 159.000đ.\n\n**3. Áo Thun Nam Thể Thao Coolmate Basics (TSZ916)**\n<img src="https://n7media.coolmate.me/uploads/September2025/ao-the-thao-nam-promax-recycle-basics1-hong-marsala-1_10.jpg" width=300>\nĐây là dòng sản phẩm Recycle Basics, vừa thân thiện môi trường, vừa siêu nhẹ, thấm hút và khô nhanh. Giá mềm hơn, chỉ 99.000đ.\n\nBạn ưng mẫu nào hay muốn xem thêm màu sắc của mẫu nào không?'}}
+              Tin nhắn hiện tại: mẫu thứ 2 có những màu nào?
+              Trả về:
+              {{"intend":" cần thêm thông tin về màu sắc Áo Thun Nam Chạy Bộ Graphic Heartbeat (TSZ877)",
+               "topic": "Product"}}
+
+              Lịch sử trò chuyện: {{'time': 'Sun Nov 16 16:00:00 2025', 'customer': 'mẫu áo thun cho nam, dưới 200k', 'bot': 'Ok bạn ơi, đây là mẫu Áo Thun Nam Cotton 220GSM này, giá chỉ 159k thôi nè. Chất cotton dày dặn, mặc thoải mái lắm nha. Bạn xem thử có ưng màu nào không nè:\n\n<img src="https://n7media.coolmate.me/uploads/February2025/ao-thun-nam-cotton-220gsm-mau-nau-cappuccino_(7).jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/February2025/ao-thun-nam-cotton-220gsm-mau-xam-castlerock_(8).jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/February2025/ao-thun-nam-cotton-220gsm-mau-hong-peach-whip_(7).jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/October2024/AT.220_-_Do_1.1.jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/January2024/AT.220.den6.jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/January2024/AT.220.xd.3.jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/January2024/AT.220.be.1.jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/January2024/AT.220.den14.jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/January2024/AT.220.NAU.1.jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/June2025/ao-thun-nam-cotton-220gsm-xanh-reu-1111.jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/January2024/AT.220.mint1.jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/January2024/AT.220.xam1.jpg" width=300>\n\nMã sản phẩm: TSZ959'}}
+                                  {{'time': 'Sun Nov 16 16:00:20 2025', 'customer': 'mẫu khác nha', 'bot': 'Ok bạn ơi, mình có mẫu Áo Thun Chạy Bộ Graphic Heartbeat này, giá cũng 159k nè, có nhiều màu xinh lắm:\n<img src="https://n7media.coolmate.me/uploads/July2025/ao-thun-nam-chay-bo-hoat-tiet-graphic-heartbeat-hong-5.jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/July2025/ao-thun-nam-chay-bo-hoat-tiet-graphic-heartbeat-tim-2.jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/July2025/ao-thun-nam-chay-bo-hoat-tiet-graphic-heartbeat-den-3.jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/July2025/ao-thun-nam-chay-bo-hoat-tiet-graphic-heartbeat-xanh-reu-3_60.jpg" width=300>\n\nMã sản phẩm: TSZ877\n\nNgoài ra còn có Áo singlet chạy bộ nam "Việt Nam tiến bước" giá 109k, siêu nhẹ và thoáng mát nè:\n<img src="https://n7media.coolmate.me/uploads/August2025/ao-singlet-chay-bo-nam-viet-nam-tien-buoc-18-do_76.jpg" width=300>\nMã sản phẩm: 25CM.MAWRU.TTA484\n\nBạn thích mẫu nào hơn nè?'}}
+              Tin nhắn hiện tại: mẫu khác
+              Trả về:
+               {{"intend":"tìm mẫu áo thun nam khác dưới 200k",
+               "topic": "Poroduct"}}
+
+              Lịch sử trò chuyện: ""
+              Tin nhắn hiện tại: Khi nào cửa hàng mình mở cửa?
+              Trả về:
+               {{"intend":"hỏi về thời gian mở cửa cửa hàng",
+               "topic": "Other"}}
+            
+            Lịch sử trò chuyện: {prev_chat}
+            Tin nhắn hiện tại: {query} """
    
-    system_instruction='Chỉ trả về một chữ FAQ hoặc Product hoặc Other'    
-    response=call_llm(prompt, system_instruction, temperature=1)
-    return response.strip().replace("'", "")
 
-def query_faq(client, query, prev_chat):
-    faqs=client.collections.get('faqs')
-    prompt=f"""Đây là tin nhắn hiện tại của khách hàng cùng lịch sử trò chuyện.
-              Hãy trả về đoạn văn bản tối ưu nhất để thực hiện semantic search trong bộ các câu hỏi faqs.
-              Tin nhắn trước đó:{prev_chat[-2]}.
-              Tin nhắn ngay trước đó: {prev_chat[-1]}.
-              Tin nhắn hiện tại: '{query}'"""
-    system_instruction="""Bạn là một trợ lý ảo trò chuyện của cửa hàng quần áo trực tuyến Coolmate. Hãy nói chuyện một cách tự nhiên, như đang trò chuyện với một người bạn.
-                                  Giữ câu trả lời ngắn gọn và hữu ích."""
-    # print(prompt)
-    
-    response=call_llm(prompt, system_instruction)
-    augmented_query=response
-    # print(augmented_query)
-
-    
-    response=faqs.query.near_text(augmented_query, limit=3)
-
-    context=""
-    for res in response.objects:
-        context+=f"Question: {res.properties['question']} Answer: {res.properties['answer']}\n"
-
-    prompt=f"""Đây là tin nhắn hiện tại của khách hàng cùng với lịch sử trò chuyện.
-                      Tin nhắn trước đó:{prev_chat[-2]}.
-                      Tin nhắn ngay trước đó: {prev_chat[-1]}.
-                      Tin nhắn hiện tại: '{query}'.
-                      Thông tin: {context}"""
-    system_instruction="""Bạn là một trợ lý ảo trò chuyện cho cửa hàng quần áo trực tuyến Coolmate. Hãy nói chuyện một cách tự nhiên, như đang trò chuyện với một người bạn.
-                                  Giữ câu trả lời ngắn gọn và hữu ích."""
-    response=call_llm(prompt, system_instruction, temperature=1)
-    # print(prompt)
-    return response
-### if the customer want to see more samples of the recommended
-
-def get_shown_codes(query, prev_chat):
-    prompt=f"""Đây là tin nhắn hiện tại của khách hàng cùng với lịch sử trò chuyện. 
-    Tin nhắn trước đó:{prev_chat[-2]}.
-    Tin nhắn ngay trước đó: {prev_chat[-1]}.
-    Tin nhắn hiện tại: '{query}'.
-    Nếu khách hàng muốn xem thêm mẫu khác của loại sản phẩm trước đó, trả về True.
-    Nếu khách hàng muốn xem loại sản phẩm khác, trả về False.
-    Trả về sản phẩm khách hàng muốn xem thêm.
-    Trả về file JSON theo mẫu sau:
-    Mẫu: 
-    {{ 'see_more': true
-       'product': "Áo khoác" 
-    }}
-    """  
-    # print(prompt)
-    system_instruction='Chỉ trả về JSON, không gì khác!'
-    response=call_llm(prompt, system_instruction)
-    # print(response)
+    system_instruction="""Nhiệm vụ của bạn là xác định và phân loại ý định của khách hàng.
+                        Chỉ trả về JSON."""
+    response=call_llm(prompt, system_instruction, temperature=0)
     match=re.search(r'{.*}', response, re.DOTALL)
     meta_data=match.group(0)
     meta_data=json.loads(meta_data)
@@ -219,33 +192,13 @@ def query_product(client, query, prev_chat, intend):
     # client.collections.delete('products')
     products=client.collections.get('products')
 
-    prompt=f"""Đây là tin nhắn hiện tại của khách hàng cùng với lịch sử trò chuyện. 
-            Tin nhắn trước đó:{prev_chat[-2]}.
-            Tin nhắn ngay trước đó: {prev_chat[-1]}.
-            Tin nhắn hiện tại: '{query}'.
-            Hãy trả về đặc điểm của sản phẩm khách hàng đang tìm.
-            Ví dụ:
-                    Khách hàng: Tôi sắp đi đám cưới, cho tôi bộ quần áo phù hợp.
-                    Trả về: Quần áo nam lịch sự, trang trọng để dự tiệc.
-
-                    Khách hàng: Quần áo mặc cho mùa hè.
-                    Trả về: Quần áo nam mặc hằng ngày, thấm hút nhanh khô, phù hợp cho các hoạt động ngoài trời.
-
-                    Khách hàng: Áo đi làm.
-                    Trả về: Áo nam lịch sự, thoải mái để mặc cả ngày, phù hợp để đi làm văn phòng.
-            Hỏi thêm khách hàng nếu cần thiết.
-            """
     # print(prompt)
-    # with open('text.text', 'w', encoding='utf-8') as f:
-    #     f.write(prompt)
-    system_instruction='Chỉ trả về đoạn văn bản dùng để tìm kiếm hoặc câu hỏi thêm thông tin khách hàng, không gì khác!'
-    augmented_query=call_llm(prompt, system_instruction, temperature=1)
+    meta_data=get_metadata(intend, query, prev_chat)
 
-    if '?' in augmented_query:
-        return augmented_query
-    print(augmented_query)
-    
-    meta_data=get_metadata(query, prev_chat)
+    # if '?' in augmented_query:
+    #     return augmented_query
+    # print(augmented_query)
+    context=""
     print(meta_data)
     filters=build_filters(meta_data)
     response=products.query.near_text(query=intend, filters=Filter.all_of(filters) if len(filters) != 0 else None, limit=3)
@@ -265,11 +218,10 @@ def query_product(client, query, prev_chat, intend):
                     hình ảnh: {res.properties['images']},
                     mô tả: {res.properties['desc']},
                     tồn kho theo kích thước và màu: {res.properties['storage']},
-                    link sản phẩm:{res.properties['product_url']} 
-                    /n"""
+                    link sản phẩm:{res.properties['product_url']}/n"""
     
-    # with open('context.txt', 'w', encoding='utf-8') as f:
-    #     f.write(context)
+    with open('context.txt', 'w', encoding='utf-8') as f:
+        f.write(context)
 
     prompt=f""" Bạn sẽ nhận:
                 - lịch sử trò chuyện giữa bạn và khách hàng
@@ -324,3 +276,5 @@ def query_other(client, query, prev_chat, intend):
                           Nếu vẫn đang trong một cuộc trò chuyện thì chỉ trả lời, không chào lại."""
     response=call_llm(prompt, system_instruction)
     return response
+
+ 
