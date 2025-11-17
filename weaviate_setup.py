@@ -36,7 +36,7 @@ def initialize_products_collection(client):
             vector_config=Configure.Vectors.text2vec_weaviate(
                 name='vector',
                 source_properties=['product_code', 'name', 'desc',
-                                'price', 'gender', 'highlights','usage',
+                                'highlights','usage',
                                 'features']),
             properties=[
                 Property(name='product_id', vectorize_property_name=False, data_type=DataType.TEXT),

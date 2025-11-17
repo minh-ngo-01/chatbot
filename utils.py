@@ -243,8 +243,8 @@ def query_product(client, query, prev_chat, intent):
                 
 
                 Yêu cầu:
-                - tránh trả lời không liên quan đến câu hỏi/ yêu cầu của khách hàng
-                - chỉ dựa vào thông tin sản phẩm để trả lời, nếu không có thông tin/sản phẩm khách hàng hỏi/ yêu cầu thì xin lỗi và đưa ra lý do.
+                - tránh trả lời không liên quan đến câu hỏi hay yêu cầu của khách hàng.
+                - chỉ dựa vào thông tin sản phẩm để trả lời, nếu không có thông tin hay sản phẩm khách hàng hỏi hay yêu cầu thì báo không có thông tin hoặc sản phẩm.
                 - liệt kê sản phẩm theo số thứ tự.
                 - Không đề cấp đến số lượng hàng tồn.
                 - Gắn hình ảnh bằng tag <img src="http:\\ ..." width=300>.
