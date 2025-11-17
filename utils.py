@@ -235,7 +235,6 @@ def query_product(client, query, prev_chat, intent):
     print(check_context)
 
     prompt=f""" Bạn sẽ nhận:
-                - lịch sử trò chuyện giữa bạn và khách hàng
                 - ý định hiện tại của khách hàng
                 - thông tin sản phẩm
 
@@ -252,9 +251,6 @@ def query_product(client, query, prev_chat, intent):
                 - Gắn hình ảnh bằng tag <img src="http:\\ ..." width=300>.
                 - Đính kèm mã sản phẩm.
                 
-
-
-                Lịch sử trò chuyện:{prev_chat}
                 ý định hiện tại của khách hàng: {intent}
                 Thông tin sản phẩm: {context}"""
                 
