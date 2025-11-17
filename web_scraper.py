@@ -93,13 +93,12 @@ def get_item_info(product_id):
             url='https://n7media.coolmate.me/uploads/'+dict_1['src'][7:]
             urls.append(url)
             images[dict_0['title']]=urls
-    storage={}
+    colorBySize=[]
     for variant in product['variants']:
         if variant['quantity']>0:
             color=variant['option1']
             size=variant['option2']
-            quantity=variant['quantity']
-            storage[size+" "+color]=quantity
+            colorBySize.append[size+" "+color]
     product_url='https://www.coolmate.me/product/'+ product['seo_alias']
 
     return {'product_id':product_id,
@@ -117,7 +116,7 @@ def get_item_info(product_id):
             'care':care,
             'video':video,
             'images':str(images),
-            'storage':str(storage),
+            'colorBySize':str(colorBySize),
             'product_url':product_url
             }
 def get_items_data(url):    

@@ -54,7 +54,7 @@ def initialize_products_collection(client):
                 Property(name='care', vectorize_property_name=True, data_type=DataType.TEXT),
                 Property(name='video', vectorize_property_name=True, data_type=DataType.TEXT),
                 Property(name='images', vectorize_property_name=True, data_type=DataType.TEXT),
-                Property(name='storage', vectorize_property_name=True, data_type=DataType.TEXT),
+                Property(name='colorBySize', vectorize_property_name=True, data_type=DataType.TEXT),
                 Property(name='product_url', vectorize_property_name=True, data_type=DataType.TEXT),
             ]
                         
@@ -80,7 +80,7 @@ def populate_products_collection(collection, list_):
             'care':dict_['care'],
             'video':dict_['video'],
             'images':dict_['images'],
-            'storage':dict_['storage'],
+            'colorBySize':dict_['colorBySize'],
             'product_url':dict_['product_url']})
             if batch.number_errors >10:
                 print('Batch import stopped due to too many errors.')

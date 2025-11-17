@@ -220,7 +220,7 @@ def query_product(client, query, prev_chat, intent):
                     bảo quản: {res.properties['care']},
                     hình ảnh: {res.properties['images']},
                     mô tả: {res.properties['desc']},
-                    tồn kho theo kích thước và màu: {res.properties['storage']},
+                    size theo màu có sẵn: {res.properties['colorBySize']},
                     link sản phẩm:{res.properties['product_url']}/n"""
     
     with open('context.txt', 'w', encoding='utf-8') as f:
@@ -232,12 +232,17 @@ def query_product(client, query, prev_chat, intent):
                 - thông tin sản phẩm
 
                 Nhiệm vụ: 
-                - trả lời tin nhắn khách hàng dựa theo các thông tin sản phẩm được cung cấp
+                trả lời tập trung vào câu hỏi/ yêu cầu của khách hàng dựa theo các thông tin sản phẩm được cung cấp.
+                
 
                 Yêu cầu:
+                - tránh trả lời không liên quan đến câu hỏi khách hàng
+                - nếu không có thông tin, sản phẩm khách hàng hỏi/ yêu cầu thì xin lỗi và đưa ra lý do
+                - liệt kê sản phẩm theo số thứ tự.
                 - Không đề cấp đến số lượng hàng tồn.
                 - Gắn hình ảnh bằng tag <img src="http:\\ ..." width=300>.
                 - Đính kèm mã sản phẩm.
+                
 
 
                 Lịch sử trò chuyện:{prev_chat}
