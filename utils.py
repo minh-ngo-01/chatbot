@@ -226,7 +226,8 @@ def query_product(client, query, prev_chat, intent):
 
         check_context+=f"""mã sản phẩm: {res.properties['product_code']},
                     tên sản phẩm:{res.properties['name']},                     
-                    giá: {res.properties['price']}"""
+                    giá: {res.properties['price']}
+                        """
                     
     
     

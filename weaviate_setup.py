@@ -153,13 +153,13 @@ urls=[
 # ) as client:
 #     products=client.collections.get('products')
 
-    # seen=[]
+#     seen=[]
     
-    # for item in products.iterator():
-    #     if item.properties['product_id'] not in seen:
-    #         seen.append(item.properties['product_id'])
-    #     else:
-    #         products.data.delete_by_id(item.uuid)
+#     for item in products.iterator():
+#         if item.properties['product_id'] not in seen:
+#             seen.append(item.properties['product_id'])
+#         else:
+#             products.data.delete_by_id(item.uuid)
     
         
         
