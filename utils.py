@@ -221,8 +221,14 @@ def query_product(client, query, prev_chat, intent):
                     mô tả: {res.properties['desc']},
                     size theo màu có sẵn: {res.properties['colorBySize']},
                     link sản phẩm:{res.properties['product_url']}/n"""
+        
+        print_context+=f"""mã sản phẩm: {res.properties['product_code']},
+                    tên sản phẩm:{res.properties['name']},                     
+                    giá: {res.properties['price']}"""
+                    
     
-    print(context)
+    
+    print(print_context)
 
     prompt=f""" Bạn sẽ nhận:
                 - lịch sử trò chuyện giữa bạn và khách hàng
