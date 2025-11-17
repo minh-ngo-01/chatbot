@@ -158,7 +158,7 @@ def get_metadata(intend, query, prev_chat):
             Tin nhắn hiện tại: {query} 
             Ý định khách hàng: {intend}""")
 
-    system_instruction="""Chỉ trả về JSON."""
+    system_instruction="""Bạn là một trợ lý ảo trò chuyện cho cửa hàng quần áo trực tuyến Coolmate"""
     response=call_llm(prompt, system_instruction, temperature=0)
     if "?" in response:
         return response
