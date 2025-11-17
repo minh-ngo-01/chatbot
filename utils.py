@@ -89,16 +89,15 @@ def classify_query(query, prev_chat):
 def get_metadata(intend, query, prev_chat):
     prompt=f"""Bạn sẽ nhận:
             - lịch sử trò chuyện giữa bạn và khách hàng.
-            - tin nhắn hiện tại của khách hàng.
-            - mô tả chi tiết về ý định của khách hàng.
+            - mô tả chi tiết về ý định hiện tại của khách hàng.
             
               Nhiệm vụ:
               1. Xác định khách hàng đang tìm gì?.
                  Thực hiện theo các bước sau:
-                 - xác định sản phẩm được đề cập trong tin nhắn gần nhất. (vd áo thun/quần tây/tất/áo khoác,...)
-                 - khách hàng có hỏi thêm, được cung cấp thêm thông tin gì về sản phẩm được đề cập trong tin nhắn gần nhất không? có -> see_more:false, product_codes=[""]
-                 - khách hàng tìm thêm mẫu khác của sản phẩm được đề cập trong tin nhắn gần nhất không? có -> see_more: True, product_codes: <các mã sản phẩm của sản phẩm đó trong lịch sử trò chuyện>
-                 - khách hàng tìm sản phẩm khác không? có -> see_more: false, product_codes=[""]
+                 - trong lịch sử trò chuyện, xác định sản phẩm được đề cập gần nhất.  vd áo thun/quần tây/tất/áo khoác,...
+                 - trong ý định hiện tại, khách hàng có hỏi thêm, yêu cầu cung cấp thêm thông tin gì về sản phẩm được đề cập gần nhất không? có -> see_more:false, product_codes=[""]
+                 - trong ý định hiện tại, khách hàng có tìm mẫu, kiểu khác của sản phẩm được đề cập gần nhất không? có -> see_more: True, product_codes: <các mã sản phẩm của sản phẩm trước đó trong lịch sử trò chuyện>
+                 - trong ý định hiện tại, khách hàng tìm sản phẩm khác với sản phẩm được đề cập gần nhất không? có -> see_more: false, product_codes=[""]
 
             2. Xác định các meta_data trong ý định của khách hàng.
                  - lọc ra các thông tin về giá và giới tính
@@ -106,7 +105,7 @@ def get_metadata(intend, query, prev_chat):
             
             Trả vê một JSON theo mẫu:
                     {{
-                    "product": str           # sản phẩm được đề cập trong tin nhắn trước dó.
+                    "previous_product": str           # sản phẩm được đề cập trong tin nhắn trước dó.
                     "see_more": Boolean           
                     "product_codes": List[str]        # mã sản phẩm của sản phẩm được đề cập trong tin nhắn gần nhất trong lịch sử trò chuyện.
                     "price": {{"min": int, "max": int}},     # "max": "inf" nếu không có thông tin về giá
@@ -119,7 +118,7 @@ def get_metadata(intend, query, prev_chat):
               Ý định khách hàng: tìm mẫu áo thun nam khác dưới 200k
               Trả về:
               {{
-                    "product": áo thun
+                    "previous_product": áo thun
                     "see_more": true           
                     "product_codes": ['TSZ959', 'TSZ877', 'MUW']  
                     "price": {{"min": 0, "max": 200000}},     
@@ -129,10 +128,10 @@ def get_metadata(intend, query, prev_chat):
               
               Lịch sử trò chuyện: {{'time': 'Sun Nov 16 07:52:30 2025', 'customer': 'các mẫu áo thun nam', 'bot': 'Tuyệt vời! Bạn đang tìm áo thun nam đúng không? Coolmate có mấy mẫu này rất được ưa chuộng nè:\n\n**1. Áo Thun Nam Cotton 220GSM Basics (TSZ959)**\n<img src="https://n7media.coolmate.me/uploads/February2025/ao-thun-nam-cotton-220gsm-mau-nau-cappuccino_(7).jpg" width=300>\nChất liệu 100% Cotton Úc dày dặn, mềm mịn, thấm hút tốt. Form Regular Fit mặc lên cực thoải mái, có đến 12 màu tha hồ lựa chọn nha. Giá chỉ 159.000đ.\n\n**2. Áo Thun Nam Chạy Bộ Graphic Heartbeat (TSZ877)**\n<img src="https://n7media.coolmate.me/uploads/July2025/ao-thun-nam-chay-bo-hoat-tiet-graphic-heartbeat-hong-5.jpg" width=300>\nSiêu nhẹ, nhanh khô và co giãn 4 chiều, cực hợp cho những ai mê vận động. Đặc biệt có logo phản quang giúp an toàn hơn khi tập luyện buổi tối. Giá cũng là 159.000đ.\n\n**3. Áo Thun Nam Thể Thao Coolmate Basics (TSZ916)**\n<img src="https://n7media.coolmate.me/uploads/September2025/ao-the-thao-nam-promax-recycle-basics1-hong-marsala-1_10.jpg" width=300>\nĐây là dòng sản phẩm Recycle Basics, vừa thân thiện môi trường, vừa siêu nhẹ, thấm hút và khô nhanh. Giá mềm hơn, chỉ 99.000đ.\n\nBạn ưng mẫu nào hay muốn xem thêm màu sắc của mẫu nào không?'}},
                                   {{'time': 'Sun Nov 16 07:52:46 2025', 'customer': 'mẫu khác', 'bot': 'Oke, bạn muốn xem thêm áo thun nam đúng không? Coolmate có mấy mẫu này nè:\n\n**1. Áo thun dài tay 100% Cotton Relax fit (LSZ711)**\n<img src="https://n7media.coolmate.me/uploads/September2025/ao-dai-tay-100-cotton-relax-fit-reu-1.jpg" width=300>\nÁo này làm từ 100% cotton mềm mại, thấm hút tốt, form Relax fit mặc thoải mái lắm. Có màu Rêu, Trắng, Đen. Giá 219.000đ.\n\n**2. Áo dài tay thể thao 1699 (LSZ681)**\n<img src="https://n7media.coolmate.me/uploads/December2024/ao-dai-tay-the-thao-1699-trang_(3).jpg" width=300>\nÁo này chất polyester thoáng khí, nhanh khô, hợp cho người hay vận động nè. Form Slim fit tôn dáng. Có các màu Trắng, Be Trench Coat, Be, Đen, Navy, Xanh bóng đêm. Giá 199.000đ.\n\n**3. Áo thun nam Cotton Compact (TSZ923)**\n<img src="https://n7media.coolmate.me/uploads/September2025/ao-thun-nam-cotton-compact-chong-nhan-den-1.jpg" width=300>\nChất cotton compact siêu mềm mịn, ít nhăn, có thêm chút spandex co giãn thoải mái. Form Regular fit. Có nhiều màu lắm: Đen, Xám, Xanh Navy, Trắng, Xanh rêu, Đỏ, Be, Xanh Pastel. Giá 229.000đ.\n\nBạn thấy mẫu nào ưng ý hay muốn xem thêm chi tiết gì không?'}}
-              Ý định khách hàng: tìm quần kaki để đi làm
+              Ý định khách hàng: tìm quần kaki nam để đi làm
               Trả về:
                {{
-                    "product": quần kaki         
+                    "previous_product": áo thun         
                     "see_more": false
                     "product_codes":[""]      
                     "price": {{"min": 0, "max": "inf"}},    
@@ -145,8 +144,8 @@ def get_metadata(intend, query, prev_chat):
               Ý định khách hàng: tìm mẫu quần short khác cho nam
               Trả về:
                {{
-                    "product": quần short        
-                    "see_more": false 
+                    "previous_product": quần short        
+                    "see_more": true
                     "product_codes": ["SOZ890", "SOZ890", "SOZ893"]       
                     "price": {{"min": 0, "max": "inf"}}, 
                     "gender": ['MALE']
@@ -154,7 +153,7 @@ def get_metadata(intend, query, prev_chat):
 
             
             Lịch sử trò chuyện: {prev_chat}
-            Ý định khách hàng: {intend}"""
+            Ý định hiện tại của khách hàng: {intend}"""
     print( f"""Lịch sử trò chuyện: {prev_chat}
             Ý định khách hàng: {intend}""")
 
