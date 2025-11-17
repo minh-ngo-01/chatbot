@@ -97,7 +97,7 @@ def get_metadata(intend, query, prev_chat):
             - xác định xem khách hàng có đang tìm những mẫu khác của sản phẩm đang được đề cập không?
             - nếu có, liệt kê mã sản phẩm của những mẫu đã gợi ý cho khách hàng của sản phẩm đó.
             - xác định các metadata hữu ích về giá, giới tính, màu sắc và size quần áo.
-            - hỏi giới tính khách hàng nếu chưa được đề cập.
+            - hỏi giới tính khách hàng nếu chưa được cung cấp.
             Trả vê một JSON theo mẫu:
 
                     {{
@@ -105,7 +105,7 @@ def get_metadata(intend, query, prev_chat):
                     "see_more": Boolean           # true nếu khách hàng tìm những mẫu khác của sản phẩm đang được đề cập, false nếu không phải.
                     "product_codes": List[str]        # những mã sản phẩm của sản phẩm đang được đề cập trong lịch sử trò chuyện.
                     "price": {{"min": int, "max": int}},     # "max": "inf" nếu không có thông tin về giá
-                    "gender": List[str],          # possible values in ['MALE', 'FEMALE', 'UNISEX'], hỏi khách hàng nếu chưa được đề cập.
+                    "gender": List[str],          # possible values in ['MALE', 'FEMALE', 'UNISEX'], hỏi lại khách hàng nếu chưa được đề cập.
                     }}            
             
             Ví dụ: 
