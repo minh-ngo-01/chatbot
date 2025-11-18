@@ -45,7 +45,6 @@ def call_llm(prompt, system_instruction, temperature=0, model='gemini-2.5-flash-
 
 def classify_query(query, prev_chat, previous_intent):
     prompt=f"""Bạn sẽ nhận:
-            - lịch sử trò chuyện giữa bạn và khách hàng.
             - ý định trước đó của khách hàng
             - tin nhắn hiện tại.
 
@@ -74,13 +73,12 @@ def classify_query(query, prev_chat, previous_intent):
                {{"intent":"hỏi về thời gian mở cửa cửa hàng",
                "topic": "Other"}}
             
-            Lịch sử trò chuyện: {prev_chat}
             Ý định trước đó: {previous_intent}
             Tin nhắn hiện tại: {query} """
    
     print(previous_intent)
     system_instruction="""Nhiệm vụ của bạn là xác định và phân loại ý định của khách hàng.
-                        Chỉ trả về JSON."""
+                          Chỉ trả về JSON."""
     response=call_llm(prompt, system_instruction, temperature=0)
     match=re.search(r'{.*}', response, re.DOTALL)
     meta_data=match.group(0)
