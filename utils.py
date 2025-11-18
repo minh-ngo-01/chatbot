@@ -239,12 +239,12 @@ def query_product(client, query, prev_chat, intent):
                 - thông tin các sản phẩm phù hợp
 
                 Nhiệm vụ: 
-                trả lời đúng vào trọng tâm câu hỏi/yêu cầu của khách hàng dựa theo thông tin sản phẩm được cung cấp.
+                trả lời đúng vào sản phẩm khách hàng đang tìm dựa theo thông tin sản phẩm được cung cấp.
                 
 
-                Yêu cầu:.
+                Yêu cầu:
+                - Báo hết sản phẩm nếu trong thông tin được cung cấp không có sản phẩm khách hàng muốn tìm.
                 - tránh trả lời không liên quan đến câu hỏi hay yêu cầu của khách hàng.
-                - xin lỗi và báo hết sản phẩm nếu trong thông tin được cung cấp không có sản phẩm khách hàng muốn tìm.
                 - liệt kê sản phẩm theo số thứ tự.
                 - Không đề cấp đến số lượng hàng tồn.
                 - Gắn hình ảnh bằng tag <img src="http:\\ ..." width=300>.
