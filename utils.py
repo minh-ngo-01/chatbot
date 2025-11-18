@@ -106,11 +106,11 @@ def get_metadata(intent, prev_chat):
             
             Trả vê một JSON hoặc câu hỏi theo mẫu:
                     {{
-                    "previous_product": str           # sản phẩm được đề cập trong tin nhắn trước dó.
+                    "previous_product": str    giải thích: sản phẩm trước đó được đề cập trong tin nhắn gần nhất.
                     "see_more": Boolean           
-                    "product_codes": List[str]        # mã sản phẩm của sản phẩm được đề cập trong tin nhắn gần nhất trong lịch sử trò chuyện.
-                    "price": {{"min": int, "max": int}},     # "max": "inf" nếu không có thông tin về giá
-                    "gender": List[str],          # possible values in ['MALE', 'FEMALE', 'UNISEX'], hỏi lại khách hàng nếu chưa được đề cập.
+                    "product_codes": List[str]         giải thích: tất cả các mã sản phẩm của sản phẩm trước đó trong lịch sử trò chuyện
+                    "price": {{"min": int, "max": int}},       ("max": "inf" nếu không có thông tin về giá)
+                    "gender": List[str],    (possible values in ['MALE', 'FEMALE', 'UNISEX'], hỏi lại khách hàng nếu chưa được đề cập.)
                     }}            
             
             Ví dụ: 
@@ -241,23 +241,53 @@ def query_product(client, query, prev_chat, intent):
                 - thông tin các sản phẩm phù hợp
 
                 Nhiệm vụ: 
-                trả lời đúng vào sản phẩm khách hàng đang tìm dựa theo thông tin sản phẩm được cung cấp.
+                - trả lời đúng vào sản phẩm khách hàng đang tìm dựa theo thông tin sản phẩm được cung cấp.
                 
 
                 Yêu cầu:
-                - Báo hết sản phẩm nếu trong sản phẩm phù hợp không có sản phẩm khách hàng muốn tìm, gợi ý sản phẩm khác.
+                - Báo không còn sản phẩm phù hợp nếu không có sản phẩm khách hàng muốn tìm.
                 - tránh trả lời không liên quan đến câu hỏi hay yêu cầu của khách hàng.
                 - liệt kê sản phẩm theo số thứ tự.
                 - Không đề cấp đến số lượng hàng tồn.
                 - Gắn hình ảnh bằng tag <img src="http:\\ ..." width=300>.
                 - Đính kèm mã sản phẩm.
+
+                Mẫu: 
+                Khách hàng: cho mình mẫu áo khoác thẻ thao
+                Trả về:
+                Dưới đây là các mẫu áo khoác thể thao, bạn xem thử nhé:
+                    1. Áo khoác nam Track Jacket Windbreaker
+                        * Mã sản phẩm: JKA447
+                        * Giá: 599.000đ
+                        * Đặc điểm nổi bật: Siêu nhẹ, kháng nước, nhanh khô, co giãn, thoáng khí.
+                        * Phù hợp: Tập luyện thể thao và mặc thường ngày.
+                        * Hình ảnh:
+                    2. Áo Khoác Nam có mũ Daily Wear
+                        * Mã sản phẩm: JKZ933
+                        * Giá: 429.000đ
+                        * Đặc điểm nổi bật: Trượt nước, chống UV, siêu nhẹ, ứng dụng công nghệ HEIQ VIROBLOCK.
+                        * Phù hợp: Mặc hàng ngày và chống nắng.
+                        * Hình ảnh:
+                    3. Áo khoác WindBreaker Nylon Taslan
+                        * Mã sản phẩm: JKZ516
+                        * Giá: 449.000đ
+                        * Đặc điểm nổi bật: Trượt nước, Bền bỉ, Thoáng mát.
+                        * Phù hợp: 
+                        * Hình ảnh:
+
+                Khách hàng: Còn mẫu áo thể thao nào khác không?
+                Trả về: 
+                (Nếu không còn sản phẩm nào phù hợp)
+                Xin lỗi, hiện cửa hàng chỉ còn các mẫu áo khoác thể thao này thôi ạ. Bạn có muốn xem sản phẩm khác không?
+
+                Lưu ý: 
+                - Không chào lại nếu đã trong một cuộc trò chuyện..
                 
                 ý định hiện tại của khách hàng: {intent}
                 sản phẩm phù hợp: {context}"""
                 
     system_instruction="""Bạn là một trợ lý ảo trò chuyện cho cửa hàng quần áo trực tuyến Coolmate. Hãy nói chuyện một cách tự nhiên, như đang trò chuyện với một người bạn.
-                            Giữ câu trả lời ngắn gọn và hữu ích.
-                            Không chào lại nếu đã trong một cuộc trò chuyện."""
+                            Giữ câu trả lời ngắn gọn và hữu ích."""
 
     response=call_llm(prompt, system_instruction)
     
@@ -283,11 +313,13 @@ def query_other(client, query, prev_chat, intent):
                 
                 Lịch sử trò chuyện:{prev_chat}
                 Tin nhắn hiện tại: '{query}'.
-                Thông tin: {context}"""
+                Thông tin: {context}
+
+                Lưu ý: 
+                - Không chào lại nếu đã trong một cuộc trò chuyện."""
     
     system_instruction="""Bạn là một trợ lý ảo trò chuyện cho cửa hàng quần áo trực tuyến Coolmate. Hãy nói chuyện một cách tự nhiên, như đang trò chuyện với một người bạn.
-                          Giữ câu trả lời ngắn gọn và hữu ích.
-                          Nếu vẫn đang trong một cuộc trò chuyện thì chỉ trả lời, không chào lại."""
+                          Giữ câu trả lời ngắn gọn và hữu ích."""
     response=call_llm(prompt, system_instruction)
     return response
 
