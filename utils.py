@@ -168,7 +168,8 @@ def get_metadata(intent, prev_chat):
     print(f"""Lịch sử trò chuyện: {prev_chat}
               Ý định hiện tại của khách hàng: {intent}""")
 
-    system_instruction="""Bạn là một trợ lý ảo trò chuyện cho cửa hàng quần áo trực tuyến Coolmate"""
+    system_instruction="""Bạn là một trợ lý ảo trò chuyện cho cửa hàng quần áo trực tuyến Coolmate.
+                          Trả về một JSON hoặc câu hỏi, chỉ một trong hai"""
     response=call_llm(prompt, system_instruction, temperature=0)
     if "?" in response:
         return response
