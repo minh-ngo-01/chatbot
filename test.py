@@ -1,2 +1,2 @@
 list_=[]
-print(list_[-1:])
+print([a for a in list_])
