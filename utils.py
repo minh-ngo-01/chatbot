@@ -276,9 +276,9 @@ def query_product(client, query, prev_chat, intent):
                         * Phù hợp: 
                         * Hình ảnh: <hình ảnh sản phẩm>
 
-                Khách hàng: Còn mẫu áo thể thao nào khác không?
-                (Nếu không còn sản phẩm nào phù hợp)
+                Khách hàng: mẫu khác.
                 Trả về: 
+                (Nếu không còn sản phẩm nào phù hợp)
                 Xin lỗi, hiện cửa hàng chỉ còn các mẫu áo khoác thể thao này thôi ạ. Bạn có muốn xem sản phẩm khác không?
 
                 Lưu ý: 
