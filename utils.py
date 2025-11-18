@@ -246,7 +246,7 @@ def query_product(client, query, prev_chat, intent):
                 
 
                 Yêu cầu:
-                - Báo hết sản phẩm nếu trong thông tin được cung cấp không có sản phẩm khách hàng muốn tìm.
+                - Báo hết sản phẩm nếu trong thông tin sản phẩm không có sản phẩm khách hàng muốn tìm.
                 - tránh trả lời không liên quan đến câu hỏi hay yêu cầu của khách hàng.
                 - liệt kê sản phẩm theo số thứ tự.
                 - Không đề cấp đến số lượng hàng tồn.
