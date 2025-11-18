@@ -262,19 +262,19 @@ def query_product(client, query, prev_chat, intent):
                         * Giá: 599.000đ
                         * Đặc điểm nổi bật: Siêu nhẹ, kháng nước, nhanh khô, co giãn, thoáng khí.
                         * Phù hợp: Tập luyện thể thao và mặc thường ngày.
-                        * Hình ảnh:
+                        * Hình ảnh: <hình ảnh sản phẩm>
                     2. Áo Khoác Nam có mũ Daily Wear
                         * Mã sản phẩm: JKZ933
                         * Giá: 429.000đ
                         * Đặc điểm nổi bật: Trượt nước, chống UV, siêu nhẹ, ứng dụng công nghệ HEIQ VIROBLOCK.
                         * Phù hợp: Mặc hàng ngày và chống nắng.
-                        * Hình ảnh:
+                        * Hình ảnh: <hình ảnh sản phẩm>
                     3. Áo khoác WindBreaker Nylon Taslan
                         * Mã sản phẩm: JKZ516
                         * Giá: 449.000đ
                         * Đặc điểm nổi bật: Trượt nước, Bền bỉ, Thoáng mát.
                         * Phù hợp: 
-                        * Hình ảnh:
+                        * Hình ảnh: <hình ảnh sản phẩm>
 
                 Khách hàng: Còn mẫu áo thể thao nào khác không?
                 (Nếu không còn sản phẩm nào phù hợp)
