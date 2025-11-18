@@ -164,7 +164,7 @@
 
         
 
-        chatHistory.push({time: new Date().toLocaleTimeString(), user:message, bot: data.message});
+        chatHistory.push({chat_history:{time: new Date().toLocaleTimeString(), user:message, bot: data.message}, intent:data.intent});
 
         const botMsg = document.createElement("div");
         botMsg.classList.add("message", "bot");

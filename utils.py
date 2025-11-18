@@ -43,10 +43,12 @@ def call_llm(prompt, system_instruction, temperature=0, model='gemini-2.5-flash-
     return response.text
 
 
-def classify_query(query, prev_chat):
+def classify_query(query, prev_chat, previous_intent):
     prompt=f"""Bạn sẽ nhận:
-            - tin nhắn hiện tại
             - lịch sử trò chuyện giữa bạn và khách hàng.
+            - ý định trước đó của khách hàng
+            - tin nhắn hiện tại.
+
             Nhiệm vụ:
             - mô tả chi tiết ý định của khách hàng, cụ thể về mẫu sản phẩm, loại sản phẩm và đặc điểm sản phẩm nếu có.
             - phân loại ý định đó theo 3 chủ đề gồm: Product(sản phẩm)/Delivery(giao hàng)/Other(chủ đề khác)
@@ -73,6 +75,7 @@ def classify_query(query, prev_chat):
                "topic": "Other"}}
             
             Lịch sử trò chuyện: {prev_chat}
+            Ý định trước đó: {previous_intent}
             Tin nhắn hiện tại: {query} """
    
 

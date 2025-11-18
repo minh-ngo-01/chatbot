@@ -41,10 +41,13 @@ class Message(BaseModel):
     time: str
     user: str
     bot: str
+class chatHistory(BaseModel):
+    message: Message
+    intent: str
 
 class chatRequest(BaseModel):
     query: str
-    chat_history: List[Message]
+    chat_history: List[chatHistory]
 
 class Product(BaseModel):
     gender: str
@@ -93,20 +96,21 @@ def add_product(product: Product):
 def answer(chat_request: chatRequest):
     weaviate_url=os.getenv('WEAVIATE_URL')
     weaviate_api_key=os.getenv('WEAVIATE_API_KEY')    
-    prev_chat=chat_request.chat_history
+    prev_chat=[chat[0] for chat in chat_request.chat_history]
     with weaviate.connect_to_weaviate_cloud(
     cluster_url=weaviate_url,
     auth_credentials=Auth.api_key(weaviate_api_key)
     ) as client:
+        previous_intent=chat_request.chat_history[-1][1]
         query=chat_request.query
-        response=classify_query(query, prev_chat)
+        response=classify_query(query, prev_chat, previous_intent)
         if response['topic']=='Product':
             res=query_product(client, query, prev_chat, response['intent'])
         if response['topic']=='Delivery':
             res="Vấn đề giao hàng chưa được hỗ trợ"
         if response['topic']=='Other':
             res=query_other(client, query, prev_chat, response['intent'])
-        return {'message':res}
+        return {'intent':response['intent'],'message':res}
 
 # @app.post('/chat')
 # def answer(chatRequest: chatRequest):
