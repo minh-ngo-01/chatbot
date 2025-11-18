@@ -78,7 +78,7 @@ def classify_query(query, prev_chat, previous_intent):
             Ý định trước đó: {previous_intent}
             Tin nhắn hiện tại: {query} """
    
-
+    print(previous_intent)
     system_instruction="""Nhiệm vụ của bạn là xác định và phân loại ý định của khách hàng.
                         Chỉ trả về JSON."""
     response=call_llm(prompt, system_instruction, temperature=0)

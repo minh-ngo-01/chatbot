@@ -41,6 +41,7 @@ class Message(BaseModel):
     time: str
     user: str
     bot: str
+    
 class chatHistory(BaseModel):
     message: Message
     intent: str
@@ -101,7 +102,7 @@ def answer(chat_request: chatRequest):
     cluster_url=weaviate_url,
     auth_credentials=Auth.api_key(weaviate_api_key)
     ) as client:
-        previous_intent=chat_request.chat_history[-1][1]
+        previous_intent=chat_request.chat_history[-1:][1:2]
         query=chat_request.query
         response=classify_query(query, prev_chat, previous_intent)
         if response['topic']=='Product':
