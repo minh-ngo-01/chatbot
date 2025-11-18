@@ -246,7 +246,7 @@ def query_product(client, query, prev_chat, intent):
                 
 
                 Yêu cầu:
-                - Báo hết sản phẩm nếu trong thông tin sản phẩm không có sản phẩm khách hàng muốn tìm.
+                - Báo hết sản phẩm nếu trong sản phẩm phù hợp không có sản phẩm khách hàng muốn tìm, gợi ý sản phẩm khác.
                 - tránh trả lời không liên quan đến câu hỏi hay yêu cầu của khách hàng.
                 - liệt kê sản phẩm theo số thứ tự.
                 - Không đề cấp đến số lượng hàng tồn.
@@ -254,7 +254,7 @@ def query_product(client, query, prev_chat, intent):
                 - Đính kèm mã sản phẩm.
                 
                 ý định hiện tại của khách hàng: {intent}
-                Thông tin sản phẩm: {context}"""
+                sản phẩm phù hợp: {context}"""
                 
     system_instruction="""Bạn là một trợ lý ảo trò chuyện cho cửa hàng quần áo trực tuyến Coolmate. Hãy nói chuyện một cách tự nhiên, như đang trò chuyện với một người bạn.
                             Giữ câu trả lời ngắn gọn và hữu ích.
