@@ -227,16 +227,14 @@ def query_product(client, query, prev_chat, intent):
     print(print_context)
     prompt=f""" Bạn sẽ nhận:
                 - ý định hiện tại của khách hàng                
-                tên sản phẩm:Áo khoác nam Track Jacket Windbreaker,... 
+                - sản phẩm tìm được
 
                 Nhiệm vụ: 
-                - Chỉ phản hồi thông tin cho sản phẩm khách hàng đang tìm, không đề cập đến sản phẩm khác.
-                - Trả lời các câu hỏi khác.
+                - Chỉ trả lời sản phẩm khách hàng đang tìm.
                 
 
-                Yêu cầu:
-                - chỉ dựa vào sản phẩm tìm được để trả lời.
-                - chỉ trả về các sản phẩm mà khách hàng đang tìm.
+                Chú ý:
+                - chỉ dùng sản phẩm tìm được để trả lời.
                 - trả về "xin lỗi, cửa hàng đã hết mẫu sản phẩm <sản phẩm> rồi ạ" nếu trong sản phẩm tìm được không có sản phẩm mà khách hàng tìm.
                 - liệt kê sản phẩm theo số thứ tự.
                 - Không đề cấp đến số lượng hàng tồn.
