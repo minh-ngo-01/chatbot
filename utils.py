@@ -230,8 +230,10 @@ def query_product(client, query, prev_chat, intent):
                 - sản phẩm tìm được
 
                 Nhiệm vụ: 
-                - Chỉ trả lời sản phẩm khách hàng đang tìm.
-                
+                Trả lời thông tin sản phẩm khách hàng đang tìm the các bước sau:
+                - Trong các sản phẩm tìm được có sản phẩm khách hàng đang tìm không?
+                  Có -> trả về thông tin sản phẩm khách hàng đang tìm.
+                  Không -> trả về "xin lỗi, cửa hàng đã hết mẫu sản phẩm <sản phẩm> rồi ạ"
 
                 Chú ý:
                 - chỉ dùng sản phẩm tìm được để trả lời.
