@@ -202,7 +202,6 @@ def query_product(client, query, prev_chat, intent):
     filters=build_filters(meta_data)
     response=products.query.near_text(query=intent, filters=Filter.all_of(filters) if len(filters) != 0 else None, limit=3)
     context=""
-    check_context=""
     for res in response.objects:
         context+=f"""mã sản phẩm: {res.properties['product_code']},
                     tên sản phẩm:{res.properties['name']},                     
@@ -219,28 +218,6 @@ def query_product(client, query, prev_chat, intent):
                     mô tả: {res.properties['desc']},
                     size theo màu có sẵn: {res.properties['colorBySize']},
                     link sản phẩm:{res.properties['product_url']}/n"""
-        
-
-        check_context+=f"""mã sản phẩm: {res.properties['product_code']},
-                    tên sản phẩm:{res.properties['name']},                     
-                    giá: {res.properties['price']},
-                    giới tính: {res.properties['gender']},
-                    nổi bât: {res.properties['highlights']},
-                    công nghệ: {res.properties['technology']},
-                    vật liệu: {res.properties['material']},
-                    kiểu dáng: {res.properties['style']},
-                    phù hợp: {res.properties['usage']},
-                    tính năng: {res.properties['features']},
-                    bảo quản: {res.properties['care']},
-                    hình ảnh: ...,
-                    mô tả: ...,
-                    size theo màu có sẵn: {res.properties['colorBySize']},
-                    link sản phẩm:{res.properties['product_url']}
-                    """
-                    
-    
-    
-    print(check_context)
 
     prompt=f""" Bạn sẽ nhận:
                 - ý định hiện tại của khách hàng                
