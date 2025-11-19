@@ -217,7 +217,8 @@ def query_product(client, query, prev_chat, intent):
                     hình ảnh: {res.properties['images']},
                     mô tả: {res.properties['desc']},
                     size theo màu có sẵn: {res.properties['colorBySize']},
-                    link sản phẩm:{res.properties['product_url']}/n"""
+                    link sản phẩm:{res.properties['product_url']}
+                    """
     print_context=""
     for res in response.objects:
      print_context+=f"""mã sản phẩm: {res.properties['product_code']},
@@ -229,11 +230,12 @@ def query_product(client, query, prev_chat, intent):
                 tên sản phẩm:Áo khoác nam Track Jacket Windbreaker,... 
 
                 Nhiệm vụ: 
-                - Chỉ phản hồi thông tin về sản phẩm khách hàng đang tìm, không đề cập đến sản phẩm khác.
+                - Chỉ phản hồi thông tin cho sản phẩm khách hàng đang tìm, không đề cập đến sản phẩm khác.
                 - Trả lời các câu hỏi khác.
                 
 
                 Yêu cầu:
+                - chỉ dựa vào sản phẩm tìm được để trả lời.
                 - chỉ trả về các sản phẩm mà khách hàng đang tìm.
                 - trả về "xin lỗi, cửa hàng đã hết mẫu sản phẩm <sản phẩm> rồi ạ" nếu trong sản phẩm tìm được không có sản phẩm mà khách hàng tìm.
                 - liệt kê sản phẩm theo số thứ tự.
