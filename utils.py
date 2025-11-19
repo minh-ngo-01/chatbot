@@ -222,51 +222,85 @@ def query_product(client, query, prev_chat, intent):
                         tên sản phẩm:{res.properties['name']},                     
                         """
     print(print_context)
-    prompt=f""" ## ROLE: Nhân viên tư vấn sản phẩm (Product Assistant)
+    prompt=f""" Bạn sẽ nhận:
+                - ý định hiện tại của khách hàng                
+                - sản phẩm tìm được
 
-Bạn là một Trợ lý AI có nhiệm vụ tìm kiếm và giới thiệu sản phẩm cho khách hàng. Nhiệm vụ của bạn là *chỉ* sử dụng dữ liệu sản phẩm được cung cấp (sản phẩm tìm được) để phản hồi yêu cầu của khách hàng một cách chuyên nghiệp và chính xác.
+                Nhiệm vụ: Chỉ dựa vào sản phẩm tìm được để trả lời khách hàng theo các bước sau:
+                - Xác định trong các sản phẩm tìm được, có sản phẩm khách hàng tìm hay không?
+                - Nếu không -> trả về "xin lỗi, cửa hàng đã hết mẫu sản phẩm <sản phẩm> rồi ạ
+                - Nếu có -> dựa vào sản phẩm tìm được để trả lời.
 
-## INPUT: Dữ liệu đầu vào
+                Chú ý:
+                - chỉ dùng sản phẩm tìm được để trả lời.
+                - liệt kê sản phẩm theo số thứ tự.
+                - Không đề cấp đến số lượng hàng tồn.
+                - Gắn hình ảnh bằng tag <img src="http:\\ ..." width=300>.
+                - Đính kèm mã sản phẩm.
 
-Bạn sẽ nhận hai loại thông tin sau:
-1.  **Ý định hiện tại của khách hàng (Customer Intent):** `{intent}` (Yêu cầu ban đầu của khách hàng, ví dụ: "tìm mẫu áo khoác thể thao cho nam")
-2.  **Sản phẩm tìm được (Search Results - Data):** `{context}` (Dữ liệu thô về các sản phẩm tìm được, bao gồm Mã sản phẩm, Tên sản phẩm, và các thông tin liên quan khác được cung cấp trong cấu trúc dữ liệu của bạn).
+                Ví dụ: 
+                ý định hiện tại của khách hàng: tìm mẫu áo khoác thể thao cho nam
+                sản phẩm tìm được: Mã sản phẩm: JKA447
+                                   Áo khoác nam Track Jacket Windbreaker
 
-## TASK: Quy trình phản hồi (Action Steps)
+                                   Mã sản phẩm: JKZ933
+                                   Áo Khoác Nam có mũ Daily Wear
 
-Dựa trên dữ liệu `{context}`, thực hiện các bước sau để tạo phản hồi cho khách hàng:
+                                   Mã sản phẩm: JKZ516
+                                   Áo khoác WindBreaker Nylon Taslan
+                -> Trả về:
+                Dưới đây là các mẫu áo khoác thể thao, bạn xem thử nhé:
+                    1. Áo khoác nam Track Jacket Windbreaker
+                        * Mã sản phẩm: JKA447
+                        * Giá: 599.000đ
+                        * Đặc điểm nổi bật: Siêu nhẹ, kháng nước, nhanh khô, co giãn, thoáng khí.
+                        * Phù hợp: Tập luyện thể thao và mặc thường ngày.
+                        * Hình ảnh: <hình ảnh sản phẩm>
+                    2. Áo Khoác Nam có mũ Daily Wear
+                        * Mã sản phẩm: JKZ933
+                        * Giá: 429.000đ
+                        * Đặc điểm nổi bật: Trượt nước, chống UV, siêu nhẹ, ứng dụng công nghệ HEIQ VIROBLOCK.
+                        * Phù hợp: Mặc hàng ngày và chống nắng.
+                        * Hình ảnh: <hình ảnh sản phẩm>
+                    3. Áo khoác WindBreaker Nylon Taslan
+                        * Mã sản phẩm: JKZ516
+                        * Giá: 449.000đ
+                        * Đặc điểm nổi bật: Trượt nước, Bền bỉ, Thoáng mát.
+                        * Phù hợp: 
+                        * Hình ảnh: <hình ảnh sản phẩm>
 
-1.  **Đánh giá sự phù hợp:** Xác định xem trong danh sách "Sản phẩm tìm được" có bất kỳ sản phẩm nào **phù hợp** với "Ý định hiện tại của khách hàng" hay không.
-2.  **Trường hợp KHÔNG CÓ sản phẩm phù hợp:**
-    * Sử dụng "Ý định hiện tại của khách hàng" để điền vào chỗ trống và trả lời: **"Xin lỗi, hiện cửa hàng đã hết mẫu {intent} rồi ạ. Bạn có muốn xem sản phẩm khác không?"**
-3.  **Trường hợp CÓ sản phẩm phù hợp:**
-    * Tạo một câu mở đầu thân thiện, giới thiệu các sản phẩm tìm được theo yêu cầu của khách hàng (sử dụng `{intent}`).
-    * Liệt kê **TẤT CẢ** các sản phẩm phù hợp theo định dạng quy định.
+                ý định hiện tại của khách hàng: tìm mẫu áo khoác thể thao cho nam khác.
+                sản phẩm tìm được: Mã sản phẩm: JKZ400
+                                   Áo khoác thể thao Windbreaker Ripstop
 
-## RULES & CONSTRAINTS: Quy tắc bắt buộc
+                                   Mã sản phẩm: SHA267
+                                   Áo sơ mi nam Casual kẻ sọc
 
-* **Chỉ Dùng Dữ Liệu Cung Cấp:** Tuyệt đối không suy đoán hoặc thêm thông tin sản phẩm không có trong `{context}` (ví dụ: Giá, Đặc điểm nổi bật, Phù hợp). Nếu thông tin không có, bạn có thể bỏ qua mục đó.
-* **Định dạng danh sách:** Liệt kê các sản phẩm bằng số thứ tự (**1.** , **2.** , **3.** ,...).
-* **Tồn kho:** KHÔNG được đề cập đến số lượng hàng tồn (còn hàng, hết hàng nếu có).
-* **Hình ảnh:** Gắn hình ảnh bằng tag HTML như sau: `<img src="URL_HÌNH_ẢNH" width=300>`.
-* **Mã sản phẩm:** Bắt buộc phải đính kèm Mã sản phẩm.
-* **Hội thoại:** Không chào lại khách hàng nếu đã trong một cuộc trò chuyện.
-* **Định dạng sản phẩm:** Mỗi sản phẩm phải được liệt kê đầy đủ các thuộc tính có sẵn trong dữ liệu.
+                                   Mã sản phẩm: TTA215
+                                   Áo ba lỗ nam mặc trong thoáng khí nhanh khô Excool
+                -> Trả về:
+                Mình chỉ tìm được một áo khoác thể thao cho nam như sau, bạn xem thử nhé:
+                      Áo khoác nam Track Jacket Windbreaker
+                        * Mã sản phẩm: JKA447
+                        * Giá: 599.000đ
+                        * Đặc điểm nổi bật: Siêu nhẹ, kháng nước, nhanh khô, co giãn, thoáng khí.
+                        * Phù hợp: Tập luyện thể thao và mặc thường ngày.
+                        * Hình ảnh: <hình ảnh sản phẩm>
+                
+                ý định hiện tại của khách hàng: tìm mẫu áo khoác thể thao cho nam khác.
+                sản phẩm tìm được: Mã sản phẩm: PAZ863
+                                   Quần Dài Nam ECC Warp Pants dáng Slim
 
-## OUTPUT FORMAT: Định dạng đầu ra mong muốn
+                                   Mã sản phẩm: SHA267
+                                   Áo sơ mi nam Casual kẻ sọc
 
-Sử dụng định dạng sau cho mỗi sản phẩm tìm được (chỉ liệt kê các thuộc tính có sẵn trong dữ liệu `{context}`):
+                                   Mã sản phẩm: TTA215
+                                   Áo ba lỗ nam mặc trong thoáng khí nhanh khô Excool
+                -> Trả về: 
+                Xin lỗi, hiện cửa hàng đã hết mẫu áo khoác thể thao cho nam khác rồi ạ. Bạn có muốn xem sản phẩm khác không?
 
-```text
-Dưới đây là các mẫu {intent}, bạn xem thử nhé:
- 1. {{Tên sản phẩm 1}}
-    * Mã sản phẩm: {{Mã sản phẩm 1}}
-    * Giá: {{Giá 1}}
-    * Đặc điểm nổi bật: {{Đặc điểm nổi bật 1}}
-    * Phù hợp: {{Phù hợp 1}}
-    * Hình ảnh: <img src="URL_HÌNH_ẢNH_1" width=300>
- 2. {{Tên sản phẩm 2}}
-    ... 
+                Lưu ý: 
+                - Không chào lại nếu đã trong một cuộc trò chuyện.
                 
                 ý định hiện tại của khách hàng: {intent}
                 sản phẩm tìm được: {context}"""
@@ -275,10 +309,8 @@ Dưới đây là các mẫu {intent}, bạn xem thử nhé:
     system_instruction="""Bạn là một trợ lý ảo trò chuyện cho cửa hàng quần áo trực tuyến Coolmate. Hãy nói chuyện một cách tự nhiên, như đang trò chuyện với một người bạn.
                             Giữ câu trả lời ngắn gọn và hữu ích."""
 
-    response=call_llm(prompt, system_instruction)
-    
-    
-    
+    response=call_llm(prompt, system_instruction, model='gemini-2.5-flash')
+
     return response
 
 
