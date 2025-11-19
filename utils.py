@@ -229,15 +229,13 @@ def query_product(client, query, prev_chat, intent):
                 - ý định hiện tại của khách hàng                
                 - sản phẩm tìm được
 
-                Nhiệm vụ: 
-                Trả lời thông tin sản phẩm khách hàng đang tìm the các bước sau:
-                - Trong các sản phẩm tìm được có sản phẩm khách hàng đang tìm không?
-                  Có -> trả về thông tin sản phẩm khách hàng đang tìm.
-                  Không -> trả về "xin lỗi, cửa hàng đã hết mẫu sản phẩm <sản phẩm> rồi ạ"
-
+                Nhiệm vụ: dựa vào sản phẩm tìm được để trả lời khách hàng theo các bước sau:
+                - Xác định trong sản phẩm tìm được có sản phẩm khách hàng tìm hay không
+                Nếu không, trả về "xin lỗi, cửa hàng đã hết mẫu sản phẩm <sản phẩm> rồi ạ
+                Nếu có, dựa vào sản phẩm tìm được để trả lời.
+                
                 Chú ý:
                 - chỉ dùng sản phẩm tìm được để trả lời.
-                - trả về "xin lỗi, cửa hàng đã hết mẫu sản phẩm <sản phẩm> rồi ạ" nếu trong sản phẩm tìm được không có sản phẩm mà khách hàng tìm.
                 - liệt kê sản phẩm theo số thứ tự.
                 - Không đề cấp đến số lượng hàng tồn.
                 - Gắn hình ảnh bằng tag <img src="http:\\ ..." width=300>.
