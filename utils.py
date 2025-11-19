@@ -79,7 +79,7 @@ def classify_query(query, prev_chat, previous_intent):
     print(previous_intent)
     system_instruction="""Nhiệm vụ của bạn là xác định và phân loại ý định của khách hàng.
                           Chỉ trả về JSON."""
-    response=call_llm(prompt, system_instruction, temperature=0)
+    response=call_llm(prompt, system_instruction, model='gemini-2.5-pro', temperature=0)
     match=re.search(r'{.*}', response, re.DOTALL)
     meta_data=match.group(0)
     meta_data=json.loads(meta_data)
@@ -168,7 +168,7 @@ def get_metadata(intent, prev_chat):
 
     system_instruction="""Bạn là một trợ lý ảo trò chuyện cho cửa hàng quần áo trực tuyến Coolmate.
                           Trả về một JSON hoặc câu hỏi, chỉ một trong hai"""
-    response=call_llm(prompt, system_instruction, temperature=0)
+    response=call_llm(prompt, system_instruction, model='gemini-2.5-pro', temperature=0)
     if "?" in response:
         return response
     match=re.search(r'{.*}', response, re.DOTALL)
@@ -290,7 +290,7 @@ def query_product(client, query, prev_chat, intent):
     system_instruction="""Bạn là một trợ lý ảo trò chuyện cho cửa hàng quần áo trực tuyến Coolmate. Hãy nói chuyện một cách tự nhiên, như đang trò chuyện với một người bạn.
                             Giữ câu trả lời ngắn gọn và hữu ích."""
 
-    response=call_llm(prompt, system_instruction)
+    response=call_llm(prompt, system_instruction, model='gemini-2.5-pro')
     
     
     
