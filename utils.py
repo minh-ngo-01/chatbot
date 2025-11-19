@@ -308,14 +308,14 @@ def query_product(client, query, prev_chat, intent):
                 
     system_instruction="""Bạn là một trợ lý ảo trò chuyện cho cửa hàng quần áo trực tuyến Coolmate. Hãy nói chuyện một cách tự nhiên, như đang trò chuyện với một người bạn.                            
                           Giữ câu trả lời ngắn gọn và hữu ích.
-                          Suy nghĩ theo từng bước, in ra suy nghĩ vào ()."""
+                          Suy nghĩ theo từng bước, in ra suy nghĩ vào <>."""
 
     response=call_llm(prompt, system_instruction, include_thoughts=True)
 
-    return re.sub(r"\(.+\)", "", response, flags=re.DOTALL)[1:]
+    return re.sub(r"<.+>", "", response, flags=re.DOTALL)[1:]
 
 
-def query_other(client, query, prev_chat, intent):
+def query_other(client, query, prev_chat, intent):  
     context=""
     faqs=client.collections.get('faqs')
     response=faqs.query.near_text(intent, limit=3)
