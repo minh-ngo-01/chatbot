@@ -223,8 +223,19 @@ def query_product(client, query, prev_chat, intent):
 
         check_context+=f"""mã sản phẩm: {res.properties['product_code']},
                     tên sản phẩm:{res.properties['name']},                     
-                    giá: {res.properties['price']}
-                        """
+                    giá: {res.properties['price']},
+                    giới tính: {res.properties['gender']},
+                    nổi bât: {res.properties['highlights']},
+                    công nghệ: {res.properties['technology']},
+                    vật liệu: {res.properties['material']},
+                    kiểu dáng: {res.properties['style']},
+                    phù hợp: {res.properties['usage']},
+                    tính năng: {res.properties['features']},
+                    bảo quản: {res.properties['care']},
+                    hình ảnh: ...,
+                    mô tả: ...,
+                    size theo màu có sẵn: {res.properties['colorBySize']},
+                    link sản phẩm:{res.properties['product_url']} /n"""
                     
     
     
@@ -248,6 +259,7 @@ def query_product(client, query, prev_chat, intent):
 
                 Mẫu: 
                 ý định hiện tại của khách hàng: tìm mẫu áo khoác thể thao cho nam
+
                 Trả về:
                 Dưới đây là các mẫu áo khoác thể thao, bạn xem thử nhé:
                     1. Áo khoác nam Track Jacket Windbreaker
