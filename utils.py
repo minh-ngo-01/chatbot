@@ -230,9 +230,9 @@ def query_product(client, query, prev_chat, intent):
                 - sản phẩm tìm được
 
                 Nhiệm vụ: dựa vào sản phẩm tìm được để trả lời khách hàng theo các bước sau:
-                - Xác định trong sản phẩm tìm được có sản phẩm khách hàng tìm hay không
-                Nếu không, trả về "xin lỗi, cửa hàng đã hết mẫu sản phẩm <sản phẩm> rồi ạ
-                Nếu có, dựa vào sản phẩm tìm được để trả lời.
+                Xác định trong sản phẩm tìm được có sản phẩm khách hàng tìm hay không
+                Nếu không -> trả về "xin lỗi, cửa hàng đã hết mẫu sản phẩm <sản phẩm> rồi ạ
+                Nếu có -> dựa vào sản phẩm tìm được để trả lời.
 
                 Chú ý:
                 - chỉ dùng sản phẩm tìm được để trả lời.
@@ -240,67 +240,6 @@ def query_product(client, query, prev_chat, intent):
                 - Không đề cấp đến số lượng hàng tồn.
                 - Gắn hình ảnh bằng tag <img src="http:\\ ..." width=300>.
                 - Đính kèm mã sản phẩm.
-
-                Ví dụ: 
-                ý định hiện tại của khách hàng: tìm mẫu áo khoác thể thao cho nam
-                sản phẩm tìm được: Mã sản phẩm: JKA447
-                                   Áo khoác nam Track Jacket Windbreaker
-
-                                   Mã sản phẩm: JKZ933
-                                   Áo Khoác Nam có mũ Daily Wear
-
-                                   Mã sản phẩm: JKZ516
-                                   Áo khoác WindBreaker Nylon Taslan
-                -> Trả về:
-                Dưới đây là các mẫu áo khoác thể thao, bạn xem thử nhé:
-                    1. Áo khoác nam Track Jacket Windbreaker
-                        * Mã sản phẩm: JKA447
-                        * Giá: 599.000đ
-                        * Đặc điểm nổi bật: Siêu nhẹ, kháng nước, nhanh khô, co giãn, thoáng khí.
-                        * Phù hợp: Tập luyện thể thao và mặc thường ngày.
-                        * Hình ảnh: <hình ảnh sản phẩm>
-                    2. Áo Khoác Nam có mũ Daily Wear
-                        * Mã sản phẩm: JKZ933
-                        * Giá: 429.000đ
-                        * Đặc điểm nổi bật: Trượt nước, chống UV, siêu nhẹ, ứng dụng công nghệ HEIQ VIROBLOCK.
-                        * Phù hợp: Mặc hàng ngày và chống nắng.
-                        * Hình ảnh: <hình ảnh sản phẩm>
-                    3. Áo khoác WindBreaker Nylon Taslan
-                        * Mã sản phẩm: JKZ516
-                        * Giá: 449.000đ
-                        * Đặc điểm nổi bật: Trượt nước, Bền bỉ, Thoáng mát.
-                        * Phù hợp: 
-                        * Hình ảnh: <hình ảnh sản phẩm>
-
-                ý định hiện tại của khách hàng: tìm mẫu áo khoác thể thao cho nam khác.
-                sản phẩm tìm được: Mã sản phẩm: JKZ400
-                                   Áo khoác thể thao Windbreaker Ripstop
-
-                                   Mã sản phẩm: SHA267
-                                   Áo sơ mi nam Casual kẻ sọc
-
-                                   Mã sản phẩm: TTA215
-                                   Áo ba lỗ nam mặc trong thoáng khí nhanh khô Excool
-                -> Trả về:
-                Mình chỉ tìm được một áo khoác thể thao cho nam như sau, bạn xem thử nhé:
-                      Áo khoác nam Track Jacket Windbreaker
-                        * Mã sản phẩm: JKA447
-                        * Giá: 599.000đ
-                        * Đặc điểm nổi bật: Siêu nhẹ, kháng nước, nhanh khô, co giãn, thoáng khí.
-                        * Phù hợp: Tập luyện thể thao và mặc thường ngày.
-                        * Hình ảnh: <hình ảnh sản phẩm>
-                
-                ý định hiện tại của khách hàng: tìm mẫu áo khoác thể thao cho nam khác.
-                sản phẩm tìm được: Mã sản phẩm: PAZ863
-                                   Quần Dài Nam ECC Warp Pants dáng Slim
-
-                                   Mã sản phẩm: SHA267
-                                   Áo sơ mi nam Casual kẻ sọc
-
-                                   Mã sản phẩm: TTA215
-                                   Áo ba lỗ nam mặc trong thoáng khí nhanh khô Excool
-                -> Trả về: 
-                Xin lỗi, hiện cửa hàng đã hết mẫu áo khoác thể thao cho nam khác rồi ạ. Bạn có muốn xem sản phẩm khác không?
 
                 Lưu ý: 
                 - Không chào lại nếu đã trong một cuộc trò chuyện.
