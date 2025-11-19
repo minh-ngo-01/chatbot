@@ -218,7 +218,12 @@ def query_product(client, query, prev_chat, intent):
                     mô tả: {res.properties['desc']},
                     size theo màu có sẵn: {res.properties['colorBySize']},
                     link sản phẩm:{res.properties['product_url']}/n"""
-
+    print_context=""
+    for res in response.objects:
+     print_context+=f"""mã sản phẩm: {res.properties['product_code']},
+                        tên sản phẩm:{res.properties['name']},                     
+                        """
+    print(print_context)
     prompt=f""" Bạn sẽ nhận:
                 - ý định hiện tại của khách hàng                
                 tên sản phẩm:Áo khoác nam Track Jacket Windbreaker,... 

@@ -175,6 +175,6 @@ cluster_url=weaviate_url,
 auth_credentials=Auth.api_key(weaviate_api_key)
 ) as client:
     products=client.collections.get('products')
-    response=products.query.near_text('áo khoác khoác nam', limit=10)
+    response=products.query.near_text('áo khoác khoác khoác nam', limit=10)
     for res in response.objects:
         print(res.properties['product_code'], res.properties['name'])

@@ -22,7 +22,7 @@ def get_item_urls(url):
             seen.append(href)
             item_url=urljoin(url, href)
             item_urls.append(item_url)
-    return item_urls[:10]
+    return item_urls
 
 def get_id(item_url):
     print(item_url)
