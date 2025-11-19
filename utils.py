@@ -238,6 +238,67 @@ def query_product(client, query, prev_chat, intent):
                 - Gắn hình ảnh bằng tag <img src="http:\\ ..." width=300>.
                 - Đính kèm mã sản phẩm.
 
+                Ví dụ: 
+                ý định hiện tại của khách hàng: tìm mẫu áo khoác thể thao cho nam
+                sản phẩm tìm được: Mã sản phẩm: JKA447
+                                   Áo khoác nam Track Jacket Windbreaker
+
+                                   Mã sản phẩm: JKZ933
+                                   Áo Khoác Nam có mũ Daily Wear
+
+                                   Mã sản phẩm: JKZ516
+                                   Áo khoác WindBreaker Nylon Taslan
+                -> Trả về:
+                Dưới đây là các mẫu áo khoác thể thao, bạn xem thử nhé:
+                    1. Áo khoác nam Track Jacket Windbreaker
+                        * Mã sản phẩm: JKA447
+                        * Giá: 599.000đ
+                        * Đặc điểm nổi bật: Siêu nhẹ, kháng nước, nhanh khô, co giãn, thoáng khí.
+                        * Phù hợp: Tập luyện thể thao và mặc thường ngày.
+                        * Hình ảnh: <hình ảnh sản phẩm>
+                    2. Áo Khoác Nam có mũ Daily Wear
+                        * Mã sản phẩm: JKZ933
+                        * Giá: 429.000đ
+                        * Đặc điểm nổi bật: Trượt nước, chống UV, siêu nhẹ, ứng dụng công nghệ HEIQ VIROBLOCK.
+                        * Phù hợp: Mặc hàng ngày và chống nắng.
+                        * Hình ảnh: <hình ảnh sản phẩm>
+                    3. Áo khoác WindBreaker Nylon Taslan
+                        * Mã sản phẩm: JKZ516
+                        * Giá: 449.000đ
+                        * Đặc điểm nổi bật: Trượt nước, Bền bỉ, Thoáng mát.
+                        * Phù hợp: 
+                        * Hình ảnh: <hình ảnh sản phẩm>
+
+                ý định hiện tại của khách hàng: tìm mẫu áo khoác thể thao cho nam khác.
+                sản phẩm tìm được: Mã sản phẩm: JKZ400
+                                   Áo khoác thể thao Windbreaker Ripstop
+
+                                   Mã sản phẩm: SHA267
+                                   Áo sơ mi nam Casual kẻ sọc
+
+                                   Mã sản phẩm: TTA215
+                                   Áo ba lỗ nam mặc trong thoáng khí nhanh khô Excool
+                -> Trả về:
+                Mình chỉ tìm được một áo khoác thể thao cho nam như sau, bạn xem thử nhé:
+                      Áo khoác nam Track Jacket Windbreaker
+                        * Mã sản phẩm: JKA447
+                        * Giá: 599.000đ
+                        * Đặc điểm nổi bật: Siêu nhẹ, kháng nước, nhanh khô, co giãn, thoáng khí.
+                        * Phù hợp: Tập luyện thể thao và mặc thường ngày.
+                        * Hình ảnh: <hình ảnh sản phẩm>
+                
+                ý định hiện tại của khách hàng: tìm mẫu áo khoác thể thao cho nam khác.
+                sản phẩm tìm được: Mã sản phẩm: PAZ863
+                                   Quần Dài Nam ECC Warp Pants dáng Slim
+
+                                   Mã sản phẩm: SHA267
+                                   Áo sơ mi nam Casual kẻ sọc
+
+                                   Mã sản phẩm: TTA215
+                                   Áo ba lỗ nam mặc trong thoáng khí nhanh khô Excool
+                -> Trả về: 
+                Xin lỗi, hiện cửa hàng đã hết mẫu áo khoác thể thao cho nam khác rồi ạ. Bạn có muốn xem sản phẩm khác không?
+
                 Lưu ý: 
                 - Không chào lại nếu đã trong một cuộc trò chuyện.
                 
