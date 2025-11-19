@@ -37,7 +37,7 @@ def call_llm(prompt, system_instruction, temperature=0, model='gemini-2.5-flash-
     response=llm_client.models.generate_content(
         model=model,
         config=types.GenerateContentConfig(system_instruction=system_instruction,
-            thinking_config=types.ThinkingConfig(include_thoughts=include_thoughts, thinking_budget=100),
+            thinking_config=types.ThinkingConfig(include_thoughts=include_thoughts),
             temperature=temperature),
         contents=prompt)
     return response.text
