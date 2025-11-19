@@ -160,6 +160,7 @@ def get_metadata(intent, prev_chat):
             
             Lịch sử trò chuyện: {prev_chat}
             Ý định hiện tại của khách hàng: {intent}"""
+    print(prev_chat)
 
     system_instruction="""Bạn là một trợ lý ảo trò chuyện cho cửa hàng quần áo trực tuyến Coolmate.
                           Trả về một JSON hoặc câu hỏi, chỉ một trong hai"""
