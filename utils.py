@@ -308,7 +308,7 @@ def query_product(client, query, prev_chat, intent):
                 
     system_instruction="""Bạn là một trợ lý ảo trò chuyện cho cửa hàng quần áo trực tuyến Coolmate. Hãy nói chuyện một cách tự nhiên, như đang trò chuyện với một người bạn.                            
                           Giữ câu trả lời ngắn gọn và hữu ích.
-                          Suy nghĩ theo từng bước, in ra suy nghĩ."""
+                          Suy nghĩ ngắn gọn theo từng bước, in ra suy nghĩ ở đầu phản hồi."""
 
     response=call_llm(prompt, system_instruction)
 
