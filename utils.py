@@ -222,27 +222,40 @@ def query_product(client, query, prev_chat, intent):
                         tên sản phẩm:{res.properties['name']},                     
                         """
     print(print_context)
-    prompt=f""" Bạn sẽ nhận:
-                - ý định hiện tại của khách hàng                
-                - sản phẩm tìm được
+    prompt=f"""
+Bạn sẽ nhận được:
+- Ý định hiện tại của khách hàng.
+- Danh sách sản phẩm tìm được (nếu có).
 
-                Nhiệm vụ: Chỉ dựa vào sản phẩm tìm được để trả lời khách hàng theo các bước sau:
-                - Xác định trong các sản phẩm tìm được, có sản phẩm khách hàng tìm hay không?
-                - Nếu không -> trả về "xin lỗi, cửa hàng đã hết mẫu sản phẩm <sản phẩm> rồi ạ
-                - Nếu có -> dựa vào sản phẩm tìm được để trả lời.
+Nhiệm vụ:
+Chỉ dựa vào DANH SÁCH SẢN PHẨM TÌM ĐƯỢC để trả lời khách hàng, theo đúng quy trình sau:
 
-                Chú ý:
-                - chỉ dùng sản phẩm tìm được để trả lời.
-                - liệt kê sản phẩm theo số thứ tự.
-                - Không đề cấp đến số lượng hàng tồn.
-                - Gắn hình ảnh bằng tag <img src="http:\\ ..." width=300>.
-                - Đính kèm mã sản phẩm.
+1. Kiểm tra xem trong danh sách sản phẩm tìm được có sản phẩm đúng với ý định của khách hàng hay không.
 
-                Lưu ý: 
-                - Không chào lại nếu đã trong một cuộc trò chuyện.
-                
-                ý định hiện tại của khách hàng: {intent}
-                sản phẩm tìm được: {context}"""
+2. Nếu KHÔNG có:
+   -> Trả về đúng mẫu câu:
+      "Xin lỗi, cửa hàng đã hết mẫu {intent} rồi ạ."
+
+3. Nếu CÓ:
+   -> Tạo câu trả lời giới thiệu các sản phẩm tìm được theo yêu cầu sau:
+      - Liệt kê sản phẩm theo số thứ tự.
+      - Mỗi sản phẩm phải bao gồm:
+         + Tên sản phẩm
+         + Mã sản phẩm
+         + Hình ảnh ở dạng: <img src="http://..." width="300">
+      - Không nhắc đến tồn kho hay số lượng hàng.
+
+Quy tắc bắt buộc:
+- KHÔNG được sử dụng bất kỳ thông tin nào ngoài danh sách sản phẩm tìm được.
+- KHÔNG chào lại khách hàng nếu đang trong một cuộc trò chuyện.
+- Trả lời ngắn gọn, tự nhiên và đúng ngữ cảnh mua hàng.
+
+---
+
+Ý định hiện tại của khách hàng: {intent}
+Danh sách sản phẩm tìm được: {context}
+"""
+
     print(f"""Ý định hiện tại của khách hàng: {intent}""")
                 
     system_instruction="""Bạn là một trợ lý ảo trò chuyện cho cửa hàng quần áo trực tuyến Coolmate. Hãy nói chuyện một cách tự nhiên, như đang trò chuyện với một người bạn.
