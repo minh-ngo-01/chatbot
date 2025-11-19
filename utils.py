@@ -215,7 +215,6 @@ def query_product(client, query, prev_chat, intent):
                     tính năng: {res.properties['features']},
                     bảo quản: {res.properties['care']},
                     hình ảnh: {res.properties['images']},
-                    mô tả: {res.properties['desc']},
                     size theo màu có sẵn: {res.properties['colorBySize']},
                     link sản phẩm:{res.properties['product_url']}
                     """
