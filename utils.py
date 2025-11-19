@@ -232,23 +232,22 @@ def query_product(client, query, prev_chat, intent):
 
     prompt=f""" Bạn sẽ nhận:
                 - ý định hiện tại của khách hàng
-                - thông tin các sản phẩm phù hợp
+                - sản phẩm tìm được
 
                 Nhiệm vụ: 
-                - Chỉ phản hồi về sản phẩm khách hàng đang tìm.
-                - Trả lời các câu hỏi chi tiết khác.
+                - Chỉ phản hồi thông tin về sản phẩm khách hàng đang tìm.
+                - Trả lời các câu hỏi khác.
                 
 
                 Yêu cầu:
-                - Trả về "không còn sản phẩm phù hợp" nếu trong thông tin sản phẩm không có sản phẩm mà khách hàng tìm.
-                - Không trả về sản phẩm khác so với sản phẩm khách hàng đang tìm.
+                - Trả về "không còn sản phẩm phù hợp" nếu trong sản phẩm tìm được không có sản phẩm mà khách hàng tìm.
                 - liệt kê sản phẩm theo số thứ tự.
                 - Không đề cấp đến số lượng hàng tồn.
                 - Gắn hình ảnh bằng tag <img src="http:\\ ..." width=300>.
                 - Đính kèm mã sản phẩm.
 
                 Mẫu: 
-                Khách hàng: cho mình mẫu áo khoác thẻ thao
+                ý định hiện tại của khách hàng: tìm mẫu áo khoác thể thao cho nam
                 Trả về:
                 Dưới đây là các mẫu áo khoác thể thao, bạn xem thử nhé:
                     1. Áo khoác nam Track Jacket Windbreaker
@@ -270,13 +269,12 @@ def query_product(client, query, prev_chat, intent):
                         * Phù hợp: 
                         * Hình ảnh: <hình ảnh sản phẩm>
 
-                Khách hàng: mẫu khác.
+                Ý định hiện tại của khách hàng: tìm mẫu áo khoác thể thao cho nam khác.
                 Trả về: 
-                (Nếu không còn sản phẩm nào phù hợp)
-                Xin lỗi, hiện cửa hàng chỉ còn các mẫu áo khoác thể thao này thôi ạ. Bạn có muốn xem sản phẩm khác không?
+                Xin lỗi, hiện cửa hàng chỉ còn các mẫu áo khoác thể thao cho nam này thôi ạ. Bạn có muốn xem sản phẩm khác không?
 
                 Lưu ý: 
-                - Không chào lại nếu đã trong một cuộc trò chuyện..
+                - Không chào lại nếu đã trong một cuộc trò chuyện.
                 
                 ý định hiện tại của khách hàng: {intent}
                 thông tin sản phẩm: {context}"""
