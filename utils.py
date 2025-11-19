@@ -226,7 +226,7 @@ def query_product(client, query, prev_chat, intent):
                 - ý định hiện tại của khách hàng                
                 - sản phẩm tìm được
 
-                Nhiệm vụ: Chỉ dựa vào sản phẩm tìm được để trả lời khách hàng theo các bước sau (thinking step by step and print the thinking process):
+                Nhiệm vụ: Chỉ dựa vào sản phẩm tìm được để trả lời khách hàng theo các bước sau:
                 - Xác định trong các sản phẩm tìm được, có sản phẩm khách hàng tìm hay không? 
                 - Nếu không -> trả về "xin lỗi, cửa hàng đã hết mẫu sản phẩm <sản phẩm> rồi ạ
                 - Nếu có -> dựa vào sản phẩm tìm được để trả lời.
@@ -309,7 +309,7 @@ def query_product(client, query, prev_chat, intent):
     system_instruction="""Bạn là một trợ lý ảo trò chuyện cho cửa hàng quần áo trực tuyến Coolmate. Hãy nói chuyện một cách tự nhiên, như đang trò chuyện với một người bạn.
                             Giữ câu trả lời ngắn gọn và hữu ích."""
 
-    response=call_llm(prompt, system_instruction, model='gemini-2.5-flash-lite', include_thoughts=True)
+    response=call_llm(prompt, system_instruction)
 
     return response
 
