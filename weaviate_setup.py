@@ -160,8 +160,21 @@ urls=[
 #             seen.append(item.properties['product_id'])
 #         else:
 #             products.data.delete_by_id(item.uuid)
-    
-        
-        
 
-
+import weaviate
+from weaviate.classes.init import Auth
+import os
+from weaviate.classes.query import Filter
+from dotenv import load_dotenv
+load_dotenv()
+weaviate_url=os.getenv('WEAVIATE_URL')
+weaviate_api_key=os.getenv('WEAVIATE_API_KEY')
+filter=Filter.by_property('product_code').equal('SM006')
+with weaviate.connect_to_weaviate_cloud(
+cluster_url=weaviate_url,
+auth_credentials=Auth.api_key(weaviate_api_key)
+) as client:
+    products=client.collections.get('products')
+    response=products.query.near_text('áo khoác khoác nam', limit=10)
+    for res in response.objects:
+        print(res.properties['product_code'], res.properties['name'])

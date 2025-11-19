@@ -235,23 +235,25 @@ def query_product(client, query, prev_chat, intent):
                     hình ảnh: ...,
                     mô tả: ...,
                     size theo màu có sẵn: {res.properties['colorBySize']},
-                    link sản phẩm:{res.properties['product_url']} /n"""
+                    link sản phẩm:{res.properties['product_url']}
+                    """
                     
     
     
     print(check_context)
 
     prompt=f""" Bạn sẽ nhận:
-                - ý định hiện tại của khách hàng
-                - sản phẩm tìm được
+                - ý định hiện tại của khách hàng                
+                tên sản phẩm:Áo khoác nam Track Jacket Windbreaker,... 
 
                 Nhiệm vụ: 
-                - Chỉ phản hồi thông tin về sản phẩm khách hàng đang tìm.
+                - Chỉ phản hồi thông tin về sản phẩm khách hàng đang tìm, không đề cập đến sản phẩm khác.
                 - Trả lời các câu hỏi khác.
                 
 
                 Yêu cầu:
-                - Trả về "không còn sản phẩm phù hợp" nếu trong sản phẩm tìm được không có sản phẩm mà khách hàng tìm.
+                - chỉ trả về các sản phẩm mà khách hàng đang tìm.
+                - trả về "xin lỗi, cửa hàng đã hết mẫu sản phẩm <sản phẩm> rồi ạ" nếu trong sản phẩm tìm được không có sản phẩm mà khách hàng tìm.
                 - liệt kê sản phẩm theo số thứ tự.
                 - Không đề cấp đến số lượng hàng tồn.
                 - Gắn hình ảnh bằng tag <img src="http:\\ ..." width=300>.
@@ -259,7 +261,14 @@ def query_product(client, query, prev_chat, intent):
 
                 Mẫu: 
                 ý định hiện tại của khách hàng: tìm mẫu áo khoác thể thao cho nam
+                sản phẩm tìm được: Mã sản phẩm: JKA447
+                                   Áo khoác nam Track Jacket Windbreaker
 
+                                   Mã sản phẩm: JKZ933
+                                   Áo Khoác Nam có mũ Daily Wear
+
+                                   Mã sản phẩm: JKZ516
+                                   Áo khoác WindBreaker Nylon Taslan
                 Trả về:
                 Dưới đây là các mẫu áo khoác thể thao, bạn xem thử nhé:
                     1. Áo khoác nam Track Jacket Windbreaker
@@ -281,15 +290,41 @@ def query_product(client, query, prev_chat, intent):
                         * Phù hợp: 
                         * Hình ảnh: <hình ảnh sản phẩm>
 
-                Ý định hiện tại của khách hàng: tìm mẫu áo khoác thể thao cho nam khác.
+                ý định hiện tại của khách hàng: tìm mẫu áo khoác thể thao cho nam khác.
+                sản phẩm tìm được: Mã sản phẩm: JKZ400
+                                   Áo khoác thể thao Windbreaker Ripstop
+
+                                   Mã sản phẩm: SHA267
+                                   Áo sơ mi nam Casual kẻ sọc
+
+                                   Mã sản phẩm: TTA215
+                                   Áo ba lỗ nam mặc trong thoáng khí nhanh khô Excool
+                Trả về:
+                Mình chỉ tìm được một áo khoác thể thao cho nam như sau, bạn xem thử nhé:
+                      Áo khoác nam Track Jacket Windbreaker
+                        * Mã sản phẩm: JKA447
+                        * Giá: 599.000đ
+                        * Đặc điểm nổi bật: Siêu nhẹ, kháng nước, nhanh khô, co giãn, thoáng khí.
+                        * Phù hợp: Tập luyện thể thao và mặc thường ngày.
+                        * Hình ảnh: <hình ảnh sản phẩm>
+                
+                ý định hiện tại của khách hàng: tìm mẫu áo khoác thể thao cho nam khác.
+                sản phẩm tìm được: Mã sản phẩm: PAZ863
+                                   Quần Dài Nam ECC Warp Pants dáng Slim
+
+                                   Mã sản phẩm: SHA267
+                                   Áo sơ mi nam Casual kẻ sọc
+
+                                   Mã sản phẩm: TTA215
+                                   Áo ba lỗ nam mặc trong thoáng khí nhanh khô Excool
                 Trả về: 
-                Xin lỗi, hiện cửa hàng chỉ còn các mẫu áo khoác thể thao cho nam này thôi ạ. Bạn có muốn xem sản phẩm khác không?
+                Xin lỗi, hiện cửa hàng đã hết mẫu áo khoác thể thao cho nam khác rồi ạ. Bạn có muốn xem sản phẩm khác không?
 
                 Lưu ý: 
                 - Không chào lại nếu đã trong một cuộc trò chuyện.
                 
                 ý định hiện tại của khách hàng: {intent}
-                thông tin sản phẩm: {context}"""
+                sản phẩm tìm được: {context}"""
                 
     system_instruction="""Bạn là một trợ lý ảo trò chuyện cho cửa hàng quần áo trực tuyến Coolmate. Hãy nói chuyện một cách tự nhiên, như đang trò chuyện với một người bạn.
                             Giữ câu trả lời ngắn gọn và hữu ích."""
