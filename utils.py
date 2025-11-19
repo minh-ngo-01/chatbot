@@ -312,7 +312,7 @@ def query_product(client, query, prev_chat, intent):
 
     response=call_llm(prompt, system_instruction, include_thoughts=True)
 
-    return re.sub(r"<.+>", "", response, flags=re.DOTALL)[1:]
+    return response
 
 
 def query_other(client, query, prev_chat, intent):  
