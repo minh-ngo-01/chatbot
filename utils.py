@@ -259,7 +259,7 @@ def query_product(client, query, prev_chat, intent):
                 - Gắn hình ảnh bằng tag <img src="http:\\ ..." width=300>.
                 - Đính kèm mã sản phẩm.
 
-                Mẫu: 
+                Ví dụ: 
                 ý định hiện tại của khách hàng: tìm mẫu áo khoác thể thao cho nam
                 sản phẩm tìm được: Mã sản phẩm: JKA447
                                    Áo khoác nam Track Jacket Windbreaker
@@ -269,7 +269,7 @@ def query_product(client, query, prev_chat, intent):
 
                                    Mã sản phẩm: JKZ516
                                    Áo khoác WindBreaker Nylon Taslan
-                Trả về:
+                -> Trả về:
                 Dưới đây là các mẫu áo khoác thể thao, bạn xem thử nhé:
                     1. Áo khoác nam Track Jacket Windbreaker
                         * Mã sản phẩm: JKA447
@@ -299,7 +299,7 @@ def query_product(client, query, prev_chat, intent):
 
                                    Mã sản phẩm: TTA215
                                    Áo ba lỗ nam mặc trong thoáng khí nhanh khô Excool
-                Trả về:
+                -> Trả về:
                 Mình chỉ tìm được một áo khoác thể thao cho nam như sau, bạn xem thử nhé:
                       Áo khoác nam Track Jacket Windbreaker
                         * Mã sản phẩm: JKA447
@@ -317,7 +317,7 @@ def query_product(client, query, prev_chat, intent):
 
                                    Mã sản phẩm: TTA215
                                    Áo ba lỗ nam mặc trong thoáng khí nhanh khô Excool
-                Trả về: 
+                -> Trả về: 
                 Xin lỗi, hiện cửa hàng đã hết mẫu áo khoác thể thao cho nam khác rồi ạ. Bạn có muốn xem sản phẩm khác không?
 
                 Lưu ý: 
