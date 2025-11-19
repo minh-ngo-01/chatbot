@@ -64,7 +64,7 @@ def classify_query(query, prev_chat):
                                   {{'time': 'Sun Nov 16 16:00:20 2025', 'customer': 'mẫu khác nha', 'bot': 'Ok bạn ơi, mình có mẫu Áo Thun Chạy Bộ Graphic Heartbeat này, giá cũng 159k nè, có nhiều màu xinh lắm:\n<img src="https://n7media.coolmate.me/uploads/July2025/ao-thun-nam-chay-bo-hoat-tiet-graphic-heartbeat-hong-5.jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/July2025/ao-thun-nam-chay-bo-hoat-tiet-graphic-heartbeat-tim-2.jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/July2025/ao-thun-nam-chay-bo-hoat-tiet-graphic-heartbeat-den-3.jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/July2025/ao-thun-nam-chay-bo-hoat-tiet-graphic-heartbeat-xanh-reu-3_60.jpg" width=300>\n\nMã sản phẩm: TSZ877\n\nNgoài ra còn có Áo singlet chạy bộ nam "Việt Nam tiến bước" giá 109k, siêu nhẹ và thoáng mát nè:\n<img src="https://n7media.coolmate.me/uploads/August2025/ao-singlet-chay-bo-nam-viet-nam-tien-buoc-18-do_76.jpg" width=300>\nMã sản phẩm: 25CM.MAWRU.TTA484\n\nBạn thích mẫu nào hơn nè?'}}
               Tin nhắn hiện tại: mẫu khác
               Trả về:
-               {{"intent":"tìm mẫu áo thun nam dưới 200k",
+               {{"intent":"tìm mẫu áo thun nam dưới 200000 vnd",
                "topic": "Poroduct"}}
 
               Lịch sử trò chuyện: ""
@@ -308,11 +308,11 @@ def query_product(client, query, prev_chat, intent):
                 
     system_instruction="""Bạn là một trợ lý ảo trò chuyện cho cửa hàng quần áo trực tuyến Coolmate. Hãy nói chuyện một cách tự nhiên, như đang trò chuyện với một người bạn.                            
                           Giữ câu trả lời ngắn gọn và hữu ích.
-                          Suy nghĩ theo từng bước, in ra suy nghĩ"""
+                          Suy nghĩ theo từng bước, in ra suy nghĩ vào ()."""
 
-    response=call_llm(prompt, system_instruction)
+    response=call_llm(prompt, system_instruction, include_thoughts=True)
 
-    return response
+    return re.sub(r"\(.+\)", "", response, flags=re.DOTALL)[1:]
 
 
 def query_other(client, query, prev_chat, intent):
