@@ -37,7 +37,7 @@ def call_llm(prompt, system_instruction, temperature=0, model='gemini-2.5-flash-
     response=llm_client.models.generate_content(
         model=model,
         config=types.GenerateContentConfig(system_instruction=system_instruction,
-            thinking_config=types.ThinkingConfig(include_thoughts=include_thoughts),
+            thinking_config=types.ThinkingConfig(include_thoughts=include_thoughts, thinking_budget=100),
             temperature=temperature),
         contents=prompt)
     return response.text
@@ -226,8 +226,8 @@ def query_product(client, query, prev_chat, intent):
                 - ý định hiện tại của khách hàng                
                 - sản phẩm tìm được
 
-                Nhiệm vụ: Chỉ dựa vào sản phẩm tìm được để trả lời khách hàng theo các bước sau:
-                - Xác định trong các sản phẩm tìm được, có sản phẩm khách hàng tìm hay không?
+                Nhiệm vụ: Chỉ dựa vào sản phẩm tìm được để trả lời khách hàng theo các bước sau (thinking step by step and print the thinking process):
+                - Xác định trong các sản phẩm tìm được, có sản phẩm khách hàng tìm hay không? 
                 - Nếu không -> trả về "xin lỗi, cửa hàng đã hết mẫu sản phẩm <sản phẩm> rồi ạ
                 - Nếu có -> dựa vào sản phẩm tìm được để trả lời.
 
