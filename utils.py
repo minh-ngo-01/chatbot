@@ -109,7 +109,7 @@ def get_metadata(intent, prev_chat):
                     "see_more": Boolean           
                     "product_codes": List[str]         giải thích: tất cả các mã sản phẩm của sản phẩm trước đó trong lịch sử trò chuyện
                     "price": {{"min": int, "max": int}},       ("max": "inf" nếu không có thông tin về giá)
-                    "gender": List[str],    (possible values in ['MALE', 'FEMALE', 'UNISEX'], hỏi lại khách hàng nếu chưa được đề cập.)
+                    "gender": List[str],    (possible values in ['MALE', 'FEMALE], hỏi lại khách hàng nếu giới tính chưa được đề cập)
                     }}            
             
             Ví dụ: 
