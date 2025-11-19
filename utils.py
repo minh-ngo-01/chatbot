@@ -79,6 +79,7 @@ def classify_query(query, prev_chat):
     system_instruction="""Nhiệm vụ của bạn là xác định và phân loại ý định của khách hàng.
                           Chỉ trả về JSON."""
     response=call_llm(prompt, system_instruction)
+    print(response)
     match=re.search(r'{.*}', response, re.DOTALL)
     meta_data=match.group(0)
     meta_data=json.loads(meta_data)
@@ -99,9 +100,11 @@ def get_metadata(intent, prev_chat):
                  - trong ý định hiện tại, khách hàng có tìm mẫu, kiểu khác của sản phẩm được đề cập gần nhất không? có -> see_more: True, product_codes: <tất cả các mã sản phẩm của sản phẩm trước đó trong lịch sử trò chuyện>
                  - trong ý định hiện tại, khách hàng tìm sản phẩm khác với sản phẩm được đề cập gần nhất không? có -> see_more: false, product_codes=[""]
 
-            2. Xác định các meta_data trong ý định của khách hàng.
-                 - lọc ra các thông tin về giá và giới tính (nam/nữ)
-                 - nếu trong ý định hiện tại của khách hàng chưa rõ về giới tính, hỏi lại.
+            2. Xác định các meta_data trong ý định của khách hàng theo các bước sau:
+                 - trong ý định hiện tại của kháchh hàng có đề cập tới giới tính (nam hay nữ) không?
+                - nếu không, hỏi lại khách hàng.
+                 -nếu có, lọc ra các thông tin về giá và giới tính.
+                 
             
             Trả vê một JSON hoặc câu hỏi theo mẫu:
                     {{
@@ -161,6 +164,7 @@ def get_metadata(intent, prev_chat):
     system_instruction="""Bạn là một trợ lý ảo trò chuyện cho cửa hàng quần áo trực tuyến Coolmate.
                           Trả về một JSON hoặc câu hỏi, chỉ một trong hai"""
     response=call_llm(prompt, system_instruction)
+    print(response)
     if "?" in response:
         return response
     match=re.search(r'{.*}', response, re.DOTALL)
@@ -237,67 +241,6 @@ def query_product(client, query, prev_chat, intent):
                 - Không đề cấp đến số lượng hàng tồn.
                 - Gắn hình ảnh bằng tag <img src="http:\\ ..." width=300>.
                 - Đính kèm mã sản phẩm.
-
-                Ví dụ: 
-                ý định hiện tại của khách hàng: tìm mẫu áo khoác thể thao cho nam
-                sản phẩm tìm được: Mã sản phẩm: JKA447
-                                   Áo khoác nam Track Jacket Windbreaker
-
-                                   Mã sản phẩm: JKZ933
-                                   Áo Khoác Nam có mũ Daily Wear
-
-                                   Mã sản phẩm: JKZ516
-                                   Áo khoác WindBreaker Nylon Taslan
-                -> Trả về:
-                Dưới đây là các mẫu áo khoác thể thao, bạn xem thử nhé:
-                    1. Áo khoác nam Track Jacket Windbreaker
-                        * Mã sản phẩm: JKA447
-                        * Giá: 599.000đ
-                        * Đặc điểm nổi bật: Siêu nhẹ, kháng nước, nhanh khô, co giãn, thoáng khí.
-                        * Phù hợp: Tập luyện thể thao và mặc thường ngày.
-                        * Hình ảnh: <hình ảnh sản phẩm>
-                    2. Áo Khoác Nam có mũ Daily Wear
-                        * Mã sản phẩm: JKZ933
-                        * Giá: 429.000đ
-                        * Đặc điểm nổi bật: Trượt nước, chống UV, siêu nhẹ, ứng dụng công nghệ HEIQ VIROBLOCK.
-                        * Phù hợp: Mặc hàng ngày và chống nắng.
-                        * Hình ảnh: <hình ảnh sản phẩm>
-                    3. Áo khoác WindBreaker Nylon Taslan
-                        * Mã sản phẩm: JKZ516
-                        * Giá: 449.000đ
-                        * Đặc điểm nổi bật: Trượt nước, Bền bỉ, Thoáng mát.
-                        * Phù hợp: 
-                        * Hình ảnh: <hình ảnh sản phẩm>
-
-                ý định hiện tại của khách hàng: tìm mẫu áo khoác thể thao cho nam khác.
-                sản phẩm tìm được: Mã sản phẩm: JKZ400
-                                   Áo khoác thể thao Windbreaker Ripstop
-
-                                   Mã sản phẩm: SHA267
-                                   Áo sơ mi nam Casual kẻ sọc
-
-                                   Mã sản phẩm: TTA215
-                                   Áo ba lỗ nam mặc trong thoáng khí nhanh khô Excool
-                -> Trả về:
-                Mình chỉ tìm được một áo khoác thể thao cho nam như sau, bạn xem thử nhé:
-                      Áo khoác nam Track Jacket Windbreaker
-                        * Mã sản phẩm: JKA447
-                        * Giá: 599.000đ
-                        * Đặc điểm nổi bật: Siêu nhẹ, kháng nước, nhanh khô, co giãn, thoáng khí.
-                        * Phù hợp: Tập luyện thể thao và mặc thường ngày.
-                        * Hình ảnh: <hình ảnh sản phẩm>
-                
-                ý định hiện tại của khách hàng: tìm mẫu áo khoác thể thao cho nam khác.
-                sản phẩm tìm được: Mã sản phẩm: PAZ863
-                                   Quần Dài Nam ECC Warp Pants dáng Slim
-
-                                   Mã sản phẩm: SHA267
-                                   Áo sơ mi nam Casual kẻ sọc
-
-                                   Mã sản phẩm: TTA215
-                                   Áo ba lỗ nam mặc trong thoáng khí nhanh khô Excool
-                -> Trả về: 
-                Xin lỗi, hiện cửa hàng đã hết mẫu áo khoác thể thao cho nam khác rồi ạ. Bạn có muốn xem sản phẩm khác không?
 
                 Lưu ý: 
                 - Không chào lại nếu đã trong một cuộc trò chuyện.
