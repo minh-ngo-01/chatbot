@@ -157,8 +157,6 @@ def get_metadata(intent, prev_chat):
             
             Lịch sử trò chuyện: {prev_chat}
             Ý định hiện tại của khách hàng: {intent}"""
-    print(f"""Lịch sử trò chuyện: {prev_chat}
-              Ý định hiện tại của khách hàng: {intent}""")
 
     system_instruction="""Bạn là một trợ lý ảo trò chuyện cho cửa hàng quần áo trực tuyến Coolmate.
                           Trả về một JSON hoặc câu hỏi, chỉ một trong hai"""
@@ -228,10 +226,10 @@ def query_product(client, query, prev_chat, intent):
                 - ý định hiện tại của khách hàng                
                 - sản phẩm tìm được
 
-                Nhiệm vụ: dựa vào sản phẩm tìm được để trả lời khách hàng theo các bước sau:
-                Xác định trong sản phẩm tìm được có sản phẩm khách hàng tìm hay không
-                Nếu không -> trả về "xin lỗi, cửa hàng đã hết mẫu sản phẩm <sản phẩm> rồi ạ
-                Nếu có -> dựa vào sản phẩm tìm được để trả lời.
+                Nhiệm vụ: Chỉ dựa vào sản phẩm tìm được để trả lời khách hàng theo các bước sau:
+                - Xác định trong các sản phẩm tìm được có sản phẩm khách hàng tìm hay không
+                - Nếu không -> trả về "xin lỗi, cửa hàng đã hết mẫu sản phẩm <sản phẩm> rồi ạ
+                - Nếu có -> dựa vào sản phẩm tìm được để trả lời.
 
                 Chú ý:
                 - chỉ dùng sản phẩm tìm được để trả lời.
@@ -245,6 +243,7 @@ def query_product(client, query, prev_chat, intent):
                 
                 ý định hiện tại của khách hàng: {intent}
                 sản phẩm tìm được: {context}"""
+    print(f"""Ý định hiện tại của khách hàng: {intent}""")
                 
     system_instruction="""Bạn là một trợ lý ảo trò chuyện cho cửa hàng quần áo trực tuyến Coolmate. Hãy nói chuyện một cách tự nhiên, như đang trò chuyện với một người bạn.
                             Giữ câu trả lời ngắn gọn và hữu ích."""
