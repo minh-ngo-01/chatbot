@@ -100,7 +100,7 @@ def get_metadata(intent, prev_chat):
                  - trong ý định hiện tại, khách hàng tìm sản phẩm khác với sản phẩm được đề cập gần nhất không? có -> see_more: false, product_codes=[""]
 
             2. Xác định các meta_data trong ý định của khách hàng.
-                 - lọc ra các thông tin về giá và giới tính
+                 - lọc ra các thông tin về giá và giới tính (nam/nữ)
                  - nếu trong ý định hiện tại của khách hàng chưa rõ về giới tính, hỏi lại.
             
             Trả vê một JSON hoặc câu hỏi theo mẫu:
@@ -109,7 +109,7 @@ def get_metadata(intent, prev_chat):
                     "see_more": Boolean           
                     "product_codes": List[str]         giải thích: tất cả các mã sản phẩm của sản phẩm trước đó trong lịch sử trò chuyện
                     "price": {{"min": int, "max": int}},       ("max": "inf" nếu không có thông tin về giá)
-                    "gender": List[str],    (possible values in ['MALE', 'FEMALE], hỏi lại khách hàng nếu giới tính chưa được đề cập)
+                    "gender": List[str],    giải thích: nam -> 'MALE', nữ ->'FEMALE, hỏi lại khách hàng nếu giới tính chưa được đề cập
                     }}            
             
             Ví dụ: 
@@ -233,7 +233,7 @@ def query_product(client, query, prev_chat, intent):
                 - Xác định trong sản phẩm tìm được có sản phẩm khách hàng tìm hay không
                 Nếu không, trả về "xin lỗi, cửa hàng đã hết mẫu sản phẩm <sản phẩm> rồi ạ
                 Nếu có, dựa vào sản phẩm tìm được để trả lời.
-                
+
                 Chú ý:
                 - chỉ dùng sản phẩm tìm được để trả lời.
                 - liệt kê sản phẩm theo số thứ tự.
