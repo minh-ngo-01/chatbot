@@ -101,8 +101,9 @@ def get_metadata(intent, prev_chat):
                  - trong ý định hiện tại, khách hàng tìm sản phẩm khác với sản phẩm được đề cập gần nhất không? có -> see_more: false, product_codes=[""]
 
             2. Xác định các meta_data trong ý định của khách hàng theo các bước sau:
-                 - trong ý định hiện tại của kháchh hàng có đề cập tới nam hay nữ không?
-                 - nếu không, hỏi lại khách hàng.
+                 - Xác định trong ý định hiện tại của kháchh hàng có đề cập tới nam hay nữ không?
+                 - Nếu không, có thể suy luận giới tính từ sản phẩm khách hàng đang tìm không? (áo bra -> nữ), (váy -> nữ)
+                 - nếu không, trả về câu hỏi về giới tính.
                  - nếu có, tiến hành lọc ra các thông tin về giá và giới tính.
                  
             
@@ -163,15 +164,21 @@ def get_metadata(intent, prev_chat):
     print(prev_chat)
 
     system_instruction="""Bạn là một trợ lý ảo trò chuyện cho cửa hàng quần áo trực tuyến Coolmate.
-                          Trả về một JSON hoặc câu hỏi, chỉ một trong hai"""
+                          Trả về một JSON hoặc câu hỏi, chỉ một trong hai.
+                          Suy nghĩ ngắn gọn theo từng bước, trả lại theo dạng JSON {"reasoning": <suy nghĩ> , "response": <nội dung>}."""
     response=call_llm(prompt, system_instruction)
     print(response)
-    if "?" in response:
-        return response
     match=re.search(r'{.*}', response, re.DOTALL)
-    meta_data=match.group(0)
-    meta_data=json.loads(meta_data)
-    return meta_data
+    response=match.group(0)
+    response=json.loads(response)
+    print(response["response"])
+    if "?" in response["response"]:
+        return response["response"]
+    # match=re.search(r'{.*}', response["response"], re.DOTALL)
+    # response=match.group(0)
+    # response=json.loads(response)
+    return response
+    
 
 def build_filters(meta_data):
     filters=[]
@@ -251,11 +258,16 @@ def query_product(client, query, prev_chat, intent):
                 
     system_instruction="""Bạn là một trợ lý ảo trò chuyện cho cửa hàng quần áo trực tuyến Coolmate. Hãy nói chuyện một cách tự nhiên, như đang trò chuyện với một người bạn.                            
                           Giữ câu trả lời ngắn gọn và hữu ích.
-                          Suy nghĩ ngắn gọn theo từng bước, in ra suy nghĩ ở đầu phản hồi."""
+                          Suy nghĩ ngắn gọn theo từng bước, trả lại theo dạng JSON {"reasoning": <suy nghĩ> , "response": <nội dung>}."""
 
     response=call_llm(prompt, system_instruction)
-
-    return response
+    # with open("text.txt", "w", encoding='utf-8') as f:
+    #     f.write(response)
+    match=re.search(r'{.*}', response, re.DOTALL)
+    response=match.group(0)
+    response=json.loads(response)
+    
+    return response["response"]
 
 
 def query_other(client, query, prev_chat, intent):  

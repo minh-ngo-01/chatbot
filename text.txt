@@ -1,13 +1,16 @@
-Dạ, bạn muốn xem thêm quần thun khác đúng không ạ? Bên em có mẫu Quần Shorts Nam Mặc Nhà này nè, siêu thoáng mát và kháng khuẩn luôn ạ.
-
-**1. Quần Shorts Nam Mặc Nhà (Mã SP: SOZ735)**
-
-*   **Giá:** 99.000đ
-*   **Mô tả:** Chất liệu cotton pha mềm mại, thoáng mát, kháng khuẩn, rất hợp để mặc ở nhà hoặc đi ngủ. Có nhiều màu và họa tiết để bạn lựa chọn.
-*   **Hình ảnh:**
-    *   Xanh dương 7: <img src="https://n7media.coolmate.me/uploads/July2025/quan-short-nam-mac-nha-4-xanh-duong-7.jpg" width=300>
-    *   Xám đen 3: <img src="https://n7media.coolmate.me/uploads/July2025/quan-short-nam-mac-nha-2-xam-den-3.jpg" width=300>
-    *   Trắng kẻ đen: <img src="https://n7media.coolmate.me/uploads/July2025/quan-short-nam-mac-nha-2-trang-ke-den.jpg" width=300>
-*   **Link sản phẩm:** https://www.coolmate.me/product/quan-short-nam-mac-nha-thoang-mat/
-
-Bạn xem mẫu này thế nào ạ?
+```json
+{
+    "previous_product": "áo thun",
+    "see_more": false,
+    "product_codes": [
+        ""
+    ],
+    "price": {
+        "min": 0,
+        "max": "inf"
+    },
+    "gender": [
+        "FEMALE"
+    ]
+}
+```

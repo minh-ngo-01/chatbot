@@ -1,1 +1,12 @@
-print('?' in 'Bạn mua áo thun cho nam hay nữ vậy ạ?')
+import re
+import json
+
+response="""{{
+    "reasoning": "Khách hàng đang tìm kiếm áo thun nam. Trong danh sách sản phẩm tìm được có các sản phẩm áo thun nam. Mình sẽ liệt kê các sản phẩm này theo yêu cầu.",
+    "response": "Chào bạn, Coolmate có một vài mẫu áo thun nam rất phù hợp với nhu cầu của bạn đây ạ:\n\n1. **Tanktop chạy bộ nam Graphic Energy** (Mã: TTA339)\n   - Giá: 199.000đ\n   - Chất liệu: 100% Polyester, nhanh khô, thấm hút tốt, siêu nhẹ.\n   - Phù hợp cho: Chạy bộ và các hoạt động thể thao.\n   - Có các màu Đỏ và Xanh.\n   - Hình ảnh:\n     <img src=\"https://n7media.coolmate.me/uploads/August2025/tanktop-chay-bo-nam-graphic-energy-1-17-do_79.jpg\" width=300>\n     <img src=\"https://n7media.coolmate.me/uploads/August2025/tanktop-chay-bo-nam-graphic-energy-1-5-xanh_31.jpg\" width=300>\n     <img src=\"https://n7media.coolmate.me/uploads/August2025/tanktop-chay-bo-nam-graphic-energy-1-18-do_40.jpg\" width=300>\n   - Link sản phẩm: https://www.coolmate.me/product/tank-top-chay-bo-nam-graphic-energy\n\n2. **Áo Dài Tay Thể Thao Essentials** (Mã: LSZ680)\n   - Giá: 159.000đ\n   - Kiểu dáng áo dài tay, phù hợp cho nhiều hoạt động.\n   - Có các màu: Đen, Xám, Xanh Naval Academy, Trắng, Xanh Conoly, Be.\n   - Hình ảnh:\n     <img src=\"https://n7media.coolmate.me/uploads/December2024/ao-dai-tay-the-thao-essentials-den-1.jpg\" width=300>\n     <img src=\"https://n7media.coolmate.me/uploads/December2024/ao-dai-tay-the-thao-essentials-xam-1.jpg\" width=300>\n     <img src=\"https://n7media.coolmate.me/uploads/December2024/ao-dai-tay-the-thao-essentials-trang-1.jpg\" width=300>\n   - Link sản phẩm: https://www.coolmate.me/product/ao-dai-tay-the-thao-essentials\n\n3. **Áo dài tay thể thao 1699** (Mã: LSZ681)\n   - Giá: 199.000đ\n   - Kiểu dáng áo dài tay, phù hợp cho nhiều hoạt động.\n   - Có các màu: Trắng, Be Trench Coat, Be, Đen, Navy, Xanh bóng đêm.\n   - Hình ảnh:\n     <img src=\"https://n7media.coolmate.me/uploads/December2024/ao-dai-tay-the-thao-1699-trang_(3).jpg\" width=300>\n     <img src=\"https://n7media.coolmate.me/uploads/December2024/ao-dai-tay-the-thao-1699-be-trench-coat_(1).jpg\" width=300>\n     <img src=\"https://n7media.coolmate.me/uploads/December2024/ao-dai-tay-the-thao-1699-den_(1).jpg\" width=300>\n   - Link sản phẩm: https://www.coolmate.me/product/ao-dai-tay-the-thao-1699\n\nBạn thích mẫu nào nhất ạ?"
+}}"""
+match=re.search(r'{.*}', response, re.DOTALL)
+response=match.group(0)
+print(response)
+response=json.loads(response)
+print(response)
