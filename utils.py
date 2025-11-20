@@ -95,7 +95,7 @@ def get_metadata(intent, prev_chat):
               Nhiệm vụ:
               1. Xác định khách hàng đang tìm gì?.
                  Thực hiện theo các bước sau:
-                 - trong lịch sử trò chuyện, xác định sản phẩm được đề cập gần nhất.  vd áo thun/quần tây/tất/áo khoác,...
+                 - trong lịch sử trò chuyện, xác định sản phẩm được đề cập trong tin nhắn gần nhất (nếu có).  vd áo thun/quần tây/tất/áo khoác,...
                  - trong ý định hiện tại, khách hàng có hỏi thêm, yêu cầu cung cấp thêm thông tin gì về sản phẩm được đề cập gần nhất không? có -> see_more:false, product_codes=[""]
                  - trong ý định hiện tại, khách hàng có tìm mẫu, kiểu khác của sản phẩm được đề cập gần nhất không? có -> see_more: True, product_codes: <tất cả các mã sản phẩm của sản phẩm trước đó trong lịch sử trò chuyện>
                  - trong ý định hiện tại, khách hàng tìm sản phẩm khác với sản phẩm được đề cập gần nhất không? có -> see_more: false, product_codes=[""]
@@ -103,7 +103,7 @@ def get_metadata(intent, prev_chat):
             2. Xác định các meta_data trong ý định của khách hàng theo các bước sau:
                  - Xác định trong ý định hiện tại của kháchh hàng có đề cập tới nam hay nữ không?
                  - Nếu không, có thể suy luận giới tính từ sản phẩm khách hàng đang tìm không? (áo bra -> nữ), (váy -> nữ)
-                 - nếu không, trả về câu hỏi về giới tính.
+                 - nếu không, không trả về JSON mà chỉ trả về câu hỏi hỏi lại khách hàng.
                  - nếu có, tiến hành lọc ra các thông tin về giá và giới tính.
                  
             
@@ -161,22 +161,16 @@ def get_metadata(intent, prev_chat):
             
             Lịch sử trò chuyện: {prev_chat}
             Ý định hiện tại của khách hàng: {intent}"""
-    print(prev_chat)
+    print("prev_chat", "abc", prev_chat)
 
     system_instruction="""Bạn là một trợ lý ảo trò chuyện cho cửa hàng quần áo trực tuyến Coolmate.
-                          Trả về một JSON hoặc câu hỏi, chỉ một trong hai.
-                          Suy nghĩ ngắn gọn theo từng bước, trả lại theo dạng JSON {"reasoning": <suy nghĩ> , "response": <nội dung>}."""
+                          Trả về một JSON hoặc câu hỏi, chỉ một trong hai."""
     response=call_llm(prompt, system_instruction)
-    print(response)
+    if "?" in response:
+        return response
     match=re.search(r'{.*}', response, re.DOTALL)
     response=match.group(0)
     response=json.loads(response)
-    print(response["response"])
-    if "?" in response["response"]:
-        return response["response"]
-    # match=re.search(r'{.*}', response["response"], re.DOTALL)
-    # response=match.group(0)
-    # response=json.loads(response)
     return response
     
 
@@ -208,7 +202,7 @@ def query_product(client, query, prev_chat, intent):
     #     return augmented_query
     # print(augmented_query)
     context=""
-    print(meta_data)
+    # print(meta_data)
     filters=build_filters(meta_data)
     response=products.query.near_text(query=intent, filters=Filter.all_of(filters) if len(filters) != 0 else None, limit=3)
     context=""
@@ -233,7 +227,7 @@ def query_product(client, query, prev_chat, intent):
      print_context+=f"""mã sản phẩm: {res.properties['product_code']},
                         tên sản phẩm:{res.properties['name']},                     
                         """
-    print(print_context)
+    # print(print_context)
     prompt=f""" Bạn sẽ nhận:
                 - ý định hiện tại của khách hàng                
                 - sản phẩm tìm được
@@ -261,6 +255,7 @@ def query_product(client, query, prev_chat, intent):
                           Suy nghĩ ngắn gọn theo từng bước, trả lại theo dạng JSON {"reasoning": <suy nghĩ> , "response": <nội dung>}."""
 
     response=call_llm(prompt, system_instruction)
+    print(response)
     # with open("text.txt", "w", encoding='utf-8') as f:
     #     f.write(response)
     match=re.search(r'{.*}', response, re.DOTALL)
