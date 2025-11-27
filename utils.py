@@ -169,7 +169,7 @@ def get_metadata(intent, prev_chat):
             
             Lịch sử trò chuyện: {prev_chat}
             Ý định hiện tại của khách hàng: {intent}"""
-    print("prev_chat", "abc", prev_chat)
+    # print("prev_chat", "abc", prev_chat)
 
     system_instruction="""Bạn là một trợ lý ảo trò chuyện cho cửa hàng quần áo trực tuyến Coolmate.
                           Trả về một JSON hoặc câu hỏi, chỉ một trong hai.
@@ -205,7 +205,7 @@ def build_filters(meta_data):
     return filters
     
 def query_product(client, query, prev_chat, intent):   
-    
+    print(intent)
     # client.collections.delete('products')
     products=client.collections.get('products')
 
@@ -265,7 +265,7 @@ def query_product(client, query, prev_chat, intent):
                 
                 ý định hiện tại của khách hàng: {intent}
                 sản phẩm tìm được: {context}"""
-    print(f"""Ý định hiện tại của khách hàng: {intent}""")
+    # print(f"""Ý định hiện tại của khách hàng: {intent}""")
                 
     system_instruction="""Bạn là một trợ lý ảo trò chuyện cho cửa hàng quần áo trực tuyến Coolmate. Hãy nói chuyện một cách tự nhiên, như đang trò chuyện với một người bạn.                            
                           Giữ câu trả lời ngắn gọn và hữu ích.
