@@ -172,16 +172,17 @@ def get_metadata(intent, prev_chat):
     # print("prev_chat", "abc", prev_chat)
 
     system_instruction="""Bạn là một trợ lý ảo trò chuyện cho cửa hàng quần áo trực tuyến Coolmate.
-                          Trả về một JSON hoặc câu hỏi, chỉ một trong hai.
-                          Suy nghĩ ngắn gọn theo từng bước, trả lại theo dạng JSON {"reasoning": <suy nghĩ> , "response": <nội dung>}.
-                          Chú ý escape các ý tự đặc biệt như " hay ' """
+                          Trả về một JSON hoặc câu hỏi, chỉ một trong hai."""
 
-                          
+
     response=call_llm(prompt, system_instruction)
+    print(response)
+    if "?" in response:
+        return response
     match=re.search(r'{.*}', response, re.DOTALL)
     response=match.group(0)
     response=json.loads(response)
-    return response["response"]
+    return response
     
 
 def build_filters(meta_data):
@@ -270,7 +271,7 @@ def query_product(client, query, prev_chat, intent):
     system_instruction="""Bạn là một trợ lý ảo trò chuyện cho cửa hàng quần áo trực tuyến Coolmate. Hãy nói chuyện một cách tự nhiên, như đang trò chuyện với một người bạn.                            
                           Giữ câu trả lời ngắn gọn và hữu ích.
                           Suy nghĩ ngắn gọn theo từng bước, trả lại theo dạng JSON {"reasoning": <suy nghĩ> , "response": <nội dung>}.
-                          Chú ý escape các ý tự đặc biệt như " hay ' """
+                          Chú ý escape các ký tự đặc biệt như " hay ' """
 
     response=call_llm(prompt, system_instruction)
     # print(response)
