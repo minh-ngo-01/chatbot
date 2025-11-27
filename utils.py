@@ -176,7 +176,7 @@ def get_metadata(intent, prev_chat):
 
 
     response=call_llm(prompt, system_instruction)
-    print(response)
+    print(repr(response))
     if "?" in response:
         return response
     match=re.search(r'{.*}', response, re.DOTALL)
@@ -188,7 +188,7 @@ def get_metadata(intent, prev_chat):
 def build_filters(meta_data):
     filters=[]
     for key, value in meta_data.items():
-        print(key, value, type(value))
+        # print(key, value, type(value))
         if value==[""] or value == []:
             continue
         elif key=="product_codes" and meta_data["see_more"] ==True:
@@ -212,7 +212,7 @@ def query_product(client, query, prev_chat, intent):
 
     # print(prompt)
     meta_data=get_metadata(intent, prev_chat)
-    print(meta_data)
+    # print(meta_data)
     if "?" in meta_data:
         return meta_data
 
@@ -274,12 +274,12 @@ def query_product(client, query, prev_chat, intent):
                           Chú ý escape các ký tự đặc biệt như " hay ' """
 
     response=call_llm(prompt, system_instruction)
-    # print(response)
-    with open("text.txt", "w", encoding='utf-8') as f:
-        f.write(response)
+    print(repr(response))
+    # with open("text.txt", "w", encoding='utf-8') as f:
+    #     f.write(repr(response))
     match=re.search(r'{.*}', response, re.DOTALL)
     response=match.group(0)
-    print(response)
+    # print(response)
     response=json.loads(response)
     
     return response["response"]

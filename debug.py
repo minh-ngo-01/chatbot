@@ -1,5 +1,6 @@
-from openai import OpenAI
-client=OpenAI(
-        base_url='https://router.huggingface.co/v1',
-        api_key='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')
-        
+import json
+response="""{"response":"this \\"is\\" a text"}"""
+print((response))
+# response=json.loads(response)
+# print(response)
+# print(type(response))
