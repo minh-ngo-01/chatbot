@@ -45,47 +45,44 @@ def call_llm(prompt, system_instruction, temperature=0, model='gemini-2.5-flash-
 
 def classify_query(query, prev_chat):
     prompt=f"""Bạn sẽ nhận:
-            - lịch sử trò chuyện giữa bạn và khách hàng
-            - tin nhắn hiện tại.
+        - lịch sử trò chuyện giữa bạn và khách hàng
+        - tin nhắn hiện tại.
 
-            Nhiệm vụ:
-            - mô tả chi tiết ý định của khách hàng, cụ thể về mẫu sản phẩm, loại sản phẩm và đặc điểm sản phẩm nếu có.
-            - phân loại ý định đó theo 3 chủ đề gồm: Product(sản phẩm)/Delivery(giao hàng)/Other(chủ đề khác)
-            Trả vê một JSON.
+        Nhiệm vụ:
+        - mô tả chi tiết ý định của khách hàng, cụ thể về mẫu sản phẩm, loại sản phẩm và đặc điểm sản phẩm nếu có.
+        - phân loại ý định đó theo 3 chủ đề gồm: Product(sản phẩm)/Delivery(giao hàng)/Other(chủ đề khác)
+        Trả vê một JSON.
 
-            Ví dụ: 
-              Lịch sử trò chuyện: {{'time': 'Sun Nov 16 07:52:30 2025', 'customer': 'các mẫu áo thun nam', 'bot': 'Tuyệt vời! Bạn đang tìm áo thun nam đúng không? Coolmate có mấy mẫu này rất được ưa chuộng nè:\n\n**1. Áo Thun Nam Cotton 220GSM Basics (TSZ959)**\n<img src="https://n7media.coolmate.me/uploads/February2025/ao-thun-nam-cotton-220gsm-mau-nau-cappuccino_(7).jpg" width=300>\nChất liệu 100% Cotton Úc dày dặn, mềm mịn, thấm hút tốt. Form Regular Fit mặc lên cực thoải mái, có đến 12 màu tha hồ lựa chọn nha. Giá chỉ 159.000đ.\n\n**2. Áo Thun Nam Chạy Bộ Graphic Heartbeat (TSZ877)**\n<img src="https://n7media.coolmate.me/uploads/July2025/ao-thun-nam-chay-bo-hoat-tiet-graphic-heartbeat-hong-5.jpg" width=300>\nSiêu nhẹ, nhanh khô và co giãn 4 chiều, cực hợp cho những ai mê vận động. Đặc biệt có logo phản quang giúp an toàn hơn khi tập luyện buổi tối. Giá cũng là 159.000đ.\n\n**3. Áo Thun Nam Thể Thao Coolmate Basics (TSZ916)**\n<img src="https://n7media.coolmate.me/uploads/September2025/ao-the-thao-nam-promax-recycle-basics1-hong-marsala-1_10.jpg" width=300>\nĐây là dòng sản phẩm Recycle Basics, vừa thân thiện môi trường, vừa siêu nhẹ, thấm hút và khô nhanh. Giá mềm hơn, chỉ 99.000đ.\n\nBạn ưng mẫu nào hay muốn xem thêm màu sắc của mẫu nào không?'}}
-              Tin nhắn hiện tại: mẫu thứ 2 có những màu nào?
-              Trả về:
-              {{"intent":" cần thêm thông tin về màu sắc Áo Thun Nam Chạy Bộ Graphic Heartbeat (TSZ877)",
-               "topic": "Product"}}
+        Ví dụ: 
+            Lịch sử trò chuyện: {{'time': 'Sun Nov 16 07:52:30 2025', 'customer': 'các mẫu áo thun nam', 'bot': 'Tuyệt vời! Bạn đang tìm áo thun nam đúng không? Coolmate có mấy mẫu này rất được ưa chuộng nè:\n\n**1. Áo Thun Nam Cotton 220GSM Basics (TSZ959)**\n<img src="https://n7media.coolmate.me/uploads/February2025/ao-thun-nam-cotton-220gsm-mau-nau-cappuccino_(7).jpg" width=300>\nChất liệu 100% Cotton Úc dày dặn, mềm mịn, thấm hút tốt. Form Regular Fit mặc lên cực thoải mái, có đến 12 màu tha hồ lựa chọn nha. Giá chỉ 159.000đ.\n\n**2. Áo Thun Nam Chạy Bộ Graphic Heartbeat (TSZ877)**\n<img src="https://n7media.coolmate.me/uploads/July2025/ao-thun-nam-chay-bo-hoat-tiet-graphic-heartbeat-hong-5.jpg" width=300>\nSiêu nhẹ, nhanh khô và co giãn 4 chiều, cực hợp cho những ai mê vận động. Đặc biệt có logo phản quang giúp an toàn hơn khi tập luyện buổi tối. Giá cũng là 159.000đ.\n\n**3. Áo Thun Nam Thể Thao Coolmate Basics (TSZ916)**\n<img src="https://n7media.coolmate.me/uploads/September2025/ao-the-thao-nam-promax-recycle-basics1-hong-marsala-1_10.jpg" width=300>\nĐây là dòng sản phẩm Recycle Basics, vừa thân thiện môi trường, vừa siêu nhẹ, thấm hút và khô nhanh. Giá mềm hơn, chỉ 99.000đ.\n\nBạn ưng mẫu nào hay muốn xem thêm màu sắc của mẫu nào không?'}}
+            Tin nhắn hiện tại: mẫu thứ 2 có những màu nào?
+            Trả về:
+            {{"intent":" cần thêm thông tin về màu sắc Áo Thun Nam Chạy Bộ Graphic Heartbeat (TSZ877)",
+            "topic": "Product"}}
 
-              Lịch sử trò chuyện: {{'time': 'Sun Nov 16 16:00:00 2025', 'customer': 'mẫu áo thun cho nam, dưới 200k', 'bot': 'Ok bạn ơi, đây là mẫu Áo Thun Nam Cotton 220GSM này, giá chỉ 159k thôi nè. Chất cotton dày dặn, mặc thoải mái lắm nha. Bạn xem thử có ưng màu nào không nè:\n\n<img src="https://n7media.coolmate.me/uploads/February2025/ao-thun-nam-cotton-220gsm-mau-nau-cappuccino_(7).jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/February2025/ao-thun-nam-cotton-220gsm-mau-xam-castlerock_(8).jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/February2025/ao-thun-nam-cotton-220gsm-mau-hong-peach-whip_(7).jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/October2024/AT.220_-_Do_1.1.jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/January2024/AT.220.den6.jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/January2024/AT.220.xd.3.jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/January2024/AT.220.be.1.jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/January2024/AT.220.den14.jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/January2024/AT.220.NAU.1.jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/June2025/ao-thun-nam-cotton-220gsm-xanh-reu-1111.jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/January2024/AT.220.mint1.jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/January2024/AT.220.xam1.jpg" width=300>\n\nMã sản phẩm: TSZ959'}}
-                                  {{'time': 'Sun Nov 16 16:00:20 2025', 'customer': 'mẫu khác nha', 'bot': 'Ok bạn ơi, mình có mẫu Áo Thun Chạy Bộ Graphic Heartbeat này, giá cũng 159k nè, có nhiều màu xinh lắm:\n<img src="https://n7media.coolmate.me/uploads/July2025/ao-thun-nam-chay-bo-hoat-tiet-graphic-heartbeat-hong-5.jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/July2025/ao-thun-nam-chay-bo-hoat-tiet-graphic-heartbeat-tim-2.jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/July2025/ao-thun-nam-chay-bo-hoat-tiet-graphic-heartbeat-den-3.jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/July2025/ao-thun-nam-chay-bo-hoat-tiet-graphic-heartbeat-xanh-reu-3_60.jpg" width=300>\n\nMã sản phẩm: TSZ877\n\nNgoài ra còn có Áo singlet chạy bộ nam "Việt Nam tiến bước" giá 109k, siêu nhẹ và thoáng mát nè:\n<img src="https://n7media.coolmate.me/uploads/August2025/ao-singlet-chay-bo-nam-viet-nam-tien-buoc-18-do_76.jpg" width=300>\nMã sản phẩm: 25CM.MAWRU.TTA484\n\nBạn thích mẫu nào hơn nè?'}}
-              Tin nhắn hiện tại: mẫu khác
-              Trả về:
-               {{"intent":"tìm mẫu áo thun nam dưới 200000 vnd",
-               "topic": "Poroduct"}}
+            Lịch sử trò chuyện: {{'time': 'Sun Nov 16 16:00:00 2025', 'customer': 'mẫu áo thun cho nam, dưới 200k', 'bot': 'Ok bạn ơi, đây là mẫu Áo Thun Nam Cotton 220GSM này, giá chỉ 159k thôi nè. Chất cotton dày dặn, mặc thoải mái lắm nha. Bạn xem thử có ưng màu nào không nè:\n\n<img src="https://n7media.coolmate.me/uploads/February2025/ao-thun-nam-cotton-220gsm-mau-nau-cappuccino_(7).jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/February2025/ao-thun-nam-cotton-220gsm-mau-xam-castlerock_(8).jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/February2025/ao-thun-nam-cotton-220gsm-mau-hong-peach-whip_(7).jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/October2024/AT.220_-_Do_1.1.jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/January2024/AT.220.den6.jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/January2024/AT.220.xd.3.jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/January2024/AT.220.be.1.jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/January2024/AT.220.den14.jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/January2024/AT.220.NAU.1.jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/June2025/ao-thun-nam-cotton-220gsm-xanh-reu-1111.jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/January2024/AT.220.mint1.jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/January2024/AT.220.xam1.jpg" width=300>\n\nMã sản phẩm: TSZ959'}}
+                                {{'time': 'Sun Nov 16 16:00:20 2025', 'customer': 'mẫu khác nha', 'bot': 'Ok bạn ơi, mình có mẫu Áo Thun Chạy Bộ Graphic Heartbeat này, giá cũng 159k nè, có nhiều màu xinh lắm:\n<img src="https://n7media.coolmate.me/uploads/July2025/ao-thun-nam-chay-bo-hoat-tiet-graphic-heartbeat-hong-5.jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/July2025/ao-thun-nam-chay-bo-hoat-tiet-graphic-heartbeat-tim-2.jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/July2025/ao-thun-nam-chay-bo-hoat-tiet-graphic-heartbeat-den-3.jpg" width=300>\n<img src="https://n7media.coolmate.me/uploads/July2025/ao-thun-nam-chay-bo-hoat-tiet-graphic-heartbeat-xanh-reu-3_60.jpg" width=300>\n\nMã sản phẩm: TSZ877\n\nNgoài ra còn có Áo singlet chạy bộ nam "Việt Nam tiến bước" giá 109k, siêu nhẹ và thoáng mát nè:\n<img src="https://n7media.coolmate.me/uploads/August2025/ao-singlet-chay-bo-nam-viet-nam-tien-buoc-18-do_76.jpg" width=300>\nMã sản phẩm: 25CM.MAWRU.TTA484\n\nBạn thích mẫu nào hơn nè?'}}
+            Tin nhắn hiện tại: mẫu khác
+            Trả về:
+            {{"intent":"tìm mẫu áo thun nam dưới 200000 vnd",
+            "topic": "Poroduct"}}
+            
+            Lịch sử trò chuyện: ""
+            Tin nhắn hiện tại: Khi nào cửa hàng mình mở cửa?
+            Trả về:
+            {{"intent":"hỏi về thời gian mở cửa cửa hàng",
+            "topic": "Other"}}
+    
+        Lịch sử trò chuyện: {prev_chat}
+        Tin nhắn hiện tại: {query} """
 
-              Lịch sử trò chuyện: ""
-              Tin nhắn hiện tại: Khi nào cửa hàng mình mở cửa?
-              Trả về:
-               {{"intent":"hỏi về thời gian mở cửa cửa hàng",
-               "topic": "Other"}}
-        
-            Lịch sử trò chuyện: {prev_chat}
-            Tin nhắn hiện tại: {query} """
-   
     system_instruction="""Nhiệm vụ của bạn là xác định và phân loại ý định của khách hàng.
-                          Chỉ trả về JSON."""
+                        Chỉ trả về JSON."""
     response=call_llm(prompt, system_instruction)
-    print(response)
-    match=re.search(r'{.*}', response, re.DOTALL)
-    meta_data=match.group(0)
-    meta_data=json.loads(meta_data)
-    return meta_data
-
-
+    match=re.search(r'{.+}', response, re.DOTALL)
+    response=match.group(0)
+    response=json.loads(response)
+    return response
 
 def get_metadata(intent, prev_chat):
     prompt=f"""Bạn sẽ nhận:
@@ -103,17 +100,19 @@ def get_metadata(intent, prev_chat):
             2. Xác định các meta_data trong ý định của khách hàng theo các bước sau:
                  - Xác định trong ý định hiện tại của kháchh hàng có đề cập tới nam hay nữ không?
                  - Nếu không, có thể suy luận giới tính từ sản phẩm khách hàng đang tìm không? (áo bra -> nữ), (váy -> nữ)
-                 - nếu không, không trả về JSON mà chỉ trả về câu hỏi hỏi lại khách hàng.
-                 - nếu có, tiến hành lọc ra các thông tin về giá và giới tính.
+                 - nếu không, không trả về JSON mà chỉ trả về câu hỏi hỏi lại khách hàng.                 
+                 - nếu có, chỉ dựa vào ý định hiện tại của khách hàng để lọc ra các thông tin về giới tính, giá, màu sắc và size.
                  
             
             Trả vê một JSON hoặc câu hỏi theo mẫu:
                     {{
-                    "previous_product": str    giải thích: sản phẩm trước đó được đề cập trong tin nhắn gần nhất.
-                    "see_more": Boolean           
-                    "product_codes": List[str]         giải thích: tất cả các mã sản phẩm của sản phẩm trước đó trong lịch sử trò chuyện
+                    "previous_product": str,    giải thích: sản phẩm trước đó được đề cập trong tin nhắn gần nhất.
+                    "see_more": Boolean,           
+                    "product_codes": List[str],         giải thích: tất cả các mã sản phẩm của sản phẩm trước đó trong lịch sử trò chuyện
                     "price": {{"min": int, "max": int}},       ("max": "inf" nếu không có thông tin về giá)
                     "gender": List[str],    giải thích: nam -> 'MALE', nữ ->'FEMALE, hỏi lại khách hàng nếu giới tính chưa được đề cập
+                    "color": List[str], giải thích: màu sắc của sản phẩm
+                    "size": List[str], giải thích: size của sản phẩm 
                     }}            
             
             Ví dụ: 
@@ -127,19 +126,26 @@ def get_metadata(intent, prev_chat):
                     "product_codes": ['TSZ959', 'TSZ877', 'MUW']  
                     "price": {{"min": 0, "max": 200000}},     
                     "gender": ['MALE'],          
-              }}
+                    "color":[""],
+                    "size":[""]
 
+              }}
+              Lịch sử trò chuyện: {{'time': 'Mon Nov 17 15:18:54 2025', 'customer': 'xin chào', 'bot': 'Chào bạn, mình có thể giúp gì cho bạn nè?'}}
+              Ý định khách hàng: tìm áo sơ mi trắng để đi đám cưới.
+              Trả về: Bạn mua áo sơ mi trắng đi đám cưới cho nam hay nữ vậy ạ?
               
-              Lịch sử trò chuyện: {{'time': 'Sun Nov 16 07:52:30 2025', 'customer': 'các mẫu áo thun nam', 'bot': 'Tuyệt vời! Bạn đang tìm áo thun nam đúng không? Coolmate có mấy mẫu này rất được ưa chuộng nè:\n\n**1. Áo Thun Nam Cotton 220GSM Basics (TSZ959)**\n<img src="https://n7media.coolmate.me/uploads/February2025/ao-thun-nam-cotton-220gsm-mau-nau-cappuccino_(7).jpg" width=300>\nChất liệu 100% Cotton Úc dày dặn, mềm mịn, thấm hút tốt. Form Regular Fit mặc lên cực thoải mái, có đến 12 màu tha hồ lựa chọn nha. Giá chỉ 159.000đ.\n\n**2. Áo Thun Nam Chạy Bộ Graphic Heartbeat (TSZ877)**\n<img src="https://n7media.coolmate.me/uploads/July2025/ao-thun-nam-chay-bo-hoat-tiet-graphic-heartbeat-hong-5.jpg" width=300>\nSiêu nhẹ, nhanh khô và co giãn 4 chiều, cực hợp cho những ai mê vận động. Đặc biệt có logo phản quang giúp an toàn hơn khi tập luyện buổi tối. Giá cũng là 159.000đ.\n\n**3. Áo Thun Nam Thể Thao Coolmate Basics (TSZ916)**\n<img src="https://n7media.coolmate.me/uploads/September2025/ao-the-thao-nam-promax-recycle-basics1-hong-marsala-1_10.jpg" width=300>\nĐây là dòng sản phẩm Recycle Basics, vừa thân thiện môi trường, vừa siêu nhẹ, thấm hút và khô nhanh. Giá mềm hơn, chỉ 99.000đ.\n\nBạn ưng mẫu nào hay muốn xem thêm màu sắc của mẫu nào không?'}},
-                                  {{'time': 'Sun Nov 16 07:52:46 2025', 'customer': 'mẫu khác', 'bot': 'Oke, bạn muốn xem thêm áo thun nam đúng không? Coolmate có mấy mẫu này nè:\n\n**1. Áo thun dài tay 100% Cotton Relax fit (LSZ711)**\n<img src="https://n7media.coolmate.me/uploads/September2025/ao-dai-tay-100-cotton-relax-fit-reu-1.jpg" width=300>\nÁo này làm từ 100% cotton mềm mại, thấm hút tốt, form Relax fit mặc thoải mái lắm. Có màu Rêu, Trắng, Đen. Giá 219.000đ.\n\n**2. Áo dài tay thể thao 1699 (LSZ681)**\n<img src="https://n7media.coolmate.me/uploads/December2024/ao-dai-tay-the-thao-1699-trang_(3).jpg" width=300>\nÁo này chất polyester thoáng khí, nhanh khô, hợp cho người hay vận động nè. Form Slim fit tôn dáng. Có các màu Trắng, Be Trench Coat, Be, Đen, Navy, Xanh bóng đêm. Giá 199.000đ.\n\n**3. Áo thun nam Cotton Compact (TSZ923)**\n<img src="https://n7media.coolmate.me/uploads/September2025/ao-thun-nam-cotton-compact-chong-nhan-den-1.jpg" width=300>\nChất cotton compact siêu mềm mịn, ít nhăn, có thêm chút spandex co giãn thoải mái. Form Regular fit. Có nhiều màu lắm: Đen, Xám, Xanh Navy, Trắng, Xanh rêu, Đỏ, Be, Xanh Pastel. Giá 229.000đ.\n\nBạn thấy mẫu nào ưng ý hay muốn xem thêm chi tiết gì không?'}}
-              Ý định khách hàng: quần kaki để đi làm cho nam
+              Lịch sử trò chuyện: {{'time': 'Sun Nov 16 07:52:30 2025', 'customer': 'lấy mình mấy mẫu áo thun nam size XL đen hoặc xám', 'bot': 'Tuyệt vời! Bạn đang tìm áo thun nam size XL màu đen hoặc xám đúng không? Coolmate có mấy mẫu này rất được ưa chuộng nè:\n\n**1. Áo Thun Nam Cotton 220GSM Basics (TSZ959)**\n<img src="https://n7media.coolmate.me/uploads/February2025/ao-thun-nam-cotton-220gsm-mau-nau-cappuccino_(7).jpg" width=300>\nChất liệu 100% Cotton Úc dày dặn, mềm mịn, thấm hút tốt. Form Regular Fit mặc lên cực thoải mái, có đến 12 màu tha hồ lựa chọn nha. Giá chỉ 159.000đ.\n\n**2. Áo Thun Nam Chạy Bộ Graphic Heartbeat (TSZ877)**\n<img src="https://n7media.coolmate.me/uploads/July2025/ao-thun-nam-chay-bo-hoat-tiet-graphic-heartbeat-hong-5.jpg" width=300>\nSiêu nhẹ, nhanh khô và co giãn 4 chiều, cực hợp cho những ai mê vận động. Đặc biệt có logo phản quang giúp an toàn hơn khi tập luyện buổi tối. Giá cũng là 159.000đ.\n\n**3. Áo Thun Nam Thể Thao Coolmate Basics (TSZ916)**\n<img src="https://n7media.coolmate.me/uploads/September2025/ao-the-thao-nam-promax-recycle-basics1-hong-marsala-1_10.jpg" width=300>\nĐây là dòng sản phẩm Recycle Basics, vừa thân thiện môi trường, vừa siêu nhẹ, thấm hút và khô nhanh. Giá mềm hơn, chỉ 99.000đ.\n\nBạn ưng mẫu nào hay muốn xem thêm màu sắc của mẫu nào không?'}},
+                                  {{'time': 'Sun Nov 16 07:52:46 2025', 'customer': 'mẫu khác', 'bot': 'Oke, bạn muốn xem thêm áo thun nam size XL có màu đen hoặc xám đúng không? Coolmate có mấy mẫu này nè:\n\n**1. Áo thun dài tay 100% Cotton Relax fit (LSZ711)**\n<img src="https://n7media.coolmate.me/uploads/September2025/ao-dai-tay-100-cotton-relax-fit-reu-1.jpg" width=300>\nÁo này làm từ 100% cotton mềm mại, thấm hút tốt, form Relax fit mặc thoải mái lắm. Có màu Rêu, Trắng, Đen. Giá 219.000đ.\n\n**2. Áo dài tay thể thao 1699 (LSZ681)**\n<img src="https://n7media.coolmate.me/uploads/December2024/ao-dai-tay-the-thao-1699-trang_(3).jpg" width=300>\nÁo này chất polyester thoáng khí, nhanh khô, hợp cho người hay vận động nè. Form Slim fit tôn dáng. Có các màu Trắng, Be Trench Coat, Be, Đen, Navy, Xanh bóng đêm. Giá 199.000đ.\n\n**3. Áo thun nam Cotton Compact (TSZ923)**\n<img src="https://n7media.coolmate.me/uploads/September2025/ao-thun-nam-cotton-compact-chong-nhan-den-1.jpg" width=300>\nChất cotton compact siêu mềm mịn, ít nhăn, có thêm chút spandex co giãn thoải mái. Form Regular fit. Có nhiều màu lắm: Đen, Xám, Xanh Navy, Trắng, Xanh rêu, Đỏ, Be, Xanh Pastel. Giá 229.000đ.\n\nBạn thấy mẫu nào ưng ý hay muốn xem thêm chi tiết gì không?'}}
+              Ý định khách hàng: tìm áo thun cho nam
               Trả về:
                {{
-                    "previous_product": áo thun         
-                    "see_more": false
-                    "product_codes":[""]      
-                    "price": {{"min": 0, "max": "inf"}},    
-                    "gender": ['MALE']
+                    "previous_product": áo thun,
+                    "see_more": false,
+                    "product_codes":[""],      
+                    "price": {{"min": 0, "max": "inf"}},
+                    "gender": ['MALE'],
+                    "color":["Đen", "Xám"],
+                    "size":["XL"]    
               }}
 
               Lịch sử trò chuyện: {{'time': 'Sun Nov 16 17:05:40 2025', 'customer': 'mẫu áo thun nam dưới 200k', 'bot': 'Chào bạn, dưới đây là một số mẫu áo thun nam dưới 200k mà bạn có thể tham khảo nè:\n\n1.  **Áo Thun Nam Cotton 220GSM Basics**\n    *   Giá: 159.000đ\n    *   Chất liệu: 100% Cotton\n    *   Đặc điểm nổi bật: Thấm hút tốt, chống xù lông, bề mặt vải mềm mịn, giữ form dáng tốt.\n    *   Mô tả: Đây là mẫu áo thun basic, là item nền tảng cho mọi tủ đồ. Vải dày dặn nhưng vẫn thoáng khí, rất phù hợp để mặc hàng ngày.\n    *   Có nhiều màu sắc đa dạng: Nâu Cappuccino, Xám Castlerock, Hồng Peach Whip, Đỏ Zifandel, Trắng, Xanh biển, Be, Đen, Nâu, Xanh rêu, Xanh mint, Xám Melange.\n    *   Link sản phẩm: https://www.coolmate.me/product/ao-thun-100-cotton-220gsm/n\n    *   Mã sản phẩm: TSZ959\n    *   Hình ảnh:\n        <img src="https://n7media.coolmate.me/uploads/February2025/ao-thun-nam-cotton-220gsm-mau-nau-cappuccino_(7).jpg" width=300>\n        <img src="https://n7media.coolmate.me/uploads/February2025/ao-thun-nam-cotton-220gsm-mau-xam-castlerock_(8).jpg" width=300>\n        <img src="https://n7media.coolmate.me/uploads/February2025/ao-thun-nam-cotton-220gsm-mau-hong-peach-whip_(7).jpg" width=300>\n\n2.  **Áo Thun Nam Thể Thao Coolmate Basics**\n    *   Giá: 99.000đ\n    *   Chất liệu: 51% Poly Recycled và 49% Poly\n    *   Đặc điểm nổi bật: Siêu nhẹ, thấm hút tốt, nhanh khô, thoáng mát.\n    *   Mô tả: Phù hợp cho các hoạt động thể thao, tập gym, chạy bộ nhờ công nghệ thấm hút và khô nhanh. Chất liệu tái chế thân thiện với môi trường.\n    *   Có nhiều màu sắc: Hồng Marsala, Xanh dương, Đen logo mới, Đen, Navy logo mới, Xanh da trời, Xanh bóng đêm, Xám nhạt, Xám nhạt logo mới, Xám đậm logo mới, Xám đậm, Xanh Cool, Xanh Cobalt, Xanh Forever Blue, Xanh Pacific, Nâu Iron, Xanh bạc hà, Xanh Navy.\n    *   Link sản phẩm: https://www.coolmate.me/product/ao-the-thao-nam-promax-recycle-basics1/n\n    *   Mã sản phẩm: TSZ916\n    *   Hình ảnh:\n        <img src="https://n7media.coolmate.me/uploads/September2025/ao-the-thao-nam-promax-recycle-basics1-hong-marsala-1_10.jpg" width=300>\n        <img src="https://n7media.coolmate.me/uploads/September2025/ao-the-thao-nam-promax-recycle-basics1-xanh-duong-1_54.jpg" width=300>\n        <img src="https://n7media.coolmate.me/uploads/September2025/ao-the-thao-nam-promax-recycle-basics1-den-logo-moi-1_82.jpg" width=300>\n\n3.  **Áo singlet chạy bộ nam "Việt Nam tiến bước"**\n    *   Giá: 109.000đ\n    *   Chất liệu: 100% Polyester\n    *   Đặc điểm nổi bật: Siêu nhẹ, thấm hút, thoáng mát, công nghệ Ex-Dry, kiểu dáng tanktop.\n    *   Mô tả: Đây là áo tanktop chuyên dụng cho chạy bộ, leo núi, với thiết kế lưng chữ Y giúp tối ưu chuyển động. Họa tiết Cờ đỏ sao vàng thể hiện niềm tự hào dân tộc.\n    *   Màu sắc: Đỏ.\n    *   Link sản phẩm: https://www.coolmate.me/product/singlet-chay-bo-nam-viet-nam-tien-buoc/n\n    *   Mã sản phẩm: 25CM.MAWRU.TTA484\n    *   Hình ảnh:\n        <img src="https://n7media.coolmate.me/uploads/August2025/ao-singlet-chay-bo-nam-viet-nam-tien-buoc-18-do_76.jpg" width=300>\n\nBạn thích mẫu nào hơn, hay muốn xem thêm những lựa chọn nào khác không?'}},
@@ -148,11 +154,13 @@ def get_metadata(intent, prev_chat):
               Ý định khách hàng: tìm mẫu quần short cho nam
               Trả về:
                {{
-                    "previous_product": quần short        
-                    "see_more": true
-                    "product_codes": ["SOZ890", "SOZ890", "SOZ893"]       
-                    "price": {{"min": 0, "max": "inf"}}, 
-                    "gender": ['MALE']
+                    "previous_product": quần short,        
+                    "see_more": true,
+                    "product_codes": ["SOZ890", "SOZ890", "SOZ893"],       
+                    "price": {{"min": 0, "max": "inf"}},
+                    "gender": ['MALE'],                    
+                    "color":[""],
+                    "size":[""]
               }}
 
               Lịch sử trò chuyện: {{'time': 'Mon Nov 17 15:18:54 2025', 'customer': 'xin chào', 'bot': 'Chào bạn, mình có thể giúp gì cho bạn nè?'}}
@@ -164,28 +172,36 @@ def get_metadata(intent, prev_chat):
     print("prev_chat", "abc", prev_chat)
 
     system_instruction="""Bạn là một trợ lý ảo trò chuyện cho cửa hàng quần áo trực tuyến Coolmate.
-                          Trả về một JSON hoặc câu hỏi, chỉ một trong hai."""
+                          Trả về một JSON hoặc câu hỏi, chỉ một trong hai.
+                          Suy nghĩ ngắn gọn theo từng bước, trả lại theo dạng JSON {"reasoning": <suy nghĩ> , "response": <nội dung>}.
+                          Chú ý escape các ý tự đặc biệt như " hay ' """
+
+                          
     response=call_llm(prompt, system_instruction)
-    if "?" in response:
-        return response
     match=re.search(r'{.*}', response, re.DOTALL)
     response=match.group(0)
     response=json.loads(response)
-    return response
+    return response["response"]
     
 
 def build_filters(meta_data):
     filters=[]
     for key, value in meta_data.items():
-        if value==[]:
+        print(key, value, type(value))
+        if value==[""] or value == []:
             continue
+        elif key=="product_codes" and meta_data["see_more"] ==True:
+            filters.append(Filter.by_property('product_code').contains_none(value))
         elif key=='price' and value['max'] != 'inf':                          
             filters.append(Filter.by_property(key).greater_than(value['min']))
             filters.append(Filter.by_property(key).less_than(value['max']))
         elif key=='gender':
             filters.append(Filter.by_property('gender').contains_any(value))
-        elif key=="product_codes" and meta_data["see_more"] ==True:
-            filters.append(Filter.by_property('product_code').contains_none(value))
+        elif key=='color':
+            filters.append(Filter.by_property('available_color').contains_any(value))
+        elif key=='size':
+            filters.append(Filter.by_property('available_size').contains_any(value))
+
     return filters
     
 def query_product(client, query, prev_chat, intent):   
@@ -195,6 +211,7 @@ def query_product(client, query, prev_chat, intent):
 
     # print(prompt)
     meta_data=get_metadata(intent, prev_chat)
+    print(meta_data)
     if "?" in meta_data:
         return meta_data
 
@@ -227,7 +244,7 @@ def query_product(client, query, prev_chat, intent):
      print_context+=f"""mã sản phẩm: {res.properties['product_code']},
                         tên sản phẩm:{res.properties['name']},                     
                         """
-    # print(print_context)
+    print(print_context)
     prompt=f""" Bạn sẽ nhận:
                 - ý định hiện tại của khách hàng                
                 - sản phẩm tìm được
@@ -252,14 +269,16 @@ def query_product(client, query, prev_chat, intent):
                 
     system_instruction="""Bạn là một trợ lý ảo trò chuyện cho cửa hàng quần áo trực tuyến Coolmate. Hãy nói chuyện một cách tự nhiên, như đang trò chuyện với một người bạn.                            
                           Giữ câu trả lời ngắn gọn và hữu ích.
-                          Suy nghĩ ngắn gọn theo từng bước, trả lại theo dạng JSON {"reasoning": <suy nghĩ> , "response": <nội dung>}."""
+                          Suy nghĩ ngắn gọn theo từng bước, trả lại theo dạng JSON {"reasoning": <suy nghĩ> , "response": <nội dung>}.
+                          Chú ý escape các ý tự đặc biệt như " hay ' """
 
     response=call_llm(prompt, system_instruction)
-    print(response)
-    # with open("text.txt", "w", encoding='utf-8') as f:
-    #     f.write(response)
+    # print(response)
+    with open("text.txt", "w", encoding='utf-8') as f:
+        f.write(response)
     match=re.search(r'{.*}', response, re.DOTALL)
     response=match.group(0)
+    print(response)
     response=json.loads(response)
     
     return response["response"]

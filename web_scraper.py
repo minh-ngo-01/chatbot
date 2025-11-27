@@ -22,7 +22,7 @@ def get_item_urls(url):
             seen.append(href)
             item_url=urljoin(url, href)
             item_urls.append(item_url)
-    return item_urls
+    return item_urls[:5]
 
 def get_id(item_url):
     print(item_url)
@@ -93,11 +93,15 @@ def get_item_info(product_id):
             url='https://n7media.coolmate.me/uploads/'+dict_1['src'][7:]
             urls.append(url)
             images[dict_0['title']]=urls
+    available_color=set()
+    available_size=set()
     colorBySize=[]
     for variant in product['variants']:
         if variant['quantity']>0:
             color=variant['option1']
             size=variant['option2']
+            available_color.add(color)
+            available_size.add(size)
             colorBySize.append(size +" "+ color)
     product_url='https://www.coolmate.me/product/'+ product['seo_alias']
 
@@ -116,7 +120,9 @@ def get_item_info(product_id):
             'care':care,
             'video':video,
             'images':str(images),
-            'colorBySize':str(colorBySize),
+            'available_color':list(available_color),
+            'available_size': list(available_size),
+            'colorBySize':colorBySize,
             'product_url':product_url
             }
 def get_items_data(url):    
@@ -125,7 +131,7 @@ def get_items_data(url):
     for url in set(urls):
         id=get_id(url)
         dict_=get_item_info(id)
-        if dict_["product_code"] != "" :
+        if dict_["product_code"] != "":
             list_.append(dict_)
     return list_
 

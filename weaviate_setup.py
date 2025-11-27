@@ -54,7 +54,9 @@ def initialize_products_collection(client):
                 Property(name='care', vectorize_property_name=True, data_type=DataType.TEXT),
                 Property(name='video', vectorize_property_name=True, data_type=DataType.TEXT),
                 Property(name='images', vectorize_property_name=True, data_type=DataType.TEXT),
-                Property(name='colorBySize', vectorize_property_name=True, data_type=DataType.TEXT),
+                Property(name='available_color', vectorize_property_name=True, data_type=DataType.TEXT_ARRAY),
+                Property(name='available_size', vectorize_property_name=True, data_type=DataType.TEXT_ARRAY),
+                Property(name='colorBySize', vectorize_property_name=True, data_type=DataType.TEXT_ARRAY),
                 Property(name='product_url', vectorize_property_name=True, data_type=DataType.TEXT),
             ]
                         
@@ -80,6 +82,8 @@ def populate_products_collection(collection, list_):
             'care':dict_['care'],
             'video':dict_['video'],
             'images':dict_['images'],
+            'available_color':dict_['available_color'],
+            'available_size':dict_['available_size'],
             'colorBySize':dict_['colorBySize'],
             'product_url':dict_['product_url']})
             if batch.number_errors >10:
@@ -89,70 +93,71 @@ def populate_products_collection(collection, list_):
 
 
 urls=[         
-            #   'https://www.coolmate.me/collection/ao-ba-lo-tank-top-nam',
-            #   'https://www.coolmate.me/collection/ao-thun-nam',
-            #   'https://www.coolmate.me/collection/ao-nam-choi-the-thao',
-            #   'https://www.coolmate.me/collection/ao-polo-nam',
-            #   'https://www.coolmate.me/collection/ao-so-mi-nam',
-            #   'https://www.coolmate.me/collection/ao-nam-dai-tay',
-            #   'https://www.coolmate.me/collection/ao-sweater-len-ni-nam',
-            #   'https://www.coolmate.me/collection/ao-khoac-nam',
-            # #   'https://www.coolmate.me/collection/quan-short-nam',
-            #   'https://www.coolmate.me/collection/quan-jogger-nam',
-            #   'https://www.coolmate.me/collection/quan-nam-choi-the-thao',
-            #   'https://www.coolmate.me/collection/quan-dai-nam',
-            #   'https://www.coolmate.me/collection/quan-pants-nam',
-            #   'https://www.coolmate.me/collection/quan-jeans-nam',
-            #   'https://www.coolmate.me/collection/quan-kaki-nam',
-            #   'https://www.coolmate.me/collection/do-boi-nam',
-            #   'https://www.coolmate.me/collection/quan-tam-giac-brief',
-            #   'https://www.coolmate.me/collection/quan-boxer-trunk',
-            #   'https://www.coolmate.me/collection/quan-boxer-brief-dang-dai',
-            #   'https://www.coolmate.me/collection/quan-long-leg',
-            #   'https://www.coolmate.me/collection/quan-boxer-shorts',
-            #   'https://www.coolmate.me/collection/phu-kien-nam'
+              'https://www.coolmate.me/collection/ao-ba-lo-tank-top-nam',
+              'https://www.coolmate.me/collection/ao-thun-nam',
+              'https://www.coolmate.me/collection/ao-nam-choi-the-thao',
+              'https://www.coolmate.me/collection/ao-polo-nam',
+              'https://www.coolmate.me/collection/ao-so-mi-nam',
+              'https://www.coolmate.me/collection/ao-nam-dai-tay',
+              'https://www.coolmate.me/collection/ao-sweater-len-ni-nam',
+              'https://www.coolmate.me/collection/ao-khoac-nam',
+              'https://www.coolmate.me/collection/quan-short-nam',
+              'https://www.coolmate.me/collection/quan-jogger-nam',
+              'https://www.coolmate.me/collection/quan-nam-choi-the-thao',
+              'https://www.coolmate.me/collection/quan-dai-nam',
+              'https://www.coolmate.me/collection/quan-pants-nam',
+              'https://www.coolmate.me/collection/quan-jeans-nam',
+              'https://www.coolmate.me/collection/quan-kaki-nam',
+              'https://www.coolmate.me/collection/do-boi-nam',
+              'https://www.coolmate.me/collection/quan-tam-giac-brief',
+              'https://www.coolmate.me/collection/quan-boxer-trunk',
+              'https://www.coolmate.me/collection/quan-boxer-brief-dang-dai',
+              'https://www.coolmate.me/collection/quan-long-leg',
+              'https://www.coolmate.me/collection/quan-boxer-shorts',
+              'https://www.coolmate.me/collection/phu-kien-nam'
               
-              'https://www.coolmate.me/collection/ao-bra-nu',
-              'https://www.coolmate.me/collection/ao-cropped-top',
-              'https://www.coolmate.me/collection/ao-polo-nu',
-              'https://www.coolmate.me/collection/ao-singlet-nu',
-              'https://www.coolmate.me/collection/ao-hoodie-sweater-nu',
-              'https://www.coolmate.me/collection/ao-dai-tay-nu',
-              'https://www.coolmate.me/collection/ao-khoac-nu',
-              'https://www.coolmate.me/collection/ao-thun-nu',
-              'https://www.coolmate.me/collection/quan-legging',
-              'https://www.coolmate.me/collection/quan-short-nu',
-              'https://www.coolmate.me/collection/quan-biker-short',
-              'https://www.coolmate.me/collection/vay-dam-nu',
-              'https://www.coolmate.me/collection/quan-dai-nu',
-              'https://www.coolmate.me/collection/amazon-best-seller',
-              'https://www.coolmate.me/collection/phu-kien-nu'] 
+            #   'https://www.coolmate.me/collection/ao-bra-nu',
+            #   'https://www.coolmate.me/collection/ao-cropped-top',
+            #   'https://www.coolmate.me/collection/ao-polo-nu',
+            #   'https://www.coolmate.me/collection/ao-singlet-nu',
+            #   'https://www.coolmate.me/collection/ao-hoodie-sweater-nu',
+            #   'https://www.coolmate.me/collection/ao-dai-tay-nu',
+            #   'https://www.coolmate.me/collection/ao-khoac-nu',
+            #   'https://www.coolmate.me/collection/ao-thun-nu',
+            #   'https://www.coolmate.me/collection/quan-legging',
+            #   'https://www.coolmate.me/collection/quan-short-nu',
+            #   'https://www.coolmate.me/collection/quan-biker-short',
+            #   'https://www.coolmate.me/collection/vay-dam-nu',
+            #   'https://www.coolmate.me/collection/quan-dai-nu',
+            #   'https://www.coolmate.me/collection/amazon-best-seller',
+            #   'https://www.coolmate.me/collection/phu-kien-nu'
+            ] 
 
-# import os
-# from weaviate.classes.init import Auth
-# import weaviate
-# from web_scraper import get_items_data
-# from dotenv import load_dotenv
-# import tqdm
-# load_dotenv()
-# weaviate_url=os.getenv('WEAVIATE_URL')
-# weaviate_api_key=os.getenv('WEAVIATE_API_KEY')
-# with weaviate.connect_to_weaviate_cloud(
-#     cluster_url=weaviate_url,
-#     auth_credentials=Auth.api_key(weaviate_api_key)
-#     ) as client:
+import os
+from weaviate.classes.init import Auth
+import weaviate
+from web_scraper import get_items_data
+from dotenv import load_dotenv
+import tqdm
+load_dotenv()
+weaviate_url=os.getenv('WEAVIATE_URL')
+weaviate_api_key=os.getenv('WEAVIATE_API_KEY')
+with weaviate.connect_to_weaviate_cloud(
+    cluster_url=weaviate_url,
+    auth_credentials=Auth.api_key(weaviate_api_key)
+    ) as client:
 #     # client.collections.delete('products')
-#     # products=initialize_products_collection(client)
-#     products=client.collections.get('products')
+#     products=initialize_products_collection(client)
+#     # products=client.collections.get('products')
 #     for url in tqdm.tqdm(urls):
 #         product_data=get_items_data(url)
 #         products=populate_products_collection(products, product_data)
 
-# # if not client.collections.exists('faqs'):
-# #     faqs=initialize_faqs_collection(client)
-# #     faqs_data=get_faqs_data()
-# #     faqs=populate_faqs_collection(faqs, faqs_data)
-# # else:
+    # from web_scraper import get_faqs_data
+    # faqs=initialize_faqs_collection(client)
+    # faqs_data=get_faqs_data()
+    # faqs=populate_faqs_collection(faqs, faqs_data)
+
 
 # import weaviate
 # from weaviate.classes.init import Auth
@@ -191,6 +196,8 @@ urls=[
 # auth_credentials=Auth.api_key(weaviate_api_key)
 # ) as client:
 #     products=client.collections.get('products')
-#     response=products.query.near_text('áo khoác khoác khoác nam', limit=10)
+#     test=Filter.all_of([Filter.by_property('available_size').contains_any(["L", "XL"]),Filter.by_property('gender').contains_any(["MALE"])])
+#     # response=products.query.fetch_objects(filters=test, limit=10)
+#     response=products.query.near_text('áo thun nam', filters=test, limit=10)
 #     for res in response.objects:
 #         print(res.properties['product_code'], res.properties['name'])

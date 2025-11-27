@@ -1,16 +1,6 @@
 ```json
 {
-    "previous_product": "áo thun",
-    "see_more": false,
-    "product_codes": [
-        ""
-    ],
-    "price": {
-        "min": 0,
-        "max": "inf"
-    },
-    "gender": [
-        "FEMALE"
-    ]
+ "reasoning": "Khách hàng đang tìm kiếm \"quần kaki nam\". Trong danh sách sản phẩm tìm được, có hai sản phẩm là quần kaki nam: \"Quần Dài Nam Kaki Excool\" (mã PAZ896) và \"Quần Dài Nam Kaki Excool dáng Straight\" (mã PAZ864). Sản phẩm \"Áo sơ mi nam Casual kẻ sọc\" (mã SHA267) không phải là quần kaki nam nên sẽ bỏ qua. Do đó, tôi sẽ liệt kê hai sản phẩm quần kaki nam tìm được.",
+ "response": "Chào bạn, Coolmate có sẵn các mẫu quần kaki nam sau đây ạ:\n\n1. **Quần Dài Nam Kaki Excool**\n   - Mã sản phẩm: PAZ896\n   - Giá: 499.000đ\n   - Chất liệu: 50% Polyester, 50% Sợi Sorona\n   - Kiểu dáng: Slimfit\n   - Nổi bật: Thấm hút, Chống UV, Co giãn\n   - Hình ảnh:\n     <img src=\"https://n7media.coolmate.me/uploads/December2024/quan-dai-nam-kaki-excool-xam-den_(5).jpg\" width=300>\n     <img src=\"https://n7media.coolmate.me/uploads/May2025/quan-dai-nam-kaki-excool-xam-nha_3.jpg\" width=300>\n     <img src=\"https://n7media.coolmate.me/uploads/December2024/quan-dai-nam-kaki-excool-den_(5).jpg\" width=300>\n   - Link sản phẩm: https://www.coolmate.me/product/quan-dai-kaki-excool-co-gian\n\n2. **Quần Dài Nam Kaki Excool dáng Straight**\n   - Mã sản phẩm: PAZ864\n   - Giá: 499.000đ\n   - Chất liệu: 50% Polyester và 50% sợi Sorona\n   - Kiểu dáng: Straight\n   - Nổi bật: Siêu nhẹ, Co giãn, Chống UV\n   - Hình ảnh:\n     <img src=\"https://n7media.coolmate.me/uploads/December2024/quan-dai-nam-kaki-excool-dang-straight-xam_(5).jpg\" width=300>\n     <img src=\"https://n7media.coolmate.me/uploads/December2024/quan-dai-nam-kaki-excool-dang-straight-den_(3).jpg\" width=300>\n     <img src=\"https://n7media.coolmate.me/uploads/November2025/quan-dai-nam-kaki-excool-dang-straight-1-1-xam-sang.jpg\" width=300>\n   - Link sản phẩm: https://www.coolmate.me/product/quan-dai-nam-kaki-excool-dang-regular-straight"
 }
 ```
