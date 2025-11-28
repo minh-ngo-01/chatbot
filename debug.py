@@ -1,6 +1,6 @@
 import json
-response="""{"response":"this \\"is\\" a text"}"""
+response="""{"response":'this is a text'}"""
 print((response))
-# response=json.loads(response)
+response=json.loads(response)
 # print(response)
 # print(type(response))

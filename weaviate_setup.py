@@ -93,13 +93,13 @@ def populate_products_collection(collection, list_):
 
 
 urls=[         
-              'https://www.coolmate.me/collection/ao-ba-lo-tank-top-nam',
-              'https://www.coolmate.me/collection/ao-thun-nam',
-              'https://www.coolmate.me/collection/ao-nam-choi-the-thao',
-              'https://www.coolmate.me/collection/ao-polo-nam',
-              'https://www.coolmate.me/collection/ao-so-mi-nam',
-              'https://www.coolmate.me/collection/ao-nam-dai-tay',
-              'https://www.coolmate.me/collection/ao-sweater-len-ni-nam',
+            #   'https://www.coolmate.me/collection/ao-ba-lo-tank-top-nam',
+            #   'https://www.coolmate.me/collection/ao-thun-nam',
+            #   'https://www.coolmate.me/collection/ao-nam-choi-the-thao',
+            #   'https://www.coolmate.me/collection/ao-polo-nam',
+            #   'https://www.coolmate.me/collection/ao-so-mi-nam',
+            #   'https://www.coolmate.me/collection/ao-nam-dai-tay',
+            #   'https://www.coolmate.me/collection/ao-sweater-len-ni-nam',
               'https://www.coolmate.me/collection/ao-khoac-nam',
               'https://www.coolmate.me/collection/quan-short-nam',
               'https://www.coolmate.me/collection/quan-jogger-nam',
@@ -147,8 +147,8 @@ urls=[
 #     auth_credentials=Auth.api_key(weaviate_api_key)
 #     ) as client:
 #     # client.collections.delete('products')
-#     products=initialize_products_collection(client)
-#     # products=client.collections.get('products')
+#     # products=initialize_products_collection(client)
+#     products=client.collections.get('products')
 #     for url in tqdm.tqdm(urls):
 #         product_data=get_items_data(url)
 #         products=populate_products_collection(products, product_data)
@@ -196,8 +196,8 @@ cluster_url=weaviate_url,
 auth_credentials=Auth.api_key(weaviate_api_key)
 ) as client:
     products=client.collections.get('products')
-    test=Filter.all_of([Filter.by_property('available_size').contains_any(["L", "XL"]),Filter.by_property('gender').contains_any(["MALE"])])
+    test=Filter.all_of([Filter.by_property('available_size').contains_any(["L"]),Filter.by_property('gender').contains_any(["MALE"])])
     # response=products.query.fetch_objects(filters=test, limit=10)
-    response=products.query.near_text('áo thun nam', filters=test, limit=10)
+    response=products.query.near_text('áo khoác nam size L', filters=test, limit=3)
     for res in response.objects:
         print(res.properties['product_code'], res.properties['name'])
