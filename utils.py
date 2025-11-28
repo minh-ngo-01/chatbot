@@ -9,14 +9,14 @@ from weaviate.classes.query import Filter
 from dotenv import load_dotenv
 
 
-# import phoenix as px
-# from phoenix.otel import register
-# from opentelemetry.trace import Status, StatusCode
-# px.launch_app(use_temp_dir=False)
-# phoenix_name= "chatbot"
-# endpoint="http://127.0.0.1:6006/v1/traces"
-# tracer_provider_phoenix=register(project_name=phoenix_name, endpoint=endpoint)
-# tracer=tracer_provider_phoenix.get_tracer(__name__)
+import phoenix as px
+from phoenix.otel import register
+from opentelemetry.trace import Status, StatusCode
+px.launch_app(use_temp_dir=False)
+phoenix_name= "chatbot"
+endpoint="http://127.0.0.1:6006/v1/traces"
+tracer_provider_phoenix=register(project_name=phoenix_name, endpoint=endpoint)
+tracer=tracer_provider_phoenix.get_tracer(__name__)
 
 
 
@@ -24,6 +24,7 @@ load_dotenv()
 
 llm_client=genai.Client(api_key=os.getenv('GOOGLE_STUDIO_API_KEY'))
 
+@tracer.chain
 def get_prev_chat(n=5):
     try:
         chat_history=joblib.load('chat_history.joblib')
@@ -42,7 +43,7 @@ def call_llm(prompt, system_instruction, temperature=0, model='gemini-2.5-flash-
         contents=prompt)
     return response.text
 
-
+@tracer.chain
 def classify_query(query, prev_chat):
     prompt=f"""Bạn sẽ nhận:
         - lịch sử trò chuyện giữa bạn và khách hàng
@@ -95,7 +96,7 @@ def classify_query(query, prev_chat):
     response=match.group(0)
     response=json.loads(response)
     return response
-
+@tracer.chain
 def get_metadata(intent, prev_chat):
     prompt=f"""Bạn sẽ nhận:
         - lịch sử trò chuyện giữa bạn và khách hàng.
@@ -232,7 +233,7 @@ def build_filters(meta_data):
             filters.append(Filter.by_property('available_size').contains_any(value))
 
     return filters
-    
+@tracer.chain    
 def query_product(client, query, prev_chat, intent):   
     print(intent)
     # client.collections.delete('products')
@@ -250,30 +251,32 @@ def query_product(client, query, prev_chat, intent):
     context=""
     # print(meta_data)
     filters=build_filters(meta_data)
-    response=products.query.near_text(query=intent, filters=Filter.all_of(filters) if len(filters) != 0 else None, limit=3)
-    context=""
-    for res in response.objects:
-        context+=f"""mã sản phẩm: {res.properties['product_code']},
-                    tên sản phẩm:{res.properties['name']},                     
-                    giá: {res.properties['price']},
-                    giới tính: {res.properties['gender']},
-                    nổi bât: {res.properties['highlights']},
-                    công nghệ: {res.properties['technology']},
-                    vật liệu: {res.properties['material']},
-                    kiểu dáng: {res.properties['style']},
-                    phù hợp: {res.properties['usage']},
-                    tính năng: {res.properties['features']},
-                    bảo quản: {res.properties['care']},
-                    hình ảnh: {res.properties['images']},
-                    size theo màu có sẵn: {res.properties['colorBySize']},
-                    link sản phẩm:{res.properties['product_url']}
-                    """
-    print_context=""
-    for res in response.objects:
-     print_context+=f"""mã sản phẩm: {res.properties['product_code']},
+    with tracer.start_as_current_span("retrieving_context") as span:
+        response=products.query.near_text(query=intent, filters=Filter.all_of(filters) if len(filters) != 0 else None, limit=3)
+        context=""
+        for res in response.objects:
+            context+=f"""mã sản phẩm: {res.properties['product_code']},
                         tên sản phẩm:{res.properties['name']},                     
+                        giá: {res.properties['price']},
+                        giới tính: {res.properties['gender']},
+                        nổi bât: {res.properties['highlights']},
+                        công nghệ: {res.properties['technology']},
+                        vật liệu: {res.properties['material']},
+                        kiểu dáng: {res.properties['style']},
+                        phù hợp: {res.properties['usage']},
+                        tính năng: {res.properties['features']},
+                        bảo quản: {res.properties['care']},
+                        hình ảnh: {res.properties['images']},
+                        size theo màu có sẵn: {res.properties['colorBySize']},
+                        link sản phẩm:{res.properties['product_url']}
                         """
-    print(print_context)
+        span.set_attribute("context", context)
+        # print_context=""
+        # for res in response.objects:
+        #     print_context+=f"""mã sản phẩm: {res.properties['product_code']},
+        #                         tên sản phẩm:{res.properties['name']},                     
+        #                         """
+        # print(print_context)
     prompt=f""" Bạn sẽ nhận:
                 - ý định hiện tại của khách hàng                
                 - sản phẩm tìm được
