@@ -293,7 +293,7 @@ def query_product(client, query, prev_chat, intent):
                 - Gắn hình ảnh bằng tag <img src="http:\\ ..." width=300>.
                 - Mỗi sản phẩm chỉ liệt kê 3 hình.
                 - Đính kèm mã sản phẩm.
-                - Không chào lại nếu đã trong một cuộc trò chuyện.
+                - Không chào hỏi, chỉ trả lời.
                 
                 ý định hiện tại của khách hàng: {intent}
                 sản phẩm tìm được: {context}"""
