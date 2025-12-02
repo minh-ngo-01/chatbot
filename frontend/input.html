@@ -12,41 +12,66 @@
   </style>
 </head>
 <body>
+   
   <h2>Add Product to Weaviate</h2>
 
   <form id="productForm">
-    <label>Gender:</label>
-    <input id="gender" required>
+    <label>product id:</label>
+    <input id="product_id" required>
 
-    <label>Master Category:</label>
-    <input id="masterCategory" required>
+    <label>product code:</label>
+    <input id="product_code" required>
 
-    <label>Sub Category:</label>
-    <input id="subCategory" required>
+    <label>product name:</label>
+    <input id="name" required>
 
-    <label>Article Type:</label>
-    <input id="articleType" required>
+    <label>product description:</label>
+    <input id="desc">
 
-    <label>Base Colour:</label>
-    <input id="baseColour" required>
-
-    <label>Season:</label>
-    <input id="season" required>
-
-    <label>Year:</label>
-    <input id="year" type="number" required>
-
-    <label>Usage:</label>
-    <input id="usage" required>
-
-    <label>Product Display Name:</label>
-    <input id="productDisplayName" required>
-
-    <label>Price:</label>
+    <label>price:</label>
     <input id="price" type="number" required>
 
-    <label>Product ID:</label>
-    <input id="product_id" type="number" required>
+    <label>gender:</label>
+    <input id="gender" required>
+
+    <label>highlight:</label>
+    <input id="highlight">
+
+    <label>technology:</label>
+    <input id="technology">
+
+    <label>material:</label>
+    <input id="material" required>
+
+    <label>style:</label>
+    <input id="style" required>
+
+    <label>usage:</label>
+    <input id="usage" required>
+
+    <label>feature:</label>
+    <input id="feature" required>
+
+    <label>care:</label>
+    <input id="care">
+
+    <label>video:</label>
+    <input id="video">
+
+    <label>image:</label>
+    <input id="image" required>
+    
+    <label>available color:</label>
+    <input id="available_color" required>
+
+    <label>available size:</label>
+    <input id="available_size" required>
+
+    <label>color by size:</label>
+    <input id="colorBySize" required>
+
+    <label>product url:</label>
+    <input id="product_url" required>
 
     <button type="submit">Add Product</button>
   </form>
@@ -57,17 +82,24 @@
     document.getElementById("productForm").addEventListener("submit", async (e) => {
       e.preventDefault();
       const product = {
-        gender: document.getElementById("gender").value,
-        masterCategory: document.getElementById("masterCategory").value,
-        subCategory: document.getElementById("subCategory").value,
-        articleType: document.getElementById("articleType").value,
-        baseColour: document.getElementById("baseColour").value,
-        season: document.getElementById("season").value,
-        year: parseInt(document.getElementById("year").value),
-        usage: document.getElementById("usage").value,
-        productDisplayName: document.getElementById("productDisplayName").value,
+        product_id: document.getElementById("product_id").value,
+        product_code: document.getElementById("product_code").value,
+        name: document.getElementById("name").value,
+        desc: document.getElementById("desc").value,
         price: parseInt(document.getElementById("price").value),
-        product_id: parseInt(document.getElementById("product_id").value),
+        gender: document.getElementById("gender").value,
+        highlight: document.getElementById("highlight").value,
+        technology: document.getElementById("technology").value,
+        material: document.getElementById("material").value,
+        style: document.getElementById("style").value,
+        usage: document.getElementById("usage").value,
+        feature: document.getElementById("feature").value,
+        care: document.getElementById("care").value,
+        video: document.getElementById("video").value,
+        image: document.getElementById("image").value,
+        available_color: document.getElementById("available_color").value,
+        available_size: document.getElementById("available_size").value,
+        colorBySize: document.getElementById("colorBySize").value,
       };
 
       const res = await fetch("http://127.0.0.1:8000/add_product", {

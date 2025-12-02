@@ -47,17 +47,24 @@ class chatRequest(BaseModel):
     chat_history: List[Message]
 
 class Product(BaseModel):
-    gender: str
-    masterCategory: str
-    subCategory: str
-    articleType: str
-    baseColour: str
-    season: str
-    year: int
-    usage: str
-    productDisplayName: str
+    product_id: str
+    product_code: str
+    name: str
+    desc: str
     price: int
-    product_id: int
+    gender: str
+    highlight: str
+    technology: str
+    material: str
+    style: str
+    usage: str
+    feature: str
+    care: str
+    video: str
+    image: str
+    available_color: str
+    available_size: str
+    colorBySize: str
 
 @app.post('/add_product')
 def add_product(product: Product):
@@ -68,22 +75,28 @@ def add_product(product: Product):
     cluster_url=weaviate_url,
     auth_credentials=Auth.api_key(weaviate_api_key)
     ) as client:
-
-        collection=get_products_collection(client)
+        collection=client.collections.get('products')
         try:
             collection.data.insert(
                 properties={
-                'gender': product.gender,
-                'masterCategory': product.masterCategory,
-                'subCategory': product.subCategory,
-                'articleType': product.articleType,
-                'baseColour': product.baseColour,
-                'season': product.season,
-                'year': product.year,
+                'product_id': product.product_id ,
+                'product_code': product.product_code ,
+                'name': product.name ,
+                'desc': product.desc ,
+                'price': product.price ,
+                'gender': product.gender ,
+                'highlight': product.highlight ,
+                'technology': product.technology ,
+                'material': product.material ,
+                'style': product.style,
                 'usage': product.usage,
-                'productDisplayName': product.productDisplayName,
-                'price': product.price,
-                'product_id': product.product_id 
+                'feature': product.feature,
+                'care': product.care,
+                'video': product.video ,
+                'image': product.image,
+                'available_color': list(product.available_color),
+                'available_size': list(product.available_size),
+                'colorBySize': list(product.colorBySize),
                 })
             return {'message': f'Product {product.product_id} added'}
         except Exception as e:
@@ -118,3 +131,37 @@ def answer(chat_request: chatRequest):
 # Mã sản phẩm: JGZ865
 
 # Bạn xem thử nha!"""}
+
+# load_dotenv()
+# weaviate_url=os.getenv('WEAVIATE_URL')
+# weaviate_api_key=os.getenv('WEAVIATE_API_KEY')
+# with weaviate.connect_to_weaviate_cloud(
+# cluster_url=weaviate_url,
+# auth_credentials=Auth.api_key(weaviate_api_key)
+# ) as client:
+#     collection=client.collections.get('products')
+#     try:
+#         collection.data.insert(
+#             properties={
+#             'product_id': "123abc",
+#             'product_code': "123abc",
+#             'name': "abc",
+#             'desc': "abc",
+#             'price': 123,
+#             'gender': "MALE",
+#             'highlight': "abc",
+#             'technology': "abc",
+#             'material': "abc",
+#             'style': "abc",
+#             'usage': "abc",
+#             'feature': "abc",
+#             'care': "abc",
+#             'video': "abc",
+#             'image': "abc",
+#             'available_color': ["abc"],
+#             'available_size': ["abc"],
+#             'colorBySize': ["abc"],
+#             })
+#         print( {'message': f'Product "123abc" added'})
+#     except Exception as e:
+#         print( {'error': str(e)})

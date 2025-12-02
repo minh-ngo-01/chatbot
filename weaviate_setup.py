@@ -182,22 +182,42 @@ urls=[
 #         else:
 #             products.data.delete_by_id(item.uuid)
 
-import weaviate
-from weaviate.classes.init import Auth
-import os
-from weaviate.classes.query import Filter
-from dotenv import load_dotenv
-load_dotenv()
-weaviate_url=os.getenv('WEAVIATE_URL')
-weaviate_api_key=os.getenv('WEAVIATE_API_KEY')
-filter=Filter.by_property('product_code').equal('SM006')
-with weaviate.connect_to_weaviate_cloud(
-cluster_url=weaviate_url,
-auth_credentials=Auth.api_key(weaviate_api_key)
-) as client:
-    products=client.collections.get('products')
-    test=Filter.all_of([Filter.by_property('available_size').contains_any(["L"]),Filter.by_property('gender').contains_any(["MALE"])])
-    # response=products.query.fetch_objects(filters=test, limit=10)
-    response=products.query.near_text('áo khoác nam size L', filters=test, limit=3)
-    for res in response.objects:
-        print(res.properties['product_code'], res.properties['name'])
+# import weaviate
+# from weaviate.classes.init import Auth
+# import os
+# from weaviate.classes.query import Filter
+# from dotenv import load_dotenv
+# load_dotenv()
+# weaviate_url=os.getenv('WEAVIATE_URL')
+# weaviate_api_key=os.getenv('WEAVIATE_API_KEY')
+# filter=Filter.by_property('product_code').equal('SM006')
+# with weaviate.connect_to_weaviate_cloud(
+# cluster_url=weaviate_url,
+# auth_credentials=Auth.api_key(weaviate_api_key)
+# ) as client:
+#     products=client.collections.get('products')
+#     test=Filter.all_of([Filter.by_property('available_size').contains_any(["L"]),Filter.by_property('gender').contains_any(["MALE"])])
+#     # response=products.query.fetch_objects(filters=test, limit=10)
+#     response=products.query.near_text('áo sơ mi siêu cấp', filters=test, limit=3)
+#     for res in response.objects:
+#         print(res.properties['product_code'], res.properties['name'])
+
+# import weaviate
+# from weaviate.classes.init import Auth
+# import os
+# from weaviate.classes.query import Filter
+# from dotenv import load_dotenv
+# load_dotenv()
+# weaviate_url=os.getenv('WEAVIATE_URL')
+# weaviate_api_key=os.getenv('WEAVIATE_API_KEY')
+# filter=Filter.by_property('product_code').equal('SM006')
+# with weaviate.connect_to_weaviate_cloud(
+# cluster_url=weaviate_url,
+# auth_credentials=Auth.api_key(weaviate_api_key)
+# ) as client:
+#     products=client.collections.get('products')
+#     # test=Filter.all_of([Filter.by_property('available_size').contains_any(["L"]),Filter.by_property('gender').contains_any(["MALE"])])
+#     # response=products.query.fetch_objects(filters=test, limit=10)
+#     response=products.query.near_text('áo sơ mi siêu cấp', limit=3)
+#     for res in response.objects:
+#         print(res.properties['product_code'], res.properties['name'])
