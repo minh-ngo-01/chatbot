@@ -300,13 +300,21 @@ def query_product(client, query, prev_chat, intent):
     # print(f"""Ý định hiện tại của khách hàng: {intent}""")
                 
     system_instruction="""Bạn là một trợ lý ảo trò chuyện cho cửa hàng quần áo trực tuyến Coolmate. Hãy nói chuyện một cách tự nhiên, như đang trò chuyện với một người bạn.                            
-                          Giữ câu trả lời ngắn gọn và hữu ích."""
+                          Giữ câu trả lời ngắn gọn và hữu ích.
+                          Suy nghĩ ngắn gọn theo từng bước, trả lại theo dạng JSON {"reasoning": <suy nghĩ> , "response": <nội dung>}.
+                          Chú ý backslash các dấu nháy đôi trong suy nghĩ và nội dung"""
 
     response=call_llm(prompt, system_instruction)
 
     print(response)
+    # with open("text.txt", "w", encoding='utf-8') as f:
+    #     f.write(repr(response))
+    match=re.search(r'{.*}', response, re.DOTALL)
+    response=match.group(0)
+    # print(response)
+    response=json.loads(response)
     
-    return response
+    return response["response"]
 
 
 def query_other(client, query, prev_chat, intent):  
